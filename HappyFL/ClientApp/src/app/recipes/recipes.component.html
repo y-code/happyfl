@@ -1,0 +1,28 @@
+<h1>Recipes</h1>
+
+<div *ngIf='(recipes$ | async).isLoading'>
+  Loading...
+</div>
+
+<div *ngIf="(recipes$ | async).data">
+  <div *ngFor="let recipe of (recipes$ | async).data">
+    <h2>{{recipe.name}}</h2>
+    <a href="{{recipe.urlOfBase}}">{{recipe.urlOfBase}}</a>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <td>Name</td>
+          <td>Amount</td>
+          <td>Note</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ingredient of recipe.ingredients">
+          <td>{{ingredient.name}}</td>
+          <td>{{ingredient.amount}} {{ingredient.unit}}</td>
+          <td>{{ingredient.note}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

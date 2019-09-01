@@ -1,0 +1,65 @@
+<h1>Recipe Seeker</h1>
+
+<label>
+  URL:
+  <input type="text" [(ngModel)]="url"/>
+</label>
+<input type="button" class="btn btn-info" value="Find Recipe" (click)="onFindRecipe()"/>
+<input type="button" class="btn btn-info" value="&lt;" (click)="onGoBack()"/>
+<input type="button" class="btn btn-info" value="&gt;" (click)="onGoForeward()"/>
+
+<table *ngIf="links" class="table table-striped">
+  <thead>
+    <tr>
+      <th>Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let link of links">
+      <td><a (click)="seekWeb(link.url)">{{link.caption}}</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<table *ngIf="imageLinks" class="table table-striped">
+  <thead>
+    <tr>
+      <th>Image</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let image of imageLinks">
+      <td><div class="found-image"><img src="{{baseUrl}}api/WebSeeker/image?url={{image.encodedUrl}}" title="{{image.caption}}"/></div></td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="(recipeSeekResult$ | async)">
+  <div *ngIf="(recipeSeekResult$ | async).isLoading">
+    Loading...
+  </div>
+</div>
+
+<div *ngIf="(recipeSeekResult$ | async)">
+  <div *ngIf="(recipeSeekResult$ | async).data">
+    <div *ngFor="let result of (recipeSeekResult$ | async).data">
+      <h2>Name</h2>
+      <ul *ngFor="let name of result.names">
+        <li>{{name}}</li>
+      </ul>
+      <h2>Ingredients</h2>
+      <div *ngFor="let ingredientSection of result.ingredientsSections">
+        <h3>Section</h3>
+        <ul *ngFor="let name of ingredientSection.names">
+          <li>{{name}}</li>
+        </ul>
+        <table *ngIf="ingredientSection.ingredients" class="table table-striped">
+          <tr *ngFor="let ingredient of ingredientSection.ingredients">
+            <td>{{ingredient}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+

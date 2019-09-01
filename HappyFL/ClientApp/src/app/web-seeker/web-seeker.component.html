@@ -1,0 +1,36 @@
+<h1>Web Seeker</h1>
+
+<label>
+  URL:
+  <input type="text" [(ngModel)]="url"/>
+</label>
+<input type="button" class="btn btn-info" value="Find Images" (click)="onFindImages()"/>
+<input type="button" class="btn btn-info" value="&lt;" (click)="onGoBack()"/>
+<input type="button" class="btn btn-info" value="&gt;" (click)="onGoForeward()"/>
+
+<table *ngIf="links" class="table table-striped">
+  <thead>
+    <tr>
+      <th>Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let link of links">
+      <td><a (click)="seekWeb(link.url)">{{link.caption}}</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<table *ngIf="imageLinks" class="table table-striped">
+  <thead>
+    <tr>
+      <th>Image</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let image of imageLinks">
+      <td><div class="found-image"><img src="{{baseUrl}}api/WebSeeker/image?url={{image.encodedUrl}}" title="{{image.caption}}"/></div></td>
+    </tr>
+  </tbody>
+</table>
+
