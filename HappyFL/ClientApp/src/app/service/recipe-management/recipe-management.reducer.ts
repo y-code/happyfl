@@ -1,12 +1,17 @@
 import { requestDishes, receiveDishes, requestRecipes, receiveRecipes, requestRecipeSeek, receiveRecipeSeekResult } from './recipe-management.actions';
-import { createReducer, on } from '@ngrx/store';
+import { createReducer, on, Action } from '@ngrx/store';
+
+export interface RecipeManagementState {
+  dishes: {},
+  recipe: {},
+}
 
 export const initialState = {
   dishes: {},
   recipe: {},
 };
 
-export const recipeManagementReducer = createReducer(initialState,
+export const RecipeManagementReducer = createReducer(initialState,
   on(requestDishes, state => ({
     ...state,
     dishes: {
@@ -51,3 +56,7 @@ export const recipeManagementReducer = createReducer(initialState,
     },
   }))
 );
+
+export function reducer(state: RecipeManagementState, action: Action) {
+  return RecipeManagementReducer(state, action);
+}

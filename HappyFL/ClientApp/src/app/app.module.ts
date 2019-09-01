@@ -14,7 +14,7 @@ import { DishesComponent } from './dishes/dishes.component';
 import { WebSeekerComponent } from './web-seeker/web-seeker.component';
 import { RecipeSeekerComponent } from './recipe-seeker/recipe-seeker.component';
 
-import { recipeManagementReducer } from './service/recipe-management/recipe-management.reducer';
+import * as RecipeManagementReducer from './service/recipe-management/recipe-management.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { RecipeManagementEffects } from './service/recipe-management/recipe-management.effects';
 import { RecipesComponent } from './recipes/recipes.component';
@@ -45,7 +45,7 @@ import { RecipesComponent } from './recipes/recipes.component';
       { path: 'recipe-seeker', component: RecipeSeekerComponent },
     ]),
     StoreModule.forRoot({
-      recipeManagement: recipeManagementReducer
+      recipeManagement: RecipeManagementReducer.reducer
     }),
     EffectsModule.forRoot([
       RecipeManagementEffects,
