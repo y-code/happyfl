@@ -72,7 +72,7 @@ for M in `dotnet ef migrations list -p ./$DB_CONTEXT_PRJ -s ./$FACTORY_PRJ -c $D
 do LM=$M
 done
 
-if [ "${LM:(-3)}" = "$DEV_MIGRATION" ]; then
+if [ "${LM:(-${#DEV_MIGRATION})}" = "$DEV_MIGRATION" ]; then
     dotnet ef database update -p ./$DB_CONTEXT_PRJ -s ./$FACTORY_PRJ -c $DB_CONTEXT $EF_ARG $LAST_MIGRATION
     dotnet ef migrations remove -p ./$DB_CONTEXT_PRJ -s ./$FACTORY_PRJ -c $DB_CONTEXT $EF_ARG
 fi
