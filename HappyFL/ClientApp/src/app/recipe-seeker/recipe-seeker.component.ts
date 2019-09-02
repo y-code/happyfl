@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, Inject } from '@angular/core';
 import { WebSeekerService, LinkInfo, RecipeSeekResult } from '../service/web-seeker.service';
 import { Store } from '@ngrx/store';
-import { requestRecipeSeek } from '../service/recipe-management/recipe-management.actions';
+import { requestRecipeSeek, cancelRecipeSeek } from '../service/recipe-management/recipe-management.actions';
 
 @Component({
   selector: 'app-recipe-seeker',
@@ -97,6 +97,10 @@ export class RecipeSeekerComponent implements OnInit {
     this.historyCursor++;
     let run = this.history[this.historyCursor];
     this.url = run();
+  }
+
+  onCancel() {
+    this.store.dispatch(cancelRecipeSeek({ url: this.url }));
   }
 }
 

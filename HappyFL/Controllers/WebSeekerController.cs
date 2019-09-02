@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static HappyFL.Services.WebSeekerService;
+using System.Threading;
 
 namespace HappyFL.Controllers
 {
@@ -56,9 +57,9 @@ namespace HappyFL.Controllers
 		}
 
         [HttpGet("[action]")]
-        public IEnumerable<RecipeSeekResult> FindRecipes(string url)
+        public async Task<IEnumerable<RecipeSeekResult>> FindRecipes(string url, CancellationToken cancel)
         {
-            return _webSeekerService.FindRecipe(new Uri(url));
+            return await Task.Run(() => _webSeekerService.FindRecipes(new Uri(url), cancel), cancel);
         }
 
 		[HttpGet("image")]

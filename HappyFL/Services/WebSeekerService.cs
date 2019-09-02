@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
+using System.Threading;
 
 namespace HappyFL.Services
 {
@@ -141,7 +142,7 @@ namespace HappyFL.Services
             }
         }
 
-        public List<RecipeSeekResult> FindRecipe(Uri url)
+        public List<RecipeSeekResult> FindRecipes(Uri url, CancellationToken? cancel = null)
         {
             var result = new List<RecipeSeekResult>();
 
@@ -161,6 +162,8 @@ namespace HappyFL.Services
 
             foreach (var ingredientsSectionLabelNode in ingredientsSectionLabelNodes)
             {
+                cancel?.ThrowIfCancellationRequested();
+
                 var ingredientsSectionNode = ingredientsSectionLabelNode.ParentNode;
                 var recipe = new RecipeSeekResult();
                 result.Add(recipe);
@@ -187,6 +190,8 @@ namespace HappyFL.Services
                 var listNodes = ingredientsSectionNode.SelectNodes(k => $"//{k}", "ul", "ol");
                 foreach (var listNode in listNodes)
                 {
+                    cancel?.ThrowIfCancellationRequested();
+
                     var section = new RecipeSeekResult.IngredientsSection();
                     recipe.IngredientsSections.Add(section);
                     section.Ingredients = listNode.SelectNodes(k => $"//{k}", "li")

@@ -7,6 +7,7 @@
 <input type="button" class="btn btn-info" value="Find Recipe" (click)="onFindRecipe()"/>
 <input type="button" class="btn btn-info" value="&lt;" (click)="onGoBack()"/>
 <input type="button" class="btn btn-info" value="&gt;" (click)="onGoForeward()"/>
+<input type="button" class="btn btn-info" value="Cancel" (click)="onCancel()"/>
 
 <table *ngIf="links" class="table table-striped">
   <thead>
@@ -37,6 +38,12 @@
 <div *ngIf="(recipeSeekResult$ | async)">
   <div *ngIf="(recipeSeekResult$ | async).isLoading">
     Loading...
+  </div>
+</div>
+
+<div *ngIf="(recipeSeekResult$ | async)">
+  <div *ngIf="(recipeSeekResult$ | async).isCancelled">
+    Cancelled
   </div>
 </div>
 

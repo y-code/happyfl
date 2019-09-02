@@ -1,4 +1,4 @@
-import { requestDishes, receiveDishes, requestRecipes, receiveRecipes, requestRecipeSeek, receiveRecipeSeekResult } from './recipe-management.actions';
+import * as RecipeManagementAction from './recipe-management.actions';
 import { createReducer, on, Action } from '@ngrx/store';
 
 export interface RecipeManagementState {
@@ -12,27 +12,27 @@ export const initialState = {
 };
 
 export const RecipeManagementReducer = createReducer(initialState,
-  on(requestDishes, state => ({
+  on(RecipeManagementAction.requestDishes, state => ({
     ...state,
     dishes: {
       isLoading: true,
     },
   })),
-  on(receiveDishes, (state, action) => ({
+  on(RecipeManagementAction.receiveDishes, (state, action) => ({
     ...state,
     dishes: {
       isLoading: false,
       data: action.dishes,
     },
   })),
-  on(requestRecipes, (state, action) => ({
+  on(RecipeManagementAction.requestRecipes, (state, action) => ({
     ...state,
     recipes: {
       isLoading: true,
       dishId: action.dishId,
     },
   })),
-  on(receiveRecipes, (state, action) => ({
+  on(RecipeManagementAction.receiveRecipes, (state, action) => ({
     ...state,
     recipes: {
       isLoading: false,
@@ -40,17 +40,27 @@ export const RecipeManagementReducer = createReducer(initialState,
       data: action.recipes,
     },
   })),
-  on(requestRecipeSeek, (state, action) => ({
+  on(RecipeManagementAction.requestRecipeSeek, (state, action) => ({
     ...state,
     recipeSeekResult: {
       isLoading: true,
+      isCancelled: false,
       url: action.url,
     },
   })),
-  on(receiveRecipeSeekResult, (state, action) => ({
+  on(RecipeManagementAction.cancelRecipeSeek, (state, action) => ({
     ...state,
     recipeSeekResult: {
       isLoading: false,
+      isCancelled: true,
+      url: action.url,
+    },
+  })),
+  on(RecipeManagementAction.receiveRecipeSeekResult, (state, action) => ({
+    ...state,
+    recipeSeekResult: {
+      isLoading: false,
+      isCancelled: false,
       url: action.url,
       data: action.result,
     },

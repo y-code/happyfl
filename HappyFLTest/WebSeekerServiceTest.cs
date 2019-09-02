@@ -70,7 +70,7 @@ namespace HappyFL.Test
         public void TestFindRecipe(string url)
         {
             var service = new WebSeekerService(_logger);
-            var result = service.FindRecipe(new Uri(url));
+            var result = service.FindRecipes(new Uri(url));
 
             Assert.That(result, Has.Count.GreaterThan(0));
             Assert.That(result[0].IngredientsSections, Has.Count.GreaterThan(0));
