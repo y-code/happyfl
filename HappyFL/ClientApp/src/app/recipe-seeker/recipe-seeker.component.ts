@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, Output, Inject } from '@angular/core';
+import { Component, OnInit, Input, Output, Inject, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { WebSeekerService, LinkInfo, RecipeSeekResult } from '../service/web-seeker.service';
 import { Store } from '@ngrx/store';
 import { requestRecipeSeek, cancelRecipeSeek } from '../service/recipe-management/recipe-management.actions';
@@ -33,10 +34,16 @@ export class RecipeSeekerComponent implements OnInit {
           data: RecipeSeekResult[]
         }
       }
-    }>
+    }>,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      this.url = params.url;
+
+      this.findRecipe(this.url);
+    });
   }
 
   onFindRecipe()  {
