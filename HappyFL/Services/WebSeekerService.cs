@@ -9,6 +9,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Threading;
+using System.Text;
+using HappyFL.Services.WebSeekers;
 
 namespace HappyFL.Services
 {
@@ -144,77 +146,17 @@ namespace HappyFL.Services
 
         public List<RecipeSeekResult> FindRecipes(Uri url, CancellationToken? cancel = null)
         {
-            var result = new List<RecipeSeekResult>();
-
-            var web = new HtmlWeb();
-            var html = web.Load(url);
-
-            List<HtmlNode> ingredientsSectionLabelNodes = html.SelectNodes(
-                k => $"//*[text() = '{k}']", "Ingredients", "INGREDIENTS");
-            var ingredientsSectionNodesByNodeName = ingredientsSectionLabelNodes
-                .GroupBy(n => n.Name).ToDictionary(g => g.Key, g => g.ToList());
-
-            ingredientsSectionLabelNodes = new List<HtmlNode>();
-            if (ingredientsSectionNodesByNodeName.ContainsKey("h3"))
-                ingredientsSectionLabelNodes = ingredientsSectionNodesByNodeName["h3"];
-            else if (ingredientsSectionNodesByNodeName.ContainsKey("h2"))
-                ingredientsSectionLabelNodes = ingredientsSectionNodesByNodeName["h2"];
-
-            foreach (var ingredientsSectionLabelNode in ingredientsSectionLabelNodes)
+            RecipeSeeker seeker = null;
+            switch (url.Host)
             {
-                cancel?.ThrowIfCancellationRequested();
-
-                var ingredientsSectionNode = ingredientsSectionLabelNode.ParentNode;
-                var recipe = new RecipeSeekResult();
-                result.Add(recipe);
-
-                // seek Recipe Name Candidates
-                string[] nameNodeNames;
-                switch (ingredientsSectionLabelNode.Name)
-                {
-                    case "h3":
-                        nameNodeNames = new[] { "h1", "h2" };
-                        break;
-                    case "h2":
-                        nameNodeNames = new[] { "h1" };
-                        break;
-                    default:
-                        nameNodeNames = new string[0];
-                        break;
-                }
-
-                recipe.Names = html.SelectNodes(k => $"//{k}", nameNodeNames)
-                    .Select(n => n.InnerText.HtmlDecode()).ToList();
-
-                // seek Ingredients List
-                var listNodes = ingredientsSectionNode.SelectNodes(k => $"//{k}", "ul", "ol");
-                foreach (var listNode in listNodes)
-                {
-                    cancel?.ThrowIfCancellationRequested();
-
-                    var section = new RecipeSeekResult.IngredientsSection();
-                    recipe.IngredientsSections.Add(section);
-                    section.Ingredients = listNode.SelectNodes(k => $"//{k}", "li")
-                        .Select(n => n.SelectNodes(k => $"//{k}", "text()[parent::li|parent::a[parent::li]]").Select(n2 => n2.InnerText).DefaultIfEmpty().Aggregate((a, b) => a + b).HtmlDecode()).ToList();
-                    
-                    section.Names = listNode.ParentNode.SelectNodes(k => $"/{k}", "h1", "h2", "h3", "h4", "h5")
-                        .Select(n => n.InnerText.HtmlDecode()).ToList();
-
-                    if (section.Names.Contains(listNode.PreviousSibling?.InnerText.HtmlDecode()))
-                        section.Names = new List<string> { listNode.PreviousSibling.InnerText.HtmlDecode() };
-                }
-                var certainSectionNames = recipe.IngredientsSections.Where(s => s.Names.Count == 1)
-                    .SelectMany(s => s.Names).ToList();
-                recipe.IngredientsSections.Where(s => s.Names.Count > 1)
-                    .ToList().ForEach(s =>
-                    {
-                        foreach (var i in s.Names.ToList())
-                            if (certainSectionNames.Contains(i))
-                                s.Names.Remove(i);
-                    });
+                case "www.delish.com":
+                    seeker = new RecipeSeekerForDelish(url, cancel);
+                    break;
+                default:
+                    seeker = new RecipeSeekerCommonA(url, cancel);
+                    break;
             }
-
-            return result;
+            return seeker.Scan().ToList();
         }
 
 		public ImageInfo GetImage(Uri url)
