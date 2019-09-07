@@ -1,0 +1,112 @@
+<div id="title" class="row">
+  <div class="col-12 align-self-center">
+    <div class="text-center">
+      <h1>Recipe Seeker</h1>
+    </div>
+  </div>
+</div>
+<div id="sites" class="row">
+    <div class="col-4">
+      <div class="row justify-content-center">
+        <svg class="site-icon" (click)="onIconClick(URL_BBCGoodFood)">
+          <style>
+            .white { fill: rgb(255, 255, 255) }
+            .yellow-green { fill: rgb(181, 238, 67) }
+            .bbc-good-food-color { fill: #4d7f83 }
+            .Rrrrr { font: 64px serif; }
+          </style>
+          <circle cx="50%" cy="50%" r="50%" class="bbc-good-food-color" />
+          <text dx="50%" dy="55%" dominant-baseline="middle" text-anchor="middle" class="Rrrrr white">B</text>
+        </svg>
+      </div>
+      <div class="row justify-content-center">
+        <div class="site-label align-bottom">BBC good food</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="row justify-content-center align-items-end">
+        <svg class="site-icon" (click)="onIconClick(URL_allrecipes)">
+          <style>
+            .white { fill: rgb(255, 255, 255) }
+            .allrecipes-color { fill: #ff7e1a }
+            .Rrrrr { font: 64px serif; }
+          </style>
+          <circle cx="50%" cy="50%" r="50%" class="allrecipes-color" />
+          <text dx="50%" dy="55%" dominant-baseline="middle" text-anchor="middle" class="Rrrrr white">a</text>
+        </svg>
+      </div>
+      <div class="row justify-content-center">
+        <div class="site-label">allrecipes</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="row justify-content-center align-items-end">
+        <svg class="site-icon" (click)="onIconClick(URL_JamieOliver)">
+          <style>
+            .white { fill: rgb(255, 255, 255) }
+            .jamie-oliver-color { fill: #62a5a1 }
+            .Rrrrr { font: 64px serif; }
+          </style>
+          <circle cx="50%" cy="50%" r="50%" class="jamie-oliver-color" />
+          <text dx="50%" dy="55%" dominant-baseline="middle" text-anchor="middle" class="Rrrrr white">J</text>
+        </svg>
+      </div>
+      <div class="row justify-content-center">
+        <div class="site-label">Jamie Oliver</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="row justify-content-center align-items-end">
+        <svg class="site-icon" (click)="onIconClick(URL_delish)">
+          <style>
+            .white { fill: rgb(255, 255, 255) }
+            .jamie-oliver-color { fill: #278090 }
+            .Rrrrr { font: 64px serif; }
+          </style>
+          <circle cx="50%" cy="50%" r="50%" class="jamie-oliver-color" />
+          <text dx="50%" dy="55%" dominant-baseline="middle" text-anchor="middle" class="Rrrrr white">d</text>
+        </svg>
+      </div>
+      <div class="row justify-content-center">
+        <div class="site-label">delish</div>
+      </div>
+    </div>
+  </div>
+<div id="form">
+  <form [formGroup]="customSiteForm" (ngSubmit)="onSubmit()">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <label for="url" class="input-group-text">Recipe Site URL</label>
+      </div>
+      <input type="text" class="form-control" id="url" formControlName="url" placeholder="URL" area-describedby="urlHelp">
+      <div class="input-group-append">
+        <input type="submit" class="btn btn-info" value="Try">
+      </div>
+    </div>
+    <small id="urlHelp" class="form-text text-muted">Enter URL to your favorite recipe web site. Recipe Seeker does not support every recipe sites, but it may work as long as the site is in English.</small>
+  </form>
+</div>
+
+<ng-template #modalContent let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Do you have Recipe Seeker Bookmarklet?</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>
+      Before going to the recipe site, <span class="text-danger">save Recipe Seeker Bookmarklet below</span> to your browser.
+    </p>
+    <p>
+      <a [href]="getLauncherScript()" class="btn btn-warning">→ Recipe Seeker</a>
+    </p>
+    <p>
+      Then, when you are at a recipe web page, <span class="text-danger">click the saved Recipe Seeker Bookmarklet</span>. It'll let you open the recipe in Recipe Seeker 👍
+    </p>
+  </div>
+  <div class="modal-footer">
+    <!-- <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('Cancel click')">Cancel</button> -->
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Open click')">Go to Site</button>
+  </div>
+</ng-template>

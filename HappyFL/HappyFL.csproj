@@ -16,7 +16,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.8" />
     <PackageReference Include="Microsoft.AspNetCore.App">
       <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
       <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
@@ -38,7 +37,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HappyFLDB\HappyFLDB.csproj" />
+    <ProjectReference Include="..\HappyFLDB\HappyFLDB.csproj">
+      <GlobalPropertiesToRemove>;WebPublishProfileFile</GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\html-agility-pack\src\HtmlAgilityPack.NETStandard2_0\HtmlAgilityPack.NETStandard2_0.csproj">
+      <GlobalPropertiesToRemove>;WebPublishProfileFile</GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Update="appsettings.json">

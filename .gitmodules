@@ -1,0 +1,4 @@
+[submodule "html-agility-pack"]
+	path = html-agility-pack
+	url = https://github.com/y-code/html-agility-pack.git
+	branch = handle-not-supported-content-encoding

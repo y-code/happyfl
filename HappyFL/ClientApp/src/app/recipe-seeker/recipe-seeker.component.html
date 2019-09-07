@@ -1,13 +1,17 @@
 <h1>Recipe Seeker</h1>
 
-<label>
-  URL:
-  <input type="text" [(ngModel)]="url"/>
-</label>
-<input type="button" class="btn btn-info" value="Find Recipe" (click)="onFindRecipe()"/>
-<input type="button" class="btn btn-info" value="&lt;" (click)="onGoBack()"/>
-<input type="button" class="btn btn-info" value="&gt;" (click)="onGoForeward()"/>
-<input type="button" class="btn btn-info" value="Cancel" (click)="onCancel()"/>
+<div class="input-group">
+  <div class="input-group-prepend">
+    <input type="button" class="btn btn-info" value="&lt;" (click)="onGoBack()"/>
+    <input type="button" class="btn btn-info" value="&gt;" (click)="onGoForeward()"/>
+    <!-- <label for="url" class="input-group-text">URL</label> -->
+  </div>
+  <input type="text" id="url" [(ngModel)]="url" class="form-control" placeholder="URL"/>
+  <div class="input-group-append">
+      <input *ngIf="!(recipeSeekResult$ | async).isLoading" type="button" class="btn btn-info" value="Go" (click)="onFindRecipe()"/>
+      <input *ngIf="(recipeSeekResult$ | async).isLoading" type="button" class="btn btn-info" value="×" (click)="onCancel()"/>
+    </div>
+</div>
 
 <table *ngIf="links" class="table table-striped">
   <thead>
