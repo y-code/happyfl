@@ -16,6 +16,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyFL", "HappyFL\HappyFL.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyFLDBRelease", "HappyFLDBRelease\HappyFLDBRelease.csproj", "{BBE93D37-EDB5-4B60-AE8D-69F66AECC70F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlAgilityPack.NETStandard2_0", "html-agility-pack\src\HtmlAgilityPack.NETStandard2_0\HtmlAgilityPack.NETStandard2_0.csproj", "{F5A647D4-A124-4D20-98E9-F06866F643E3}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HtmlAgilityPack.Shared", "html-agility-pack\src\HtmlAgilityPack.Shared\HtmlAgilityPack.Shared.shproj", "{5BA9A0D7-173F-4C4F-AFFA-3DD6DC2F9A79}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +38,10 @@ Global
 		{BBE93D37-EDB5-4B60-AE8D-69F66AECC70F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBE93D37-EDB5-4B60-AE8D-69F66AECC70F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBE93D37-EDB5-4B60-AE8D-69F66AECC70F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5A647D4-A124-4D20-98E9-F06866F643E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5A647D4-A124-4D20-98E9-F06866F643E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5A647D4-A124-4D20-98E9-F06866F643E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5A647D4-A124-4D20-98E9-F06866F643E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
