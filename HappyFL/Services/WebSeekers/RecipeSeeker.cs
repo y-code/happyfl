@@ -28,7 +28,19 @@ namespace HappyFL.Services.WebSeekers
             if (Encoding != null)
                 web.OverrideEncoding = Encoding;
 
-            HtmlDocument doc = web.Load(Url);
+            HtmlDocument doc = null;
+            try
+            {
+                doc = web.Load(Url);
+            }
+            catch (EncodingNotSupportedException)
+            {
+                if (Encoding != Encoding.UTF8)
+                {
+                    Encoding = Encoding.UTF8;
+                    return Scan();
+                }
+            }
 
             var ingredientsCaptionNodes = ScanIngredientsCaptionNodes(doc);
 

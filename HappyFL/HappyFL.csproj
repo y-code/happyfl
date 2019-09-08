@@ -12,11 +12,11 @@
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
     <RootNamespace>HappyFL</RootNamespace>
 
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <PublishDir>$(OutDir)_PublishedWebsites\NetCoreWebApp\</PublishDir>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.8" />
     <PackageReference Include="Microsoft.AspNetCore.App">
       <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
       <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
@@ -38,7 +38,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HappyFLDB\HappyFLDB.csproj" />
+    <ProjectReference Include="..\HappyFLDB\HappyFLDB.csproj">
+      <GlobalPropertiesToRemove>;WebPublishProfileFile</GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Update="appsettings.json">
@@ -76,6 +78,31 @@
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </ResolvedFileToPublish>
     </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\unsubmodule\html-agility-pack\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="UnsubmoduleOnDebug" BeforeTargets="Build">
+    <Message Importance="High" Text="Run Unsubmodule if configuration is 'Debug'." />
+    <CallTarget Condition="'$(Configuration)' == 'Debug'" Targets="Unsubmodule" />
+  </Target>
+
+  <PropertyGroup>
+    <SolutionDir>$([System.IO.Path]::GetDirectoryName($(MSBuildProjectDirectory)))\</SolutionDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <HtmlAgilityPackArtifacts Include="$(SolutionDir)/html-agility-pack/src/HtmlAgilityPack.NETStandard2_0/bin/Debug/netstandard2.0/netstandard2.0/*.*" />
+  </ItemGroup>
+
+  <Target Name="Unsubmodule">
+    <Message Importance="High" Text="Copy submodule artifacts to unsubmodule dir for the use in AppHarbor.sln." />
+    <MakeDir Directories="$(SolutionDir)/unsubmodule/html-agility-pack" />
+    <Copy SourceFiles="@(HtmlAgilityPackArtifacts)" DestinationFolder="$(SolutionDir)/unsubmodule/html-agility-pack" />
   </Target>
 
 </Project>
