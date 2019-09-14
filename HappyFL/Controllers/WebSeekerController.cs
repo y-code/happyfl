@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using static HappyFL.Services.WebSeekerService;
 using System.Threading;
+using HappyFL.Models.WebSeeker;
 
 namespace HappyFL.Controllers
 {

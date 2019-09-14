@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using HappyFL.Models.WebSeeker;
 using HtmlAgilityPack;
 
 namespace HappyFL.Services.WebSeekers
@@ -45,30 +46,31 @@ namespace HappyFL.Services.WebSeekers
             }
 
             return doc.SelectNodes(k => $"//{k}", nameNodeNames)
-                .Select(n => n.InnerText.HtmlDecode());
+                .Select(n => n.InnerText.HtmlDecode().Trim());
         }
  
         protected override IEnumerable<HtmlNode> ScanIngredientsSubSectionNodes(HtmlDocument doc, HtmlNode ingredientsSectionNode)
             => ingredientsSectionNode.SelectNodes(k => $"//{k}", "ul", "ol");
 
-        protected override WebSeekerService.RecipeSeekResult.IngredientsSection ScanIngredientsSubSection(HtmlDocument doc, HtmlNode subSectionNode)
+        protected override List<string> ScanIngredientsSubSectionForNames(HtmlDocument doc, HtmlNode subSectionNode)
         {
-            var subSection = new WebSeekerService.RecipeSeekResult.IngredientsSection();
-            subSection.Ingredients = subSectionNode.SelectNodes(k => $"//{k}", "li")
-                .Select(n => n
-                    .SelectNodes(k => $"//{k}", "text()[parent::li|parent::a[parent::li]|parent::span]")
-                    .Select(n2 => n2.InnerText)
-                    .DefaultIfEmpty().Aggregate((a, b) => a + b)
-                    .HtmlDecode())
-                .ToList();
-
-            subSection.Names = subSectionNode.ParentNode.SelectNodes(k => $"/{k}", "h1", "h2", "h3", "h4", "h5")
+            var names = subSectionNode.ParentNode.SelectNodes(k => $"/{k}", "h1", "h2", "h3", "h4", "h5")
                 .Select(n => n.InnerText.HtmlDecode()).ToList();
 
-            if (subSection.Names.Contains(subSectionNode.PreviousSibling?.InnerText.HtmlDecode()))
-                subSection.Names = new List<string> { subSectionNode.PreviousSibling.InnerText.HtmlDecode() };
+            if (names.Contains(subSectionNode.PreviousSibling?.InnerText.HtmlDecode().Trim()))
+                names = new List<string> { subSectionNode.PreviousSibling.InnerText.HtmlDecode().Trim() };
 
-            return subSection;
+            return names;
         }
+
+        protected override List<string> ScanIngredientsSubSectionForIngredients(HtmlDocument doc, HtmlNode subSectionNode)
+            => subSectionNode.SelectNodes(k => $"//{k}", "li")
+                .Select(n => n
+                    .SelectNodes(k => $"//{k}", "text()[parent::li|parent::a[parent::li]|parent::span]")
+                    .Select(n2 => n2.InnerText.Trim())
+                    .DefaultIfEmpty().Aggregate((a, b) => a + " " + b)
+                    .HtmlDecode().Trim())
+                .Where(t => !string.IsNullOrEmpty(t))
+                .ToList();
     }
 }

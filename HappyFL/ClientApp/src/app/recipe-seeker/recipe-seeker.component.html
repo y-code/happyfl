@@ -66,7 +66,16 @@
         </ul>
         <table *ngIf="ingredientSection.ingredients" class="table table-striped">
           <tr *ngFor="let ingredient of ingredientSection.ingredients">
-            <td>{{ingredient}}</td>
+            <td class="container">
+              <div class="row">
+                <div class="col-12 bg-light text-dark">{{ingredient.input}}</div>
+              </div>
+              <div *ngFor="let candidate of ingredient.candidates" class="row">
+                <div class="col-4">{{candidate.name}}</div>
+                <div class="col-4">{{candidate.amount}} {{candidate.unit}}</div>
+                <div class="col-4">{{candidate.note}}</div>
+              </div>
+            </td>
           </tr>
         </table>
       </div>

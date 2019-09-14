@@ -11,6 +11,7 @@ using System.Web;
 using System.Threading;
 using System.Text;
 using HappyFL.Services.WebSeekers;
+using HappyFL.Models.WebSeeker;
 
 namespace HappyFL.Services
 {
@@ -133,17 +134,6 @@ namespace HappyFL.Services
 			return result;
 		}
 
-        public class RecipeSeekResult
-        {
-            public List<string> Names { get; set; } = new List<string>();
-            public List<IngredientsSection> IngredientsSections { get; set; } = new List<IngredientsSection>();
-            public class IngredientsSection
-            {
-                public List<string> Names { get; set; } = new List<string>();
-                public List<string> Ingredients { get; set; } = new List<string>();
-            }
-        }
-
         public List<RecipeSeekResult> FindRecipes(Uri url, CancellationToken? cancel = null)
         {
             RecipeSeeker seeker = null;
@@ -151,6 +141,12 @@ namespace HappyFL.Services
             {
                 case "www.delish.com":
                     seeker = new RecipeSeekerForDelish(url, cancel);
+                    break;
+                case "www.bbcgoodfood.com":
+                    seeker = new RecipeSeekerForBBCGoodfood(url, cancel);
+                    break;
+                case "www.allrecipes.com":
+                    seeker = new RecipeSeekerForAllRecipes(url, cancel);
                     break;
                 default:
                     seeker = new RecipeSeekerCommonA(url, cancel);
@@ -224,7 +220,7 @@ namespace HappyFL.Services
 
         public static string HtmlDecode(this string html)
         {
-            return HttpUtility.HtmlDecode(html).Trim();
+            return HttpUtility.HtmlDecode(html);
         }
     }
 }

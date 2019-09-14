@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using HappyFL.Models.WebSeeker;
 using HtmlAgilityPack;
 
 namespace HappyFL.Services.WebSeekers
@@ -12,17 +13,19 @@ namespace HappyFL.Services.WebSeekers
         public Uri Url { get; }
         public CancellationToken? Cancel { get; }
         public Encoding Encoding { get; private set; }
+        public IIngredientItemParser IngredientItemParser { get; }
 
-        public RecipeSeeker(Uri url, CancellationToken? cancel = null, Encoding encoding = null)
+        public RecipeSeeker(Uri url, CancellationToken? cancel = null, Encoding encoding = null, IIngredientItemParser ingredientItemParser = null)
         {
             Url = url;
             Cancel = cancel;
             Encoding = encoding;
+            IngredientItemParser = ingredientItemParser ?? new IngredientItemParserCommonA();
         }
 
-        public IEnumerable<WebSeekerService.RecipeSeekResult> Scan()
+        public IEnumerable<RecipeSeekResult> Scan()
         {
-            var result = new List<WebSeekerService.RecipeSeekResult>();
+            var result = new List<RecipeSeekResult>();
 
             var web = new HtmlWeb();
             if (Encoding != null)
@@ -49,7 +52,7 @@ namespace HappyFL.Services.WebSeekers
                 Cancel?.ThrowIfCancellationRequested();
 
                 var ingredientsSectionNode = ScanIngredientsSectionNode(doc, ingredientsCaptionNode);
-                var recipe = new WebSeekerService.RecipeSeekResult();
+                var recipe = new RecipeSeekResult();
                 result.Add(recipe);
 
                 recipe.Names = ScanRecipeNameCandidates(doc, ingredientsCaptionNode).ToList();
@@ -59,7 +62,14 @@ namespace HappyFL.Services.WebSeekers
                 {
                     Cancel?.ThrowIfCancellationRequested();
 
-                    recipe.IngredientsSections.Add(ScanIngredientsSubSection(doc, subSectionNode));
+                    var names = ScanIngredientsSubSectionForNames(doc, subSectionNode);
+                    var ingredients = ScanIngredientsSubSectionForIngredients(doc, subSectionNode);
+
+                    recipe.IngredientsSections.Add(new RecipeSeekResult.IngredientsSection
+                    {
+                        Names = names,
+                        Ingredients = ingredients.Select(i => IngredientItemParser.Parse(i)).ToList(),
+                    });
                 }
 
                 // refine data
@@ -72,19 +82,20 @@ namespace HappyFL.Services.WebSeekers
                             if (reliableSectionNames.Contains(i))
                                 s.Names.Remove(i);
                     });
+
+                foreach (var section in recipe.IngredientsSections.ToList())
+                    if (section.Ingredients.Count() == 0)
+                        recipe.IngredientsSections.Remove(section);
             }
 
             return result;
         }
 
         protected abstract IEnumerable<HtmlNode> ScanIngredientsCaptionNodes(HtmlDocument doc);
-
         protected abstract HtmlNode ScanIngredientsSectionNode(HtmlDocument doc, HtmlNode ingredientsCaptionNode);
-
         protected abstract IEnumerable<string> ScanRecipeNameCandidates(HtmlDocument doc, HtmlNode ingredientsCaptionNode);
-
         protected abstract IEnumerable<HtmlNode> ScanIngredientsSubSectionNodes(HtmlDocument doc, HtmlNode ingredientsSectionNode);
-
-        protected abstract WebSeekerService.RecipeSeekResult.IngredientsSection ScanIngredientsSubSection(HtmlDocument doc, HtmlNode subSectionNode);
+        protected abstract List<string> ScanIngredientsSubSectionForNames(HtmlDocument doc, HtmlNode subSectionNode);
+        protected abstract List<string> ScanIngredientsSubSectionForIngredients(HtmlDocument doc, HtmlNode subSectionNode);
     }
 }
