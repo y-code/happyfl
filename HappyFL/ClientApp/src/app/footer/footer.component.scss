@@ -1,0 +1,19 @@
+@import '../../styles.scss';
+
+.main-container {
+  @extend .container;
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+.col-app-name {
+  @extend .app-name;
+  @extend .text-primary;
+  font-size: 3em;
+  min-width: 200px;
+  padding-right: 60px;
+}
+
+.col-content {
+  flex: 1;
+}

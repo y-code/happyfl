@@ -4,3 +4,7 @@
     padding-top: 50px;
   }
 }
+
+.container-main {
+  min-height: calc(100vh - 65px);
+}

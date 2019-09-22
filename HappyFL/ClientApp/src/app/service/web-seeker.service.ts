@@ -32,4 +32,29 @@ export class LinkInfo {
 }
 
 export class RecipeSeekResult {
+  public names: string[];
+  public ingredientsSections: {
+    names: string[];
+    ingredients: {
+      input: string;
+      candidates: Ingredient[];
+    }[];
+  }[];
+}
+
+export class Recipe {
+  public name: string;
+  public ingredientsSections: IngredientsSection[] = [];
+}
+
+export class IngredientsSection {
+  name: string;
+  ingredients: Ingredient[] = [];
+}
+
+export class Ingredient {
+  name: string;
+  amount: number;
+  unit: string;
+  note: string;
 }

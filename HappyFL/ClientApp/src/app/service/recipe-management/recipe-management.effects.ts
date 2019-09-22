@@ -34,7 +34,7 @@ export class RecipeManagementEffects {
     ofType(RecipeManagementAction.requestRecipeSeek),
     exhaustMap(action =>
       this.webSeekerService.findRecipes(action.url).pipe(
-        map(result => RecipeManagementAction.receiveRecipeSeekResult({ url: action.url, result })),
+        map(result => RecipeManagementAction.receiveRecipeSeekResult({ url: action.url, result: (result && result.length > 0 ? result[0] : null) })),
         catchError(() => EMPTY),
         takeUntil(
           this.actions$.pipe(

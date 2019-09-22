@@ -1,85 +1,84 @@
-<h1>Recipe Seeker</h1>
+<div class="container">
 
-<div class="input-group">
-  <div class="input-group-prepend">
-    <input type="button" class="btn btn-info" value="&lt;" (click)="onGoBack()"/>
-    <input type="button" class="btn btn-info" value="&gt;" (click)="onGoForeward()"/>
-    <!-- <label for="url" class="input-group-text">URL</label> -->
-  </div>
-  <input type="text" id="url" [(ngModel)]="url" class="form-control" placeholder="URL"/>
-  <div class="input-group-append">
-      <input *ngIf="!(recipeSeekResult$ | async).isLoading" type="button" class="btn btn-info" value="Go" (click)="onFindRecipe()"/>
-      <input *ngIf="(recipeSeekResult$ | async).isLoading" type="button" class="btn btn-info" value="×" (click)="onCancel()"/>
+  <div class="row header sticky-top bg-light">
+    <div class="col-12 align-self-center">
+      <h1 class="text-center app-name">Recipe Seeker</h1>
     </div>
-</div>
-
-<table *ngIf="links" class="table table-striped">
-  <thead>
-    <tr>
-      <th>Link</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let link of links">
-      <td><a (click)="seekWeb(link.url)">{{link.caption}}</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<table *ngIf="imageLinks" class="table table-striped">
-  <thead>
-    <tr>
-      <th>Image</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let image of imageLinks">
-      <td><div class="found-image"><img src="{{baseUrl}}api/WebSeeker/image?url={{image.encodedUrl}}" title="{{image.caption}}"/></div></td>
-    </tr>
-  </tbody>
-</table>
-
-<div *ngIf="(recipeSeekResult$ | async)">
-  <div *ngIf="(recipeSeekResult$ | async).isLoading">
-    Loading...
+    <div class="col-12 text-right site-link">
+      <a class="" href="{{url}}">Open in {{getSiteDomain()}}</a>
+    </div>
   </div>
-</div>
 
-<div *ngIf="(recipeSeekResult$ | async)">
-  <div *ngIf="(recipeSeekResult$ | async).isCancelled">
-    Cancelled
+  <div
+    *ngIf="(recipeSeekResult$ | async) && (recipeSeekResult$ | async).isLoading"
+    class="row fill-window">
+    <div class="col-12 align-self-center text-center">
+      Loading...
+    </div>
   </div>
-</div>
 
-<div *ngIf="(recipeSeekResult$ | async)">
-  <div *ngIf="(recipeSeekResult$ | async).data">
-    <div *ngFor="let result of (recipeSeekResult$ | async).data">
-      <h2>Name</h2>
-      <ul *ngFor="let name of result.names">
-        <li>{{name}}</li>
-      </ul>
-      <h2>Ingredients</h2>
-      <div *ngFor="let ingredientSection of result.ingredientsSections">
-        <h3>Section</h3>
-        <ul *ngFor="let name of ingredientSection.names">
-          <li>{{name}}</li>
-        </ul>
-        <table *ngIf="ingredientSection.ingredients" class="table table-striped">
-          <tr *ngFor="let ingredient of ingredientSection.ingredients">
-            <td class="container">
-              <div class="row">
-                <div class="col-12 bg-light text-dark">{{ingredient.input}}</div>
-              </div>
-              <div *ngFor="let candidate of ingredient.candidates" class="row">
-                <div class="col-4">{{candidate.name}}</div>
-                <div class="col-4">{{candidate.amount}} {{candidate.unit}}</div>
-                <div class="col-4">{{candidate.note}}</div>
-              </div>
-            </td>
-          </tr>
-        </table>
+  <div
+    *ngIf="(recipeSeekResult$ | async) && (recipeSeekResult$ | async).isCancelled"
+    class="row fill-window">
+    <div class="col-12 align-self-center">
+      <div class="text-center">
+        Cancelled
       </div>
     </div>
   </div>
-</div>
 
+  <div
+    *ngIf="(recipeSeekResult$ | async) && !(recipeSeekResult$ | async).isLoading && !(recipeSeekResult$ | async).isCancelled"
+    class="row no-gutters">
+    <div class="col-12">
+      <div class="form-group">
+        <label for="recipeName">Recipe Name</label>
+        <app-candidates-combobox
+          name="recipeName"
+          placeholder="Please enter this recipe's name."
+          [(ngModel)]="recipeName"
+          [options]="(recipeSeekResult$ | async).data.names">
+        </app-candidates-combobox>
+      </div>
+
+      <h3>Ingredients</h3>
+      <div
+        *ngFor="let ingredientSection of (recipeSeekResult$ | async).data.ingredientsSections; let i = index">
+        <h4>Section {{(i + 10).toString(36).toUpperCase()}}</h4>
+        <div class="form-group">
+          <label for="sectionName">Section Name</label>
+          <app-candidates-combobox
+            name="sectionName"
+            placeholder="Please enter this section's name, if you need it."
+            [(ngModel)]="sectionName"
+            [options]="ingredientSection.names">
+          </app-candidates-combobox>
+        </div>
+        <div class="form-group">
+          <label>Ingredients ({{ingredientSection.ingredients.length}})</label>
+          <div *ngIf="ingredientSection.ingredients">
+            <div
+              class="row ingredient-row"
+              *ngFor="let ingredient of ingredientSection.ingredients; let j = index;">
+              <app-ingredient-candidates-combobox
+                class="col-12"
+                name="ingredient-{{i}}-{{j}}-"
+                [(ngModel)]="recipe.ingredientsSections[i].ingredients[j]"
+                [options]="ingredient.candidates"
+                [original]="ingredient.input">
+              </app-ingredient-candidates-combobox>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center row-btn">
+        <span
+          class="btn btn-primary btn-save"
+          (click)="test()">
+          Save
+        </span>
+      </div>
+    </div>
+  </div>
+
+</div>

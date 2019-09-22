@@ -27,7 +27,6 @@ namespace HappyFL.Services.WebSeekers
             protected string _value;
             public string Value
                 => _value ?? Tokens?
-                //.SelectMany(t => new string[] { (t.Type == TokenType.Unit || (Type == TokenType.Unit && t.Value == ".") ? "" : " "), t.Value })
                 .SelectMany(t => new string[] { ((Type == TokenType.Unit && t.Value == ".") ? "" : " "), t.Value })
                 .DefaultIfEmpty().Aggregate((a, b) => a + b)
                 .Trim();
@@ -183,15 +182,15 @@ namespace HappyFL.Services.WebSeekers
             {
                 { new Keyword("teaspoon", StringComparer.InvariantCultureIgnoreCase), "teaspoon" },
                 { new Keyword("teaspoons", StringComparer.InvariantCultureIgnoreCase), "teaspoon" },
-                { new Keyword("tea spoon", StringComparer.InvariantCultureIgnoreCase), "teaspoon" },
-                { new Keyword("tea spoons", StringComparer.InvariantCultureIgnoreCase), "teaspoon" },
+                { new Keyword("heaped teaspoon", StringComparer.InvariantCultureIgnoreCase), "teaspoon" },
+                { new Keyword("heaped teaspoons", StringComparer.InvariantCultureIgnoreCase), "teaspoon" },
                 { new Keyword("tsp .", StringComparer.InvariantCultureIgnoreCase), "teaspoon" },
                 { new Keyword("tsp", StringComparer.InvariantCultureIgnoreCase), "teaspoon" },
                 { new Keyword("t", StringComparer.InvariantCulture), "teaspoon" },
                 { new Keyword("tablespoon", StringComparer.InvariantCultureIgnoreCase), "tablespoon" },
                 { new Keyword("tablespoons", StringComparer.InvariantCultureIgnoreCase), "tablespoon" },
-                { new Keyword("table spoon", StringComparer.InvariantCultureIgnoreCase), "tablespoon" },
-                { new Keyword("table spoons", StringComparer.InvariantCultureIgnoreCase), "tablespoon" },
+                { new Keyword("heaped tablespoon", StringComparer.InvariantCultureIgnoreCase), "tablespoon" },
+                { new Keyword("heaped tablespoons", StringComparer.InvariantCultureIgnoreCase), "tablespoon" },
                 { new Keyword("tbl .", StringComparer.InvariantCultureIgnoreCase), "tablespoon" },
                 { new Keyword("tbl", StringComparer.InvariantCultureIgnoreCase), "tablespoon" },
                 { new Keyword("tbs .", StringComparer.InvariantCultureIgnoreCase), "tablespoon" },

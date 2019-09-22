@@ -8,4 +8,4 @@ export const requestRecipes = createAction('[Recipe Management] Request Recipes'
 export const receiveRecipes = createAction('[Recipe Management] Receive Recipe', props<{ dishId: number, recipes: Recipe[] }>());
 export const requestRecipeSeek = createAction('[Recipe Management] Request Recipe Seek', props<{ url: string }>());
 export const cancelRecipeSeek = createAction('[Recipe Management] Cancel Recipe Seek', props<{ url: string }>());
-export const receiveRecipeSeekResult = createAction('[Recipe Management] Receive Recipe Seek Result', props<{ url: string, result: RecipeSeekResult[] }>());
+export const receiveRecipeSeekResult = createAction('[Recipe Management] Receive Recipe Seek Result', props<{ url: string, result: RecipeSeekResult }>());

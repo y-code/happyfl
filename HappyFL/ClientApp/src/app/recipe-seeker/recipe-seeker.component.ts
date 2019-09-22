@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, Output, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, Inject, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { WebSeekerService, LinkInfo, RecipeSeekResult } from '../service/web-seeker.service';
+import { WebSeekerService, LinkInfo, RecipeSeekResult, Recipe, Ingredient, IngredientsSection } from '../service/web-seeker.service';
 import { Store } from '@ngrx/store';
 import { requestRecipeSeek, cancelRecipeSeek } from '../service/recipe-management/recipe-management.actions';
 
@@ -15,11 +15,16 @@ export class RecipeSeekerComponent implements OnInit {
   @Output()
   public url: string;
 
-  public historyCursor: number = -1;
-  public history: (() => string)[] = [];
-
   public links: LinkInfo[];
   public imageLinks: LinkInfoPlus[];
+
+  @Input()
+  @Output()
+  public recipeName: string;
+
+  public sectionName: string;
+
+  public recipe: Recipe = new Recipe();
 
   recipeSeekResult$ = this.store.select(state => state.recipeManagement.recipeSeekResult);
 
@@ -31,12 +36,22 @@ export class RecipeSeekerComponent implements OnInit {
         recipeSeekResult: {
           isLoading: boolean,
           url: string,
-          data: RecipeSeekResult[]
+          data: RecipeSeekResult
         }
       }
     }>,
     private route: ActivatedRoute,
-  ) { }
+  ) {
+    this.recipe = new Recipe();
+    for (let n = 0; n < 10; n++) {
+      let s = new IngredientsSection();
+      for (let m = 0; m < 100; m++) {
+        s.ingredients.push(new Ingredient());
+      }
+      this.recipe.ingredientsSections.push(s);
+    }
+
+  }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -44,26 +59,36 @@ export class RecipeSeekerComponent implements OnInit {
 
       this.findRecipe(this.url);
     });
+
+    this.recipeSeekResult$.subscribe(state => {
+      if (!state.data || !state.data.names)
+        return;
+      this.recipeName = state.data.names.length ? state.data.names[0] : '';
+
+      this.recipe = new Recipe();
+      for (let section of state.data.ingredientsSections) {
+        let s = new IngredientsSection();
+        for (let ingredient of section.ingredients) {
+          let i = ingredient.candidates.length
+            ? { ...ingredient.candidates[0] }
+            : new Ingredient();
+          s.ingredients.push(i);
+        }
+        this.recipe.ingredientsSections.push(s);
+      }
+    });
   }
 
-  onFindRecipe()  {
-    this.runWithHistory(this.url, u => this.findRecipe(u));
+  getSiteDomain(): string {
+    var parts = this.url.split('/');
+    if (parts.length < 3)
+      return "";
+    else
+      return parts[2];
   }
 
-  onFindImages() {
-    this.runWithHistory(this.url, u => this.findImages(u));
-  }
-
-  runWithHistory(url: string, run: (url: string) => void) {
-    this.historyCursor++;
-    while (this.history.length > this.historyCursor)
-      this.history.pop();
-    let execRun = () => {
-      run(url);
-      return url;
-    }
-    this.history.push(execRun);
-    execRun();
+  test() {
+    console.log(this.recipe);
   }
 
   findRecipe(url: string) {
@@ -71,39 +96,6 @@ export class RecipeSeekerComponent implements OnInit {
     this.imageLinks = undefined;
 
     this.store.dispatch(requestRecipeSeek({url}));
-  }
-
-  findImages(url: string) {
-    this.links = undefined;
-    this.imageLinks = undefined;
-    this.webSeekerService.FindLinksWithImage(url).subscribe(result => {
-      this.links = result;
-    })
-    this.webSeekerService.FindImageLinks(url).subscribe(result => {
-      this.imageLinks = result as LinkInfoPlus[];
-      this.imageLinks.map(l => l.encodedUrl = encodeURIComponent(l.url));
-    });
-  }
-
-  seekWeb(url: string) {
-    this.url = url;
-    this.onFindImages();
-  }
-
-  onGoBack() {
-    if (this.historyCursor == 0)
-      return;
-    this.historyCursor--;
-    let run = this.history[this.historyCursor];
-    this.url = run();
-  }
-
-  onGoForeward() {
-    if (this.historyCursor + 1 >= this.history.length)
-      return;
-    this.historyCursor++;
-    let run = this.history[this.historyCursor];
-    this.url = run();
   }
 
   onCancel() {
