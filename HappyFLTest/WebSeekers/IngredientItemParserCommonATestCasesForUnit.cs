@@ -71,7 +71,7 @@ namespace HappyFL.Test.WebSeekers
             {
                 new TestCommonATestCase
                 {
-                    Input = "2 table-spoon - allspice berries",
+                    Input = "2 heaped-tablespoon - allspice berries",
                     Expected =
                     {
                         new TestCommonATestCase.ExpectedResult
@@ -86,7 +86,7 @@ namespace HappyFL.Test.WebSeekers
             {
                 new TestCommonATestCase
                 {
-                    Input = "2 table spoon - allspice berries",
+                    Input = "2 heaped tablespoon - allspice berries",
                     Expected =
                     {
                         new TestCommonATestCase.ExpectedResult
@@ -101,7 +101,7 @@ namespace HappyFL.Test.WebSeekers
             {
                 new TestCommonATestCase
                 {
-                    Input = "2 table_spoon - allspice berries",
+                    Input = "2 heaped_tablespoon - allspice berries",
                     Expected =
                     {
                         new TestCommonATestCase.ExpectedResult
