@@ -7,7 +7,7 @@
 <div *ngIf="(recipes$ | async).data">
   <div *ngFor="let recipe of (recipes$ | async).data">
     <h2>{{recipe.name}}</h2>
-    <a href="{{recipe.urlOfBase}}">{{recipe.urlOfBase}}</a>
+    <a href="{{recipe.urlOfBase}}" target="_blank">{{recipe.urlOfBase}}</a>
     <table class="table table-striped">
       <thead>
         <tr>

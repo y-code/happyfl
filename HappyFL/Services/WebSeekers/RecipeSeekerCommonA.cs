@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using HappyFL.DB.RecipeManagement;
 using HappyFL.Models.WebSeeker;
 using HtmlAgilityPack;
 
@@ -52,18 +53,32 @@ namespace HappyFL.Services.WebSeekers
         protected override IEnumerable<HtmlNode> ScanIngredientsSubSectionNodes(HtmlDocument doc, HtmlNode ingredientsSectionNode)
             => ingredientsSectionNode.SelectNodes(k => $"//{k}", "ul", "ol");
 
-        protected override List<string> ScanIngredientsSubSectionForNames(HtmlDocument doc, HtmlNode subSectionNode)
+        protected override ScannedIngredientSection ScanIngredientSection(HtmlDocument doc, HtmlNode subSectionNode)
         {
-            var names = subSectionNode.ParentNode.SelectNodes(k => $"/{k}", "h1", "h2", "h3", "h4", "h5")
-                .Select(n => n.InnerText.HtmlDecode()).ToList();
+            var candidates = subSectionNode.ParentNode.SelectNodes(k => $"/{k}", "h1", "h2", "h3", "h4", "h5")
+                .Select(n =>
+                {
+                    var candidate = new IngredientSection
+                    {
+                        Name = n.InnerText.HtmlDecode().Trim()
+                    };
+                    return candidate;
+                }).ToList();
 
-            if (names.Contains(subSectionNode.PreviousSibling?.InnerText.HtmlDecode().Trim()))
-                names = new List<string> { subSectionNode.PreviousSibling.InnerText.HtmlDecode().Trim() };
+            var closestName = subSectionNode.PreviousSibling?.InnerText.HtmlDecode().Trim();
+            IngredientSection closestCandidate = candidates.FirstOrDefault(c => c.Name == closestName);
+            if (closestCandidate != null)
+                candidates = new List<IngredientSection> { closestCandidate };
 
-            return names;
+            var scanned = new ScannedIngredientSection
+            {
+                Candidates = candidates,
+            };
+
+            return scanned;
         }
 
-        protected override List<string> ScanIngredientsSubSectionForIngredients(HtmlDocument doc, HtmlNode subSectionNode)
+        protected override List<string> ScanIngredientsFromIngredientSection(HtmlDocument doc, HtmlNode subSectionNode)
             => subSectionNode.SelectNodes(k => $"//{k}", "li")
                 .Select(n => n
                     .SelectNodes(k => $"//{k}", "text()[parent::li|parent::a[parent::li]|parent::span]")

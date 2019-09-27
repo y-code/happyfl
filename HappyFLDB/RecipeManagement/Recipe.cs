@@ -9,11 +9,11 @@ namespace HappyFL.DB.RecipeManagement
     public class Recipe
     {
         [Column("recipe_id"), Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+        public long? Id { get; set; }
         [Column("name")]
         public string Name { get; set; }
         [Column("url_of_base")]
-        public string UrlofBase { get; set; }
+        public string UrlOfBase { get; set; }
         [ForeignKey("dish_id")]
         public Dish Dish { get; set; }
         public ICollection<Ingredient> Ingredients { get; set; }

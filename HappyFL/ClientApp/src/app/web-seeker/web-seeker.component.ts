@@ -1,7 +1,5 @@
 import { Component, OnInit, Input, Output, Inject } from '@angular/core';
-import { WebSeekerService, LinkInfo, RecipeSeekResult } from '../service/web-seeker.service';
-import { Store } from '@ngrx/store';
-import { requestRecipeSeek } from '../service/recipe-management/recipe-management.actions';
+import { WebSeekerService, LinkInfo } from '../service/web-seeker/web-seeker.service';
 
 @Component({
   selector: 'app-web-seeker',

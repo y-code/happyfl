@@ -6,6 +6,6 @@ namespace HappyFL.Services.WebSeekers
 {
     public interface IRecipeSeeker
     {
-        IEnumerable<RecipeSeekResult> Scan();
+        IEnumerable<ScannedRecipe> Scan();
     }
 }

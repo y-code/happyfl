@@ -7,6 +7,6 @@ namespace HappyFL.Services.WebSeekers
 {
     public interface IIngredientItemParser
     {
-        RecipeSeekResult.IngredientItem Parse(string input);
+        ScannedIngredient  Parse(string input);
     }
 }

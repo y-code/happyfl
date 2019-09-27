@@ -23,9 +23,9 @@ namespace HappyFL.Services.WebSeekers
             IngredientItemParser = ingredientItemParser ?? new IngredientItemParserCommonA();
         }
 
-        public IEnumerable<RecipeSeekResult> Scan()
+        public IEnumerable<ScannedRecipe> Scan()
         {
-            var result = new List<RecipeSeekResult>();
+            var scanned = new List<ScannedRecipe>();
 
             var web = new HtmlWeb();
             if (Encoding != null)
@@ -52,8 +52,8 @@ namespace HappyFL.Services.WebSeekers
                 Cancel?.ThrowIfCancellationRequested();
 
                 var ingredientsSectionNode = ScanIngredientsSectionNode(doc, ingredientsCaptionNode);
-                var recipe = new RecipeSeekResult();
-                result.Add(recipe);
+                var recipe = new ScannedRecipe();
+                scanned.Add(recipe);
 
                 recipe.Names = ScanRecipeNameCandidates(doc, ingredientsCaptionNode).ToList();
 
@@ -62,40 +62,65 @@ namespace HappyFL.Services.WebSeekers
                 {
                     Cancel?.ThrowIfCancellationRequested();
 
-                    var names = ScanIngredientsSubSectionForNames(doc, subSectionNode);
-                    var ingredients = ScanIngredientsSubSectionForIngredients(doc, subSectionNode);
+                    var section = ScanIngredientSection(doc, subSectionNode);
 
-                    recipe.IngredientsSections.Add(new RecipeSeekResult.IngredientsSection
+                    var ingredients = ScanIngredientsFromIngredientSection(doc, subSectionNode);
+
+                    recipe.Ingredients.AddRange(ingredients.Select(i =>
                     {
-                        Names = names,
-                        Ingredients = ingredients.Select(i => IngredientItemParser.Parse(i)).ToList(),
-                    });
+                        var d = IngredientItemParser.Parse(i);
+                        d.Section = section;
+                        return d;
+                    }));
                 }
 
                 // refine data
-                var reliableSectionNames = recipe.IngredientsSections.Where(s => s.Names.Count == 1)
-                    .SelectMany(s => s.Names).ToList();
-                recipe.IngredientsSections.Where(s => s.Names.Count > 1)
+                var sections = recipe.Ingredients.Select(i => i.Section).Distinct();
+                var reliableSectionNames = sections.Where(s => s.Candidates.Count == 1)
+                    .SelectMany(s => s.Candidates).ToList();
+                sections.Where(s => s.Candidates.Count > 1)
                     .ToList().ForEach(s =>
                     {
-                        foreach (var i in s.Names.ToList())
+                        foreach (var i in s.Candidates.ToList())
                             if (reliableSectionNames.Contains(i))
-                                s.Names.Remove(i);
+                                s.Candidates.Remove(i);
                     });
-
-                foreach (var section in recipe.IngredientsSections.ToList())
-                    if (section.Ingredients.Count() == 0)
-                        recipe.IngredientsSections.Remove(section);
             }
 
-            return result;
+            AppendTemporaryIndecies(scanned);
+
+            return scanned;
+        }
+
+        private void AppendTemporaryIndecies(List<ScannedRecipe> scanned)
+        {
+            int sequenceForRecipe = 0;
+            int sequenceForIngredientSection = 0;
+            int sequenceForIngredient = 0;
+
+            foreach (var recipe in scanned)
+            {
+                recipe.Id = --sequenceForRecipe;
+                foreach (var s in recipe.Ingredients
+                    .Select(i =>
+                    {
+                        i.Id = --sequenceForIngredient;
+                        return i.Section;
+                    })
+                    .Distinct())
+                {
+                    s.Id = --sequenceForIngredientSection;
+                }
+            }
+
+
         }
 
         protected abstract IEnumerable<HtmlNode> ScanIngredientsCaptionNodes(HtmlDocument doc);
         protected abstract HtmlNode ScanIngredientsSectionNode(HtmlDocument doc, HtmlNode ingredientsCaptionNode);
         protected abstract IEnumerable<string> ScanRecipeNameCandidates(HtmlDocument doc, HtmlNode ingredientsCaptionNode);
         protected abstract IEnumerable<HtmlNode> ScanIngredientsSubSectionNodes(HtmlDocument doc, HtmlNode ingredientsSectionNode);
-        protected abstract List<string> ScanIngredientsSubSectionForNames(HtmlDocument doc, HtmlNode subSectionNode);
-        protected abstract List<string> ScanIngredientsSubSectionForIngredients(HtmlDocument doc, HtmlNode subSectionNode);
+        protected abstract ScannedIngredientSection ScanIngredientSection(HtmlDocument doc, HtmlNode subSectionNode);
+        protected abstract List<string> ScanIngredientsFromIngredientSection(HtmlDocument doc, HtmlNode subSectionNode);
     }
 }

@@ -11,7 +11,7 @@ namespace HappyFL.Services.WebSeekers
         public RecipeSeekerForBBCGoodfood(Uri url, CancellationToken? cancel = null)
             : base(url, cancel) { }
 
-        protected override List<string> ScanIngredientsSubSectionForIngredients(HtmlDocument doc, HtmlNode subSectionNode)
+        protected override List<string> ScanIngredientsFromIngredientSection(HtmlDocument doc, HtmlNode subSectionNode)
             => subSectionNode.SelectNodes(k => $"//{k}", "li")
                 .Select(n => n
                     .SelectNodes(k => $"//{k}", "text()[(parent::li|parent::a[parent::li]|parent::span) and not(ancestor::article[contains(@class, 'glossary')])]")

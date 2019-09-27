@@ -293,6 +293,8 @@ namespace HappyFL.Services.WebSeekers
                 { new Keyword("a bunch of", StringComparer.InvariantCultureIgnoreCase), "bunch" },
                 { new Keyword("bunches", StringComparer.InvariantCultureIgnoreCase), "bunch" },
                 { new Keyword("bunches of", StringComparer.InvariantCultureIgnoreCase), "bunch" },
+                { new Keyword("handful", StringComparer.InvariantCultureIgnoreCase), "handful" },
+                { new Keyword("handful of", StringComparer.InvariantCultureIgnoreCase), "handful" },
                 { new Keyword("splash", StringComparer.InvariantCultureIgnoreCase), "splash" },
                 { new Keyword("splash of", StringComparer.InvariantCultureIgnoreCase), "splash" },
                 { new Keyword("a splash of", StringComparer.InvariantCultureIgnoreCase), "splash" },
@@ -320,7 +322,6 @@ namespace HappyFL.Services.WebSeekers
         private ConcurrentBag<string> _calculusSymbols = new ConcurrentBag<string>(new List<string>
         {
             "+",
-            //"-",
             "/",
             "*",
         });
@@ -405,10 +406,10 @@ namespace HappyFL.Services.WebSeekers
             });
         }
 
-        public RecipeSeekResult.IngredientItem Parse(string input)
+        public ScannedIngredient Parse(string input)
         {
             if (string.IsNullOrEmpty(input))
-                return new RecipeSeekResult.IngredientItem { Input = input };
+                return new ScannedIngredient { Input = input };
 
             var tokens = Tokenize(input);
             tokens = RecognizeKeywords(
@@ -427,7 +428,7 @@ namespace HappyFL.Services.WebSeekers
             tokens = RecognizeAmountUnitTokens(tokens);
             tokens = RecognizeAmountTokens(tokens);
 
-            var results = new RecipeSeekResult.IngredientItem
+            var results = new ScannedIngredient
             {
                 Input = input
             };

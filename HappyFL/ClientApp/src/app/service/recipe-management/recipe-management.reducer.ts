@@ -1,5 +1,6 @@
 import * as RecipeManagementAction from './recipe-management.actions';
 import { createReducer, on, Action } from '@ngrx/store';
+import { state } from '@angular/animations';
 
 export interface RecipeManagementState {
   dishes: {},
@@ -64,6 +65,20 @@ export const RecipeManagementReducer = createReducer(initialState,
       url: action.url,
       data: action.result,
     },
+  })),
+  on(RecipeManagementAction.requestSaveRecipe, (state, action) => ({
+    ...state,
+    saveRecipe: {
+      isSaving: true,
+    },
+  })),
+  on(RecipeManagementAction.receiveResponseForSaveRecipe, (state, action) => ({
+    ...state,
+    saveRecipe: {
+      isSaving: false,
+      isSuccess: action.isSuccess,
+      message: action.message,
+    }
   }))
 );
 

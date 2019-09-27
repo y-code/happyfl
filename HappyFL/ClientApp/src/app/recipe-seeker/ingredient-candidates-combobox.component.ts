@@ -1,8 +1,8 @@
-import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, Inject } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, Inject } from '@angular/core';
 import { ValueAccessorBase } from '../shared/value-accessor-base';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Ingredient } from '../service/web-seeker.service';
 import { DOCUMENT } from '@angular/common';
+import { Ingredient } from '../model/recipe-management';
 
 @Component({
   selector: 'app-ingredient-candidates-combobox',
@@ -22,7 +22,8 @@ import { DOCUMENT } from '@angular/common';
                   type="text"
                   class="ingredient-candidate-name form-control"
                   placeholder="Ingredient Name"
-                  [(ngModel)]="_name"
+                  [ngModel]="value?.name"
+                  (ngModelChange)="value.name = $event"
                   (mousedown)="$event.stopPropagation(); showOptions()"
                   (focus)="showOptions()"
                   (focusout)="hideOptions()" />
@@ -33,7 +34,8 @@ import { DOCUMENT } from '@angular/common';
                   type="text"
                   class="ingredient-candidate-amount form-control"
                   placeholder="Amount"
-                  [(ngModel)]="_amount"
+                  [ngModel]="value?.amount"
+                  (ngModelChange)="value.amount = $event"
                   (mousedown)="$event.stopPropagation(); showOptions()"
                   (focus)="showOptions()"
                   (focusout)="hideOptions()" />
@@ -44,7 +46,8 @@ import { DOCUMENT } from '@angular/common';
                   type="text"
                   class="ingredient-candidate-unit form-control"
                   placeholder="Unit"
-                  [(ngModel)]="_unit"
+                  [ngModel]="value?.unit"
+                  (ngModelChange)="value.unit = $event"
                   (mousedown)="$event.stopPropagation(); showOptions()"
                   (focus)="showOptions()"
                   (focusout)="hideOptions()" />
@@ -55,7 +58,8 @@ import { DOCUMENT } from '@angular/common';
                   type="text"
                   class="ingredient-candidate-note form-control"
                   placeholder="Please enter any notes if you have."
-                  [(ngModel)]="_note"
+                  [ngModel]="value?.note"
+                  (ngModelChange)="value.note = $event"
                   (mousedown)="$event.stopPropagation(); showOptions()"
                   (focus)="showOptions()"
                   (focusout)="hideOptions()" />
@@ -113,8 +117,17 @@ export class IngredientCandidatesComboboxComponent extends ValueAccessorBase<Ing
   @Input()
   public placeholder: string;
 
+  private _options: Ingredient[];
   @Input()
-  public options: Ingredient[];
+  public set options(value: Ingredient[]) {
+    this._options = value;
+    if (this._options.length) {
+      this.updateValue(this._options[0]);
+    }
+  }
+  public get options(): Ingredient[] {
+    return this._options;
+  }
 
   @Input()
   public original: string;
@@ -133,37 +146,9 @@ export class IngredientCandidatesComboboxComponent extends ValueAccessorBase<Ing
   @ViewChild("noteInput", { static: true })
   public noteInputElement: ElementRef;
 
-  public get _name(): string {
-    return this.value ? this.value.name : null;
-  }
-  public set _name(value: string) {
-    this.value.name = value;
-  }
-
-  public get _amount(): number {
-    return this.value ? this.value.amount : null;
-  }
-  public set _amount(value: number) {
-    this.value.amount = value;
-  }
-
-  public get _unit(): string {
-    return this.value ? this.value.unit : null;
-  }
-  public set _unit(value: string) {
-    this.value.unit = value;
-  }
-
-  public get _note(): string {
-    return this.value ? this.value.note : null;
-  }
-  public set _note(value: string) {
-    this.value.note = value;
-  }
-
   constructor(
     @Inject(DOCUMENT)
-    private document: Document
+    private document: Document,
   ) {
     super();
   }
@@ -171,8 +156,15 @@ export class IngredientCandidatesComboboxComponent extends ValueAccessorBase<Ing
   ngOnInit() {
   }
 
+  private updateValue(newValue: Ingredient) {
+    if (!this.value)
+      return;
+    for (let propName in newValue)
+      this.value[propName] = newValue[propName];
+  }
+
   onOptionClick(event: Event, option: Ingredient): void {
-    this.value = { ...option };
+    this.updateValue(option);
     this.putBackFocus();
     event.preventDefault();
   }

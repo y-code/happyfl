@@ -11,8 +11,8 @@ namespace HappyFL.Services.WebSeekers
         public RecipeSeekerForAllRecipes(Uri url, CancellationToken? cancel = null)
             : base(url, cancel) { }
 
-        protected override List<string> ScanIngredientsSubSectionForIngredients(HtmlDocument doc, HtmlNode subSectionNode)
-            => base.ScanIngredientsSubSectionForIngredients(doc, subSectionNode)
+        protected override List<string> ScanIngredientsFromIngredientSection(HtmlDocument doc, HtmlNode subSectionNode)
+            => base.ScanIngredientsFromIngredientSection(doc, subSectionNode)
                 .Where(i =>
                 {
                     switch (i)

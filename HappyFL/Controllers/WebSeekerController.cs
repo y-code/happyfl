@@ -7,17 +7,28 @@ using System.Threading.Tasks;
 using static HappyFL.Services.WebSeekerService;
 using System.Threading;
 using HappyFL.Models.WebSeeker;
+using HappyFL.DB;
+using HappyFL.DB.RecipeManagement;
+using Microsoft.Extensions.Logging;
 
 namespace HappyFL.Controllers
 {
 	[Route("api/[controller]")]
 	public class WebSeekerController : Controller
 	{
-		WebSeekerService _webSeekerService;
+        ILogger<WebSeekerController> _logger;
 
-		public WebSeekerController(WebSeekerService webSeekerService)
+        WebSeekerService _webSeekerService;
+        HappyFLDbContext _dbContext;
+
+        public WebSeekerController(
+            ILogger<WebSeekerController> logger,
+            WebSeekerService webSeekerService,
+            HappyFLDbContext dbContext)
 		{
+            _logger = logger;
 			_webSeekerService = webSeekerService;
+            _dbContext = dbContext;
 		}
 
 		[HttpGet("[action]")]
@@ -58,7 +69,7 @@ namespace HappyFL.Controllers
 		}
 
         [HttpGet("[action]")]
-        public async Task<IEnumerable<RecipeSeekResult>> FindRecipes(string url, CancellationToken cancel)
+        public async Task<IEnumerable<ScannedRecipe>> FindRecipes(string url, CancellationToken cancel)
         {
             return await Task.Run(() => _webSeekerService.FindRecipes(new Uri(url), cancel), cancel);
         }

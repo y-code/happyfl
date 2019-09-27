@@ -29,7 +29,7 @@ namespace HappyFL.DevDBSetup.RecipeManagement
                         new Recipe
                         {
                             Name = "Mapo Tofu - Recipe 1",
-                            UrlofBase = "https://omnivorescookbook.com/authentic-mapo-tofu/",
+                            UrlOfBase = "https://omnivorescookbook.com/authentic-mapo-tofu/",
                             Ingredients = new List<Ingredient>
                             {
                                 new Ingredient
@@ -157,7 +157,7 @@ namespace HappyFL.DevDBSetup.RecipeManagement
                         new Recipe
                         {
                             Name = "Mapo Tofu - Recipe 2",
-                            UrlofBase = "https://www.chinasichuanfood.com/mapo-tofu-recipe/",
+                            UrlOfBase = "https://www.chinasichuanfood.com/mapo-tofu-recipe/",
                             Ingredients = new List<Ingredient>
                             {
                                 new Ingredient
@@ -292,7 +292,7 @@ namespace HappyFL.DevDBSetup.RecipeManagement
                         new Recipe
                         {
                             Name = "Mapo Tofu - Recipe 3",
-                            UrlofBase = "https://thewoksoflife.com/ma-po-tofu-real-deal/",
+                            UrlOfBase = "https://thewoksoflife.com/ma-po-tofu-real-deal/",
                             Ingredients = new List<Ingredient>
                             {
                                 new Ingredient

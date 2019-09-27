@@ -15,34 +15,34 @@ using HappyFL.Models.WebSeeker;
 
 namespace HappyFL.Services
 {
-	public class WebSeekerService
-	{
-		ILogger<WebSeekerService> _logger;
+    public class WebSeekerService
+    {
+        ILogger<WebSeekerService> _logger;
 
-		public WebSeekerService(ILogger<WebSeekerService> logger)
-		{
-			_logger = logger;
-		}
+        public WebSeekerService(ILogger<WebSeekerService> logger)
+        {
+            _logger = logger;
+        }
 
-		public List<LinkInfo> FindLinksWithImage(Uri url)
-		{
-			var result = new List<LinkInfo>();
+        public List<LinkInfo> FindLinksWithImage(Uri url)
+        {
+            var result = new List<LinkInfo>();
 
-			var web = new HtmlWeb();
-			var html = web.Load(url.AbsoluteUri);
-			foreach (var a in html.DocumentNode.SelectNodes("//a[.//img]"))
-			{
-				var linkUrl = a.Attributes["href"]?.Value;
-				if (linkUrl == null)
-					continue;
+            var web = new HtmlWeb();
+            var html = web.Load(url.AbsoluteUri);
+            foreach (var a in html.DocumentNode.SelectNodes("//a[.//img]"))
+            {
+                var linkUrl = a.Attributes["href"]?.Value;
+                if (linkUrl == null)
+                    continue;
 
                 if (linkUrl.StartsWith('/'))
                     linkUrl = $"{url.Scheme}://{url.Host}{linkUrl}";
 
                 _logger.LogDebug($"Found a link to {linkUrl}");
 
-				var fileName = linkUrl.Split('/').LastOrDefault();
-				fileName = fileName.Split('?').FirstOrDefault();
+                var fileName = linkUrl.Split('/').LastOrDefault();
+                fileName = fileName.Split('?').FirstOrDefault();
 
                 var caption = a.InnerText.Trim();
                 if (string.IsNullOrEmpty(caption))
@@ -56,8 +56,8 @@ namespace HappyFL.Services
                     });
             }
 
-			return result;
-		}
+            return result;
+        }
 
         public List<LinkInfo> FindImages(Uri url)
         {
@@ -101,40 +101,40 @@ namespace HappyFL.Services
         }
 
         public List<LinkInfo> FindImageLinks(Uri url)
-		{
-			var result = new List<LinkInfo>();
+        {
+            var result = new List<LinkInfo>();
 
-			var web = new HtmlWeb();
-			var html = web.Load(url.AbsoluteUri);
-			var count = 0;
-			foreach (var a in html.DocumentNode.SelectNodes("//a"))
-			{
-				var linkUrl = a.Attributes["href"]?.Value;
-				if (linkUrl == null)
-					continue;
+            var web = new HtmlWeb();
+            var html = web.Load(url.AbsoluteUri);
+            var count = 0;
+            foreach (var a in html.DocumentNode.SelectNodes("//a"))
+            {
+                var linkUrl = a.Attributes["href"]?.Value;
+                if (linkUrl == null)
+                    continue;
 
-				_logger.LogDebug($"Found a link to {linkUrl}");
+                _logger.LogDebug($"Found a link to {linkUrl}");
 
-				var fileName = linkUrl.Split('/').LastOrDefault();
-				fileName = fileName.Split('?').FirstOrDefault();
-				if (string.IsNullOrEmpty(fileName))
-					continue;
+                var fileName = linkUrl.Split('/').LastOrDefault();
+                fileName = fileName.Split('?').FirstOrDefault();
+                if (string.IsNullOrEmpty(fileName))
+                    continue;
 
-				var file = new FileInfo(fileName);
-				var extension = file.Extension;
+                var file = new FileInfo(fileName);
+                var extension = file.Extension;
 
-				if (new[] { ".jpg", ".jpeg", ".gif", ".png" }.Contains(extension))
-					result.Add(new LinkInfo
-					{
-						Url = new Uri(linkUrl),
-						Caption = $"{Path.GetFileNameWithoutExtension(file.Name)}-{count++}{extension}",
-					});
-			}
+                if (new[] { ".jpg", ".jpeg", ".gif", ".png" }.Contains(extension))
+                    result.Add(new LinkInfo
+                    {
+                        Url = new Uri(linkUrl),
+                        Caption = $"{Path.GetFileNameWithoutExtension(file.Name)}-{count++}{extension}",
+                    });
+            }
 
-			return result;
-		}
+            return result;
+        }
 
-        public List<RecipeSeekResult> FindRecipes(Uri url, CancellationToken? cancel = null)
+        public List<ScannedRecipe> FindRecipes(Uri url, CancellationToken? cancel = null)
         {
             RecipeSeeker seeker = null;
             switch (url.Host)
@@ -155,45 +155,45 @@ namespace HappyFL.Services
             return seeker.Scan().ToList();
         }
 
-		public ImageInfo GetImage(Uri url)
-		{
+        public ImageInfo GetImage(Uri url)
+        {
             _logger.LogDebug("getting image from {URL}", url);
 
-			var http = new HttpClient();
-			var data = http.GetAsync(url.AbsoluteUri).Result;
+            var http = new HttpClient();
+            var data = http.GetAsync(url.AbsoluteUri).Result;
 
-			using (var stream = data.Content.ReadAsStreamAsync().Result)
-			using (var reader = new BinaryReader(stream))
-			{
-				const int bufferSize = 4096;
-				using (var memory = new MemoryStream())
-				{
-					byte[] buffer = new byte[bufferSize];
-					int count;
-					while ((count = reader.Read(buffer, 0, buffer.Length)) != 0)
-						memory.Write(buffer, 0, count);
+            using (var stream = data.Content.ReadAsStreamAsync().Result)
+            using (var reader = new BinaryReader(stream))
+            {
+                const int bufferSize = 4096;
+                using (var memory = new MemoryStream())
+                {
+                    byte[] buffer = new byte[bufferSize];
+                    int count;
+                    while ((count = reader.Read(buffer, 0, buffer.Length)) != 0)
+                        memory.Write(buffer, 0, count);
 
-					return new ImageInfo
-					{
-						ContentType = data.Content.Headers.ContentType.ToString(),
-						Data = memory.ToArray(),
-					};
-				}
-			}
-		}
-	}
+                    return new ImageInfo
+                    {
+                        ContentType = data.Content.Headers.ContentType.ToString(),
+                        Data = memory.ToArray(),
+                    };
+                }
+            }
+        }
+    }
 
-	public class LinkInfo
-	{
-		public Uri Url { get; set; }
-		public string Caption { get; set; }
-	}
+    public class LinkInfo
+    {
+        public Uri Url { get; set; }
+        public string Caption { get; set; }
+    }
 
-	public class ImageInfo
-	{
-		public string ContentType { get; set; }
-		public byte[] Data { get; set; }
-	}
+    public class ImageInfo
+    {
+        public string ContentType { get; set; }
+        public byte[] Data { get; set; }
+    }
 
     public static class WebSeekerServiceExtensions
     {

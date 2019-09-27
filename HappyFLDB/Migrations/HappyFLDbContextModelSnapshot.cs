@@ -21,7 +21,7 @@ namespace HappyFL.DB.Migrations
 
             modelBuilder.Entity("HappyFL.DB.RecipeManagement.Dish", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<long?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("dish_id");
 
@@ -38,7 +38,7 @@ namespace HappyFL.DB.Migrations
 
             modelBuilder.Entity("HappyFL.DB.RecipeManagement.Ingredient", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<long?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("ingredient_id");
 
@@ -69,7 +69,7 @@ namespace HappyFL.DB.Migrations
 
             modelBuilder.Entity("HappyFL.DB.RecipeManagement.IngredientSection", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<long?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("ingredient_section_id");
 
@@ -83,14 +83,14 @@ namespace HappyFL.DB.Migrations
 
             modelBuilder.Entity("HappyFL.DB.RecipeManagement.Recipe", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<long?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("recipe_id");
 
                     b.Property<string>("Name")
                         .HasColumnName("name");
 
-                    b.Property<string>("UrlofBase")
+                    b.Property<string>("UrlOfBase")
                         .HasColumnName("url_of_base");
 
                     b.Property<long?>("dish_id");

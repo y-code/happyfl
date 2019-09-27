@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using HappyFL.DB.RecipeManagement;
 using HappyFL.Models.WebSeeker;
 using HtmlAgilityPack;
 
@@ -29,12 +30,15 @@ namespace HappyFL.Services.WebSeekers
         protected override IEnumerable<HtmlNode> ScanIngredientsSubSectionNodes(HtmlDocument doc, HtmlNode ingredientsSectionNode)
             => ingredientsSectionNode.SelectNodes(k => $"//div[contains(@class, '{k}')]", "ingredient-section");
 
-        protected override List<string> ScanIngredientsSubSectionForNames(HtmlDocument doc, HtmlNode subSectionNode)
-            => subSectionNode.SelectNodes(k => $"//div[@class = '{k}']", "ingredient-title")
-                .Select(n => n.InnerText.HtmlDecode().Trim())
-                .ToList();
+        protected override ScannedIngredientSection ScanIngredientSection(HtmlDocument doc, HtmlNode subSectionNode)
+            => new ScannedIngredientSection
+            {
+                Candidates = subSectionNode.SelectNodes(k => $"//div[@class = '{k}']", "ingredient-title")
+                .Select(n => new IngredientSection { Name = n.InnerText.HtmlDecode().Trim() })
+                .ToList()
+            };
 
-        protected override List<string> ScanIngredientsSubSectionForIngredients(HtmlDocument doc, HtmlNode subSectionNode)
+        protected override List<string> ScanIngredientsFromIngredientSection(HtmlDocument doc, HtmlNode subSectionNode)
             => subSectionNode.SelectNodes(k => $"//div[@class = '{k}']", "ingredient-item")
                 .Select(n => n.SelectNodes(k =>"//text()", "")
                     .Select(n2 => n2.InnerText.HtmlDecode().Trim())
