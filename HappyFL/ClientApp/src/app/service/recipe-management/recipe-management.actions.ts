@@ -1,7 +1,6 @@
 import { createAction, props } from '@ngrx/store'
-import { Dish } from './recipe-management.service';
 import { ScannedRecipe } from '../web-seeker/web-seeker.service';
-import { Recipe } from 'src/app/model/recipe-management';
+import { Recipe, Dish } from 'src/app/model/recipe-management';
 
 export const requestDishes = createAction('[Recipe Management] Request Dishes');
 export const receiveDishes = createAction('[Recipe Management] Receive Dishes', props<{ dishes: Dish[] }>());

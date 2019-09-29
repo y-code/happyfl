@@ -1,9 +1,9 @@
 import { Component, OnInit, Output } from '@angular/core';
 // import { RecipeManagementService, Dish } from '../service/recipe-management.service';
-import { Dish } from '../service/recipe-management/recipe-management.service';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { requestDishes } from '../service/recipe-management/recipe-management.actions';
+import { Dish } from '../model/recipe-management';
 
 @Component({
   selector: 'app-dishes',
