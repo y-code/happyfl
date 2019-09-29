@@ -23,7 +23,6 @@ namespace HappyFL.DevDBSetup.RecipeManagement
                 context.Add(new Dish
                 {
                     Name = "Mapo Tofu",
-                    Cuisine = "Chinese",
                     Recipes = new List<Recipe>
                     {
                         new Recipe
@@ -399,7 +398,6 @@ namespace HappyFL.DevDBSetup.RecipeManagement
                 context.Add(new Dish
                 {
                     Name = "Risotto",
-                    Cuisine = "Italian",
                     Recipes = new List<Recipe>
                     {
                         new Recipe
@@ -411,7 +409,6 @@ namespace HappyFL.DevDBSetup.RecipeManagement
                 context.Add(new Dish
                 {
                     Name = "Carbonara",
-                    Cuisine = "Italian",
                     Recipes = new List<Recipe>
                     {
                         new Recipe

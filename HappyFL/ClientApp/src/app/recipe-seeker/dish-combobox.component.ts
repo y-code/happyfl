@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter } from '@angular/core';
+import { ValueAccessorBase } from '../shared/value-accessor-base';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Dish } from '../service/recipe-management/recipe-management.service';
 import { Combobox } from './combobox';
-import { Dish } from '../model/recipe-management';
 
 @Component({
   selector: 'app-recipe-seeker-dish-combobox',

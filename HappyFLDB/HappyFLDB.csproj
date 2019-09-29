@@ -17,4 +17,8 @@
   <ItemGroup>
     <Folder Include="RecipeManagement\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Migrations\20190929082026_v0.1.Designer.cs" />
+    <Compile Remove="Migrations\20190929082026_v0.1.cs" />
+  </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@
   </div>
 
   <div
-    *ngIf="(recipeSeekResult$ | async) && (recipeSeekResult$ | async).isLoading"
+    *ngIf="(recipeSeekResult$ | async).isLoading"
     class="row fill-window">
     <div class="col-12 align-self-center text-center">
       Loading...
@@ -18,7 +18,7 @@
   </div>
 
   <div
-    *ngIf="(recipeSeekResult$ | async) && (recipeSeekResult$ | async).isCancelled"
+    *ngIf="(recipeSeekResult$ | async).isCancelled"
     class="row fill-window">
     <div class="col-12 align-self-center">
       <div class="text-center">
@@ -28,7 +28,7 @@
   </div>
 
   <div
-    *ngIf="(recipeSeekResult$ | async) && !(recipeSeekResult$ | async).isLoading && !(recipeSeekResult$ | async).isCancelled"
+    *ngIf="!(recipeSeekResult$ | async).isLoading && !(recipeSeekResult$ | async).isCancelled && (recipeSeekResult$ | async).data"
     class="row no-gutters">
     <div class="col-12">
       <div class="form-group">
@@ -83,11 +83,12 @@
         </div>
       </div>
       <div class="text-center row-btn">
-        <span
+        <input
+          ngbButton
           class="btn btn-primary btn-save"
-          (click)="save()">
-          Save
-        </span>
+          (click)="save()"
+          [disabled]="(saveRecipe$ | async).isSaving"
+          value="Save" />
       </div>
     </div>
   </div>

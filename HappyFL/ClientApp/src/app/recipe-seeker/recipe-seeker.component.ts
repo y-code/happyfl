@@ -1,11 +1,12 @@
-import { Component, OnInit, Input, Output, Inject, ViewChild, ElementRef, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { WebSeekerService, LinkInfo, ScannedRecipe, ScannedIngredient, ScannedIngredientSection,  } from '../service/web-seeker/web-seeker.service';
+import { Component, OnInit, Input, Output, Inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { WebSeekerService, LinkInfo, ScannedRecipe, ScannedIngredient, ScannedIngredientSection,  } from 'src/app/service/web-seeker/web-seeker.service';
 import { Store } from '@ngrx/store';
-import { requestRecipeSeek, cancelRecipeSeek, requestSaveRecipe } from '../service/recipe-management/recipe-management.actions';
-import { Recipe, Ingredient, IngredientSection, Dish } from '../model/recipe-management';
+import { requestRecipeSeek, cancelRecipeSeek, requestSaveRecipe, completeSaveRecipe } from 'src/app/service/recipe-management/recipe-management.actions';
+import { Recipe, Ingredient, IngredientSection, Dish } from 'src/app/model/recipe-management';
+import { Notification } from 'src/app/model/notification';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators'
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-recipe-seeker',
@@ -18,26 +19,30 @@ export class RecipeSeekerComponent implements OnInit {
   @Output()
   public url: string;
 
-  public links: LinkInfo[];
-  public imageLinks: LinkInfoPlus[];
-
   @Input()
   public recipeSeekResult$: Observable<{
     isLoading: boolean,
     url: string,
-    data: ScannedRecipe
+    data: ScannedRecipe,
   }>;
+
   public ingredientCandidatesBySection$: Observable<{
     section: ScannedIngredientSection,
-    ingredients: ScannedIngredient[]
+    ingredients: ScannedIngredient[],
   }[]>;
+
+  public saveRecipe$: Observable<{
+    isSaving: boolean,
+    isSuccess: boolean,
+    message: Notification,
+  }>;
 
   public recipe: Recipe = new Recipe();
 
   public sections: IngredientSection[] = [];
   public ingredientsBySection: {
     section: IngredientSection,
-    ingredients: Ingredient[]
+    ingredients: Ingredient[],
   }[] = [];
 
   constructor(
@@ -49,10 +54,16 @@ export class RecipeSeekerComponent implements OnInit {
           isLoading: boolean,
           url: string,
           data: ScannedRecipe
-        }
+        },
+        saveRecipe: {
+          isSaving: boolean,
+          isSuccess: boolean,
+          message: Notification,
+        },
       }
     }>,
     private route: ActivatedRoute,
+    private router: Router
   ) {
     this.recipe = new Recipe();
   }
@@ -125,6 +136,18 @@ export class RecipeSeekerComponent implements OnInit {
     this.ingredientCandidatesBySection$ = this.recipeSeekResult$.pipe(
       map(r => this.groupBySection(r.data.ingredients))
     );
+
+    this.saveRecipe$ = this.store.select(state => state.recipeManagement.saveRecipe);
+    this.saveRecipe$.subscribe(r => {
+      if (!r || r.isSaving || typeof(r.isSuccess) !== "boolean")
+        return;
+      
+      if (!r.isSuccess)
+        return;
+
+      this.store.dispatch(completeSaveRecipe({}));
+      this.router.navigate(["dishes"]);
+    });
   }
 
   getRecipeSiteDomain(): string {
@@ -140,9 +163,6 @@ export class RecipeSeekerComponent implements OnInit {
   }
 
   findRecipe(url: string) {
-    this.links = undefined;
-    this.imageLinks = undefined;
-
     this.store.dispatch(requestRecipeSeek({url}));
   }
 
@@ -163,12 +183,4 @@ export class RecipeSeekerComponent implements OnInit {
     }, []);
     return groups;
   }
-
-  extractSectionNameCandidatesFrom(scanned: ScannedIngredientSection): string[] {
-    return scanned.candidates.map(c => c.name);
-  }
-}
-
-class LinkInfoPlus extends LinkInfo {
-  public encodedUrl: string;
 }

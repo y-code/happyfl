@@ -1,16 +1,15 @@
 import * as RecipeManagementAction from './recipe-management.actions';
 import { createReducer, on, Action } from '@ngrx/store';
-import { state } from '@angular/animations';
+import { Notification, NotificationType } from 'src/app/model/notification';
 
-export interface RecipeManagementState {
-  dishes: {},
-  recipe: {},
+export class RecipeManagementState {
+  dishes = {};
+  recipe = {};
+  recipeSeekResult = {};
+  saveRecipe = {};
 }
 
-export const initialState = {
-  dishes: {},
-  recipe: {},
-};
+export const initialState: RecipeManagementState = new RecipeManagementState();
 
 export const RecipeManagementReducer = createReducer(initialState,
   on(RecipeManagementAction.requestDishes, state => ({
@@ -77,7 +76,22 @@ export const RecipeManagementReducer = createReducer(initialState,
     saveRecipe: {
       isSaving: false,
       isSuccess: action.isSuccess,
-      message: action.message,
+      notification: new Notification(NotificationType.success, action.message),
+    }
+  })),
+  on(RecipeManagementAction.completeSaveRecipe, (state, action) => ({
+    ...state,
+    saveRecipe: {
+      ...state.saveRecipe,
+      isSaving: false,
+      isSuccess: undefined,
+    }
+  })),
+  on(RecipeManagementAction.closeSaveRecipeMessage, (state, action) => ({
+    ...state,
+    saveRecipe: {
+      ...state.saveRecipe,
+      notification: undefined,
     }
   }))
 );

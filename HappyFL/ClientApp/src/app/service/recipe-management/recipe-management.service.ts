@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Recipe, Dish } from 'src/app/model/recipe-management';
+import { Recipe } from 'src/app/model/recipe-management';
 import { SaveRecipeResponse } from '../web-seeker/web-seeker.service';
 
 @Injectable({
@@ -25,4 +25,8 @@ export class RecipeManagementService {
   public saveRecipe(recipe: Recipe): Observable<SaveRecipeResponse> {
     return this.http.post<SaveRecipeResponse>(`${this.baseUrl}api/RecipeManagement/SaveRecipe`, recipe);
   }
+}
+
+export class Dish {
+  id: number;
 }
