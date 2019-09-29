@@ -289,11 +289,11 @@ namespace HappyFL.Services.WebSeekers
                 { new Keyword("pinches", StringComparer.InvariantCultureIgnoreCase), "pinch" },
                 { new Keyword("pinches of", StringComparer.InvariantCultureIgnoreCase), "pinch" },
                 { new Keyword("bunch", StringComparer.InvariantCultureIgnoreCase), "bunch" },
-                { new Keyword("bunch of", StringComparer.InvariantCultureIgnoreCase), "bunch" },
                 { new Keyword("a bunch of", StringComparer.InvariantCultureIgnoreCase), "bunch" },
                 { new Keyword("bunches", StringComparer.InvariantCultureIgnoreCase), "bunch" },
                 { new Keyword("bunches of", StringComparer.InvariantCultureIgnoreCase), "bunch" },
                 { new Keyword("handful", StringComparer.InvariantCultureIgnoreCase), "handful" },
+                { new Keyword("a handful of", StringComparer.InvariantCultureIgnoreCase), "handful" },
                 { new Keyword("handful of", StringComparer.InvariantCultureIgnoreCase), "handful" },
                 { new Keyword("splash", StringComparer.InvariantCultureIgnoreCase), "splash" },
                 { new Keyword("splash of", StringComparer.InvariantCultureIgnoreCase), "splash" },
@@ -307,7 +307,9 @@ namespace HappyFL.Services.WebSeekers
                 { new Keyword("clove", StringComparer.InvariantCultureIgnoreCase), "clove" },
                 { new Keyword("cloves", StringComparer.InvariantCultureIgnoreCase), "clove" },
                 { new Keyword("block", StringComparer.InvariantCultureIgnoreCase), "block" },
+                { new Keyword("a block of", StringComparer.InvariantCultureIgnoreCase), "block" },
                 { new Keyword("blocks", StringComparer.InvariantCultureIgnoreCase), "block" },
+                { new Keyword("blocks of", StringComparer.InvariantCultureIgnoreCase), "block" },
                 { new Keyword("stick", StringComparer.InvariantCultureIgnoreCase), "stick" },
                 { new Keyword("sticks", StringComparer.InvariantCultureIgnoreCase), "stick" },
                 { new Keyword("package", StringComparer.InvariantCultureIgnoreCase), "package" },
@@ -409,7 +411,11 @@ namespace HappyFL.Services.WebSeekers
         public ScannedIngredient Parse(string input)
         {
             if (string.IsNullOrEmpty(input))
-                return new ScannedIngredient { Input = input };
+                return new ScannedIngredient
+                {
+                    Input = input,
+                    Candidates = new List<Ingredient>(),
+                };
 
             var tokens = Tokenize(input);
             tokens = RecognizeKeywords(
@@ -433,6 +439,7 @@ namespace HappyFL.Services.WebSeekers
                 Input = input
             };
 
+            var candidates = new List<Ingredient>();
             for (var i = 0; i < tokens.Count(); i++)
             {
                 var token = tokens.ElementAt(i) as AmountToken;
@@ -445,7 +452,7 @@ namespace HappyFL.Services.WebSeekers
                         .Split(", ", 2, StringSplitOptions.RemoveEmptyEntries);
 
                     if (i == 0)
-                        results.Candidates.Add(new Ingredient
+                        candidates.Add(new Ingredient
                         {
                             Name = partAfter?.First(),
                             Amount = token.Amount,
@@ -453,7 +460,7 @@ namespace HappyFL.Services.WebSeekers
                             Note = (partAfter?.Count() ?? 0) > 1 ? partAfter.ElementAt(1) : null,
                         });
                     else if (i == tokens.Count() - 1)
-                        results.Candidates.Add(new Ingredient
+                        candidates.Add(new Ingredient
                         {
                             Name = partBefore,
                             Amount = token.Amount,
@@ -463,7 +470,7 @@ namespace HappyFL.Services.WebSeekers
                     else
                     {
                         if (partAfter != null)
-                            results.Candidates.Add(new Ingredient
+                            candidates.Add(new Ingredient
                             {
                                 Name = partAfter.First(),
                                 Amount = token.Amount,
@@ -471,7 +478,7 @@ namespace HappyFL.Services.WebSeekers
                                 Note = ((partAfter?.Count() ?? 0) > 1 ? partAfter.ElementAt(1) + (partBefore != null ? ", " : "") : "") + partBefore,
                             });
                         if (partBefore != null)
-                            results.Candidates.Add(new Ingredient
+                            candidates.Add(new Ingredient
                             {
                                 Name = partBefore,
                                 Amount = token.Amount,
@@ -482,37 +489,39 @@ namespace HappyFL.Services.WebSeekers
                 }
             }
 
-            if (results.Candidates.Count == 0)
+            if (candidates.Count == 0)
             {
                 var value = ConcatenateTokens(tokens);
 
                 if (value != null)
                 {
-                    var candidates = new List<string[]>();
-                    candidates.Add(value
+                    var nameCandidates = new List<string[]>();
+                    nameCandidates.Add(value
                         .Split(", ", 2, StringSplitOptions.RemoveEmptyEntries));
-                    candidates.Add(new string(value.Reverse().ToArray())
+                    nameCandidates.Add(new string(value.Reverse().ToArray())
                         .Split(", ", 2, StringSplitOptions.RemoveEmptyEntries)
                         .Select(p => new string(p.Reverse().ToArray()))
                         .Reverse()
                         .ToArray());
-                    candidates = candidates.Where(c => c.Length > 0).ToList();
+                    nameCandidates = nameCandidates.Where(c => c.Length > 0).ToList();
 
-                    if (candidates.Count() > 1
-                        && candidates.ElementAt(0)[0] == candidates.ElementAt(1)[0])
-                        candidates.Remove(candidates.ElementAt(1));
+                    if (nameCandidates.Count() > 1
+                        && nameCandidates.ElementAt(0)[0] == nameCandidates.ElementAt(1)[0])
+                        nameCandidates.Remove(nameCandidates.ElementAt(1));
 
-                    foreach (var candidate in candidates)
+                    foreach (var nameCandidate in nameCandidates)
                     {
-                        results.Candidates.Add(new Ingredient
+                        candidates.Add(new Ingredient
                         {
-                            Name = candidate.Length > 0 ? candidate[0] : null,
+                            Name = nameCandidate.Length > 0 ? nameCandidate[0] : null,
                             Amount = 1,
-                            Note = candidate.Length > 1 ? candidate[1] : null,
+                            Note = nameCandidate.Length > 1 ? nameCandidate[1] : null,
                         });
                     }
                 }
             }
+
+            results.Candidates = candidates;
 
             return results;
         }

@@ -32,7 +32,7 @@ namespace HappyFL.Test.WebSeekers
             var parser = new IngredientItemParserCommonA();
             var result = parser.Parse(testCase.Input);
 
-            Assert.That(result.Candidates.Count(), Is.EqualTo(testCase.ExpectedCount));
+            Assert.That(result.Candidates, Has.Count.EqualTo(testCase.ExpectedCount));
             for (var i = 0; i < result.Candidates.Count(); i++)
             {
                 Assert.That(result.Candidates.ElementAt(i).Name, Is.EqualTo(testCase.Expected[i].Name), "Ingredient name did not match.");

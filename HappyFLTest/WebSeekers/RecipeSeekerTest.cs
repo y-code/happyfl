@@ -3,8 +3,9 @@ using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using HappyFL.Services;
 using Serilog;
-using System;
 using System.Collections.Generic;
+using HappyFL.Models.WebSeeker;
+using System;
 using System.Linq;
 
 namespace HappyFL.Test.WebSeekers
@@ -34,33 +35,7 @@ namespace HappyFL.Test.WebSeekers
         {
             public class ExpectedResultForTestFindRecipe
             {
-                public List<ExpectedIngredientItem> Ingredients { get; } = new List<ExpectedIngredientItem>();
-                public int NumberOfResult => Recipes.Count;
-                public List<ExpectedRecipe> Recipes { get; set; } = new List<ExpectedRecipe>();
-            }
-
-            public class ExpectedRecipe
-            {
-                public List<ExpectedIngredientSection> Sections { get; } = new List<ExpectedIngredientSection>();
-            }
-
-            public class ExpectedIngredientSection
-            {
-                public List<string> Names { get; } = new List<string>();
-                public List<ExpectedIngredientItem> Ingredients { get; } = new List<ExpectedIngredientItem>();
-            }
-
-            public class ExpectedIngredientItem
-            {
-                public List<ExpectedIngredientCandidate> Candidates { get; } = new List<ExpectedIngredientCandidate>();
-            }
-
-            public class ExpectedIngredientCandidate
-            {
-                public string Name { get; set; }
-                public float Amount { get; set; }
-                public string Unit { get; set; }
-                public string Note { get; set; }
+                public List<ScannedRecipe> Recipes { get; set; } = new List<ScannedRecipe>();
             }
 
             public string Url { get; set; }
@@ -85,114 +60,30 @@ namespace HappyFL.Test.WebSeekers
                 var expectedRecipe = testCase.Expected.Recipes[i];
                 var actualRecipe = results[i];
 
-                Assert.That(actualRecipe.IngredientsSections, Has.Count.EqualTo(expectedRecipe.Sections.Count));
-                for (var j = 0; j < expectedRecipe.Sections.Count; j++)
+                Assert.That(actualRecipe.Ingredients, Has.Count.EqualTo(expectedRecipe.Ingredients.Count()));
+                for (var j = 0; j < expectedRecipe.Ingredients.Count(); j++)
                 {
-                    var expectedSection = expectedRecipe.Sections[i];
-                    var actualSection = actualRecipe.IngredientsSections[i];
+                    var expectedIngredient_ = expectedRecipe.Ingredients.ElementAt(i);
+                    var actualIngredient_ = actualRecipe.Ingredients.ElementAt(i);
 
-                    Assert.That(actualSection.Names, Has.Count.EqualTo(expectedSection.Names.Count));
-                    for (var k = 0; k < expectedSection.Names.Count; k++)
+                    Assert.That(actualIngredient_.Candidates, Has.Count.EqualTo(expectedIngredient_.Candidates.Count()));
+                    for (var k = 0; k < expectedIngredient_.Candidates.Count(); k++)
                     {
-                        var expectedSectionName = expectedSection.Names[k];
-                        var actualSectionName = actualSection.Names[k];
-                        Assert.That(actualSectionName, Is.EqualTo(expectedSectionName));
+                        var expectedIngredientCandidate = expectedIngredient_.Candidates.ElementAt(k);
+                        var actualIngredientCandidate = actualIngredient_.Candidates.ElementAt(k);
+                        Assert.That(actualIngredientCandidate.Name, Is.EqualTo(expectedIngredientCandidate.Name));
+                        Assert.That(actualIngredientCandidate.Amount, Is.EqualTo(expectedIngredientCandidate.Amount));
+                        Assert.That(actualIngredientCandidate.Unit, Is.EqualTo(expectedIngredientCandidate.Unit));
+                        Assert.That(actualIngredientCandidate.Note, Is.EqualTo(expectedIngredientCandidate.Note));
                     }
-                    Assert.That(actualSection.Ingredients, Has.Count.EqualTo(expectedSection.Ingredients.Count));
-                    for (var k = 0; k < expectedSection.Ingredients.Count; k++)
-                    {
-                        var expectedIngredient = expectedSection.Ingredients[k];
-                        var actualIngredient = actualSection.Ingredients[k];
-                        Assert.That(actualIngredient.Candidates, Has.Count.EqualTo(expectedIngredient.Candidates.Count));
-                        for (var m = 0; m < expectedIngredient.Candidates.Count; m++)
-                        {
-                            var expectedCandidate = expectedIngredient.Candidates[m];
-                            var actualCandidate = actualIngredient.Candidates[m];
-                            Assert.That(actualCandidate.Name, Is.EqualTo(expectedCandidate.Name));
-                            Assert.That(actualCandidate.Amount, Is.EqualTo(expectedCandidate.Amount));
-                            Assert.That(actualCandidate.Unit, Is.EqualTo(expectedCandidate.Unit));
-                            Assert.That(actualCandidate.Note, Is.EqualTo(expectedCandidate.Note));
-                        }
-                    }
+
+                    var expectedSection = expectedIngredient_.Section;
+                    var actualSection = actualIngredient_.Section;
+
+                    Assert.That(actualSection.Id, Is.EqualTo(expectedSection.Id));
+                    Assert.That(actualSection.Candidates?.Count(), Is.EqualTo(expectedSection.Candidates.Count()));
                 }
             }
-        }
-
-        //[TestCase("https://www.delish.com/cooking/recipe-ideas/a27819262/coconut-chicken-tenders-recipe/")]
-        public void GenerateTestCaseCodeOfTestFindRecipe(string url)
-        {
-            var service = new WebSeekerService(_logger);
-            var results = service.FindRecipes(new Uri(url));
-
-            var recipes = results
-                .Select(r =>
-                {
-                    var sections = r.IngredientsSections
-                        .Select(s =>
-                        {
-                            var names = s.Names
-                                .Select(n => $@"
-                                            ""{n}"",")
-                                .DefaultIfEmpty().Aggregate((a, b) => $"{a} {b}");
-                            var ingredients = s.Ingredients
-                                .Select(i =>
-                                {
-                                    var candidates = i.Candidates
-                                        .Select(c => $@"
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {{
-                                                        Name = ""{c.Name}"",
-                                                        Amount = {c.Amount}f,
-                                                        Unit = ""{c.Unit}"",
-                                                        Note = ""{c.Note}"",
-                                                    }},")
-                                        .DefaultIfEmpty().Aggregate((a, b) => $"{a} {b}");
-                                    return $@"
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
-                                            {{
-                                                Candidates =
-                                                {{{candidates}
-                                                }}
-                                            }},";
-                                })
-                                .DefaultIfEmpty().Aggregate((a, b) => $"{a} {b}");
-                            return $@"
-                                    new TestFindRecipeTestCase.ExpectedIngredientSection
-                                    {{
-                                        Names =
-                                        {{{names}
-                                        }},
-                                        Ingredients =
-                                        {{{ingredients}
-                                        }}
-                                    }},";
-                        })
-                        .DefaultIfEmpty().Aggregate((a, b) => $"{a} {b}");
-                    return $@"
-                            new TestFindRecipeTestCase.ExpectedRecipe
-                            {{
-                                Sections =
-                                {{{sections}
-                                }}
-                            }},";
-                })
-                .DefaultIfEmpty().Aggregate((a, b) => $"{a} {b}");
-
-            var code = $@"
-            {{
-                new TestFindRecipeTestCase
-                {{
-                    Url = ""{url}"",
-                    Expected =
-                    {{
-                        Recipes =
-                        {{{recipes}
-                        }}
-                    }},
-                }},
-            }},
-";
-            Console.WriteLine(code);
         }
     }
 }

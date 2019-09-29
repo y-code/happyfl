@@ -1,4 +1,7 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using HappyFL.DB.RecipeManagement;
+using HappyFL.Models.WebSeeker;
+
 namespace HappyFL.Test.WebSeekers
 {
     public partial class RecipeSeekerTest
@@ -13,417 +16,239 @@ namespace HappyFL.Test.WebSeekers
                     {
                         Recipes =
                         {
-                            new TestFindRecipeTestCase.ExpectedRecipe
+                            new ScannedRecipe
                             {
-                                Sections =
+                                Id = -1,
+                                Dish = new ScannedDish
                                 {
-                                    new TestFindRecipeTestCase.ExpectedIngredientSection
+                                    Id = -1,
+                                    Candidates = new List<Dish>
                                     {
-                                        Names =
-                                        {
-                                        },
-                                        Ingredients =
-                                        {
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
-                                            {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "(20 ounce) package chocolate sandwich cookies",
-                                                        Amount = 1f,
-                                                        Unit = null,
-                                                        Note = null,
-                                                    },
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = ") package chocolate sandwich cookies",
-                                                        Amount = 20f,
-                                                        Unit = "ounce",
-                                                        Note = "1 (",
-                                                    },
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "1 (",
-                                                        Amount = 20f,
-                                                        Unit = "ounce",
-                                                        Note = ") package chocolate sandwich cookies",
-                                                    },
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "chocolate sandwich cookies",
-                                                        Amount = 1f,
-                                                        Unit = "package",
-                                                        Note = "1 (20 ounce)",
-                                                    },
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "1 (20 ounce)",
-                                                        Amount = 1f,
-                                                        Unit = "package",
-                                                        Note = "chocolate sandwich cookies",
-                                                    },
-                                                }
-                                            },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
-                                            {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "margarine",
-                                                        Amount = 0.5f,
-                                                        Unit = "cup",
-                                                        Note = "melted",
-                                                    },
-                                                }
-                                            },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
-                                            {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "chopped Spanish peanuts",
-                                                        Amount = 1.5f,
-                                                        Unit = "cup",
-                                                        Note = null,
-                                                    },
-                                                }
-                                            },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
-                                            {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "vanilla ice cream",
-                                                        Amount = 0.5f,
-                                                        Unit = "gallon",
-                                                        Note = "softened",
-                                                    },
-                                                }
-                                            },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
-                                            {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "confectioners ' sugar",
-                                                        Amount = 2f,
-                                                        Unit = "cup",
-                                                        Note = null,
-                                                    },
-                                                }
-                                            },
-                                        }
-                                    },
-                                    new TestFindRecipeTestCase.ExpectedIngredientSection
-                                    {
-                                        Names =
-                                        {
-                                        },
-                                        Ingredients =
-                                        {
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
-                                            {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "(12fluid ounce) can evaporated milk",
-                                                        Amount = 1f,
-                                                        Unit = null,
-                                                        Note = null,
-                                                    },
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = ") can evaporated milk",
-                                                        Amount = 12f,
-                                                        Unit = "fl oz",
-                                                        Note = "1 (",
-                                                    },
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "1 (",
-                                                        Amount = 12f,
-                                                        Unit = "fl oz",
-                                                        Note = ") can evaporated milk",
-                                                    },
-                                                }
-                                            },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
-                                            {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "semisweet chocolate chips",
-                                                        Amount = 0.6666667f,
-                                                        Unit = "cup",
-                                                        Note = null,
-                                                    },
-                                                }
-                                            },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
-                                            {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "margarine",
-                                                        Amount = 0.5f,
-                                                        Unit = "cup",
-                                                        Note = null,
-                                                    },
-                                                }
-                                            },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
-                                            {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "vanilla extract",
-                                                        Amount = 1f,
-                                                        Unit = "teaspoon",
-                                                        Note = null,
-                                                    },
-                                                }
-                                            },
-                                        }
-                                    },
-                                }
-                            },
-                        }
-                    },
-                },
-            },
-            {
-                new TestFindRecipeTestCase
-                {
-                    Url = "https://www.allrecipes.com/recipe/275108/healthier-pan-fried-honey-sesame-chicken/",
-                    Expected =
-                    {
-                        Recipes =
-                        {
-                            new TestFindRecipeTestCase.ExpectedRecipe
-                            {
-                                Sections =
+                                    }
+                                },
+                                Ingredients = new List<ScannedIngredient>
                                 {
-                                    new TestFindRecipeTestCase.ExpectedIngredientSection
+                                    new ScannedIngredient
                                     {
-                                        Names =
+                                        Candidates = new List<Ingredient>
                                         {
+                                            new Ingredient
+                                            {
+                                                Name = "(20 ounce) package chocolate sandwich cookies",
+                                                Amount = 1f,
+                                                Unit = null,
+                                                Note = null,
+                                            },
+                                            new Ingredient
+                                            {
+                                                Name = ") package chocolate sandwich cookies",
+                                                Amount = 20f,
+                                                Unit = "ounce",
+                                                Note = "1 (",
+                                            },
+                                            new Ingredient
+                                            {
+                                                Name = "1 (",
+                                                Amount = 20f,
+                                                Unit = "ounce",
+                                                Note = ") package chocolate sandwich cookies",
+                                            },
+                                            new Ingredient
+                                            {
+                                                Name = "chocolate sandwich cookies",
+                                                Amount = 1f,
+                                                Unit = "package",
+                                                Note = "1 (20 ounce)",
+                                            },
+                                            new Ingredient
+                                            {
+                                                Name = "1 (20 ounce)",
+                                                Amount = 1f,
+                                                Unit = "package",
+                                                Note = "chocolate sandwich cookies",
+                                            },
                                         },
-                                        Ingredients =
+                                        Section = new ScannedIngredientSection
                                         {
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
+                                            Id = -1,
+                                            Candidates = new List<IngredientSection>
                                             {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "water",
-                                                        Amount = 0.5f,
-                                                        Unit = "cup",
-                                                        Note = null,
-                                                    },
-                                                }
                                             },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
-                                            {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "low-sodium chicken broth",
-                                                        Amount = 1f / 3,
-                                                        Unit = "cup",
-                                                        Note = null,
-                                                    },
-                                                }
-                                            },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
-                                            {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "ketchup",
-                                                        Amount = 0.25f,
-                                                        Unit = "cup",
-                                                        Note = null,
-                                                    },
-                                                }
-                                            },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
-                                            {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "low-sodium soy sauce",
-                                                        Amount = 0.25f,
-                                                        Unit = "cup",
-                                                        Note = null,
-                                                    },
-                                                }
-                                            },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
-                                            {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "honey",
-                                                        Amount = 0.25f,
-                                                        Unit = "cup",
-                                                        Note = null,
-                                                    },
-                                                }
-                                            },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
-                                            {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "garlic",
-                                                        Amount = 2f,
-                                                        Unit = "clove",
-                                                        Note = "crushed",
-                                                    },
-                                                }
-                                            },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
-                                            {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "rice vinegar",
-                                                        Amount = 1f,
-                                                        Unit = "tablespoon",
-                                                        Note = null,
-                                                    },
-                                                }
-                                            },
-                                        }
+                                        },
                                     },
-                                    new TestFindRecipeTestCase.ExpectedIngredientSection
+                                    new ScannedIngredient
                                     {
-                                        Names =
+                                        Candidates = new List<Ingredient>
                                         {
+                                            new Ingredient
+                                            {
+                                                Name = "margarine",
+                                                Amount = 0.5f,
+                                                Unit = "cup",
+                                                Note = "melted",
+                                            },
                                         },
-                                        Ingredients =
+                                        Section = new ScannedIngredientSection
                                         {
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
+                                            Id = -1,
+                                            Candidates = new List<IngredientSection>
                                             {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "Sriracha sauce",
-                                                        Amount = 2f,
-                                                        Unit = "teaspoon",
-                                                        Note = null,
-                                                    },
-                                                }
                                             },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
                                             {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "sesame oil",
-                                                        Amount = 2f,
-                                                        Unit = "teaspoon",
-                                                        Note = null,
-                                                    },
-                                                }
+                                                Name = "chopped Spanish peanuts",
+                                                Amount = 1.5f,
+                                                Unit = "cup",
+                                                Note = null,
                                             },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -1,
+                                            Candidates = new List<IngredientSection>
                                             {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "grated fresh ginger root",
-                                                        Amount = 1f,
-                                                        Unit = "teaspoon",
-                                                        Note = null,
-                                                    },
-                                                }
                                             },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
                                             {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "crushed red pepper flakes",
-                                                        Amount = 0.25f,
-                                                        Unit = "teaspoon",
-                                                        Note = "or to taste",
-                                                    },
-                                                }
+                                                Name = "vanilla ice cream",
+                                                Amount = 0.5f,
+                                                Unit = "gallon",
+                                                Note = "softened",
                                             },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -1,
+                                            Candidates = new List<IngredientSection>
                                             {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "vegetable oil",
-                                                        Amount = 2f,
-                                                        Unit = "tablespoon",
-                                                        Note = null,
-                                                    },
-                                                }
                                             },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
                                             {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "boneless chicken breast",
-                                                        Amount = 4f,
-                                                        Unit = null,
-                                                        Note = "cut into bite-size pieces",
-                                                    },
-                                                }
+                                                Name = "confectioners ' sugar",
+                                                Amount = 2f,
+                                                Unit = "cup",
+                                                Note = null,
                                             },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -1,
+                                            Candidates = new List<IngredientSection>
                                             {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "water",
-                                                        Amount = 3f,
-                                                        Unit = "tablespoon",
-                                                        Note = null,
-                                                    },
-                                                }
                                             },
-                                            new TestFindRecipeTestCase.ExpectedIngredientItem
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
                                             {
-                                                Candidates =
-                                                {
-                                                    new TestFindRecipeTestCase.ExpectedIngredientCandidate
-                                                    {
-                                                        Name = "cornstarch",
-                                                        Amount = 2f,
-                                                        Unit = "tablespoon",
-                                                        Note = null,
-                                                    },
-                                                }
+                                                Name = "(12fluid ounce) can evaporated milk",
+                                                Amount = 1f,
+                                                Unit = null,
+                                                Note = null,
                                             },
-                                        }
+                                            new Ingredient
+                                            {
+                                                Name = ") can evaporated milk",
+                                                Amount = 12f,
+                                                Unit = "fl oz",
+                                                Note = "1 (",
+                                            },
+                                            new Ingredient
+                                            {
+                                                Name = "1 (",
+                                                Amount = 12f,
+                                                Unit = "fl oz",
+                                                Note = ") can evaporated milk",
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -2,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "semisweet chocolate chips",
+                                                Amount = 0.6666667f,
+                                                Unit = "cup",
+                                                Note = null,
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -2,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "margarine",
+                                                Amount = 0.5f,
+                                                Unit = "cup",
+                                                Note = null,
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -2,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "vanilla extract",
+                                                Amount = 1f,
+                                                Unit = "teaspoon",
+                                                Note = null,
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -2,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
                                     },
                                 }
                             },
@@ -439,10 +264,344 @@ namespace HappyFL.Test.WebSeekers
                     {
                         Recipes =
                         {
-                            new TestFindRecipeTestCase.ExpectedRecipe
+                            new ScannedRecipe
                             {
-                                Sections =
+                                Id = -1,
+                                Dish = new ScannedDish
                                 {
+                                    Id = -1,
+                                    Candidates = new List<Dish>
+                                    {
+                                    }
+                                },
+                                Ingredients = new List<ScannedIngredient>
+                                {
+                                }
+                            },
+                        }
+                    },
+                },
+            },
+            {
+                new TestFindRecipeTestCase
+                {
+                    Url = "https://www.allrecipes.com/recipe/275108/healthier-pan-fried-honey-sesame-chicken/",
+                    Expected =
+                    {
+                        Recipes =
+                        {
+                            new ScannedRecipe
+                            {
+                                Id = -1,
+                                Dish = new ScannedDish
+                                {
+                                    Id = -1,
+                                    Candidates = new List<Dish>
+                                    {
+                                    }
+                                },
+                                Ingredients = new List<ScannedIngredient>
+                                {
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "water",
+                                                Amount = 0.5f,
+                                                Unit = "cup",
+                                                Note = null,
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -1,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "low-sodium chicken broth",
+                                                Amount = 0.3333333f,
+                                                Unit = "cup",
+                                                Note = null,
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -1,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "ketchup",
+                                                Amount = 0.25f,
+                                                Unit = "cup",
+                                                Note = null,
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -1,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "low-sodium soy sauce",
+                                                Amount = 0.25f,
+                                                Unit = "cup",
+                                                Note = null,
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -1,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "honey",
+                                                Amount = 0.25f,
+                                                Unit = "cup",
+                                                Note = null,
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -1,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "garlic",
+                                                Amount = 2f,
+                                                Unit = "clove",
+                                                Note = "crushed",
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -1,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "rice vinegar",
+                                                Amount = 1f,
+                                                Unit = "tablespoon",
+                                                Note = null,
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -1,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "Sriracha sauce",
+                                                Amount = 2f,
+                                                Unit = "teaspoon",
+                                                Note = null,
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -2,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "sesame oil",
+                                                Amount = 2f,
+                                                Unit = "teaspoon",
+                                                Note = null,
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -2,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "grated fresh ginger root",
+                                                Amount = 1f,
+                                                Unit = "teaspoon",
+                                                Note = null,
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -2,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "crushed red pepper flakes",
+                                                Amount = 0.25f,
+                                                Unit = "teaspoon",
+                                                Note = "or to taste",
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -2,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "vegetable oil",
+                                                Amount = 2f,
+                                                Unit = "tablespoon",
+                                                Note = null,
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -2,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "boneless chicken breast",
+                                                Amount = 4f,
+                                                Unit = null,
+                                                Note = "cut into bite-size pieces",
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -2,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "water",
+                                                Amount = 3f,
+                                                Unit = "tablespoon",
+                                                Note = null,
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -2,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "cornstarch",
+                                                Amount = 2f,
+                                                Unit = "tablespoon",
+                                                Note = null,
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -2,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                            },
+                                        },
+                                    },
                                 }
                             },
                         }

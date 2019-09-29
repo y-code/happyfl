@@ -32,7 +32,6 @@ namespace HappyFL.Controllers
             {
                 Id = d.Id;
                 Name = d.Name;
-                Cuisine = d.Cuisine;
                 NumberOfRecipes = d.Recipes?.Count ?? 0;
             }
         }

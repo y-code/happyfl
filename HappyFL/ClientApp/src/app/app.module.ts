@@ -22,8 +22,9 @@ import { EffectsModule } from '@ngrx/effects';
 import { RecipeManagementEffects } from './service/recipe-management/recipe-management.effects';
 import { RecipesComponent } from './recipes/recipes.component';
 import { RecipeSeekerIndexComponent } from './recipe-seeker-index/recipe-seeker-index.component';
-import { CandidatesComboboxComponent } from './recipe-seeker/candidates-combobox.component';
-import { IngredientCandidatesComboboxComponent } from './recipe-seeker/ingredient-candidates-combobox.component';
+import { DishComboboxComponent } from './recipe-seeker/dish-combobox.component';
+import { IngredientSectionComboboxComponent } from './recipe-seeker/ingredient-section-combobox.component';
+import { IngredientComboboxComponent } from './recipe-seeker/ingredient-combobox.component';
 import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
@@ -38,8 +39,9 @@ import { FooterComponent } from './footer/footer.component';
     RecipeSeekerComponent,
     RecipeSeekerIndexComponent,
     RecipesComponent,
-    CandidatesComboboxComponent,
-    IngredientCandidatesComboboxComponent,
+    DishComboboxComponent,
+    IngredientSectionComboboxComponent,
+    IngredientComboboxComponent,
     FooterComponent,
   ],
   imports: [

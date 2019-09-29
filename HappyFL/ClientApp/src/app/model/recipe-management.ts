@@ -1,7 +1,13 @@
 export class Recipe {
-  public id: number;
-  public name: string;
-  public ingredients: Ingredient[] = [];
+  id: number;
+  name: string;
+  dish: Dish;
+  ingredients: Ingredient[] = [];
+}
+
+export class Dish {
+  id: number;
+  name: string;
 }
 
 export class IngredientSection {

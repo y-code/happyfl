@@ -25,15 +25,30 @@ namespace HappyFL.DB.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("dish_id");
 
-                    b.Property<string>("Cuisine")
-                        .HasColumnName("cuisine");
-
                     b.Property<string>("Name")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
 
                     b.ToTable("dish","recipe_management");
+                });
+
+            modelBuilder.Entity("HappyFL.DB.RecipeManagement.DishTag", b =>
+                {
+                    b.Property<long?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("dish_tag_id");
+
+                    b.Property<long?>("DishId");
+
+                    b.Property<string>("Name")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DishId");
+
+                    b.ToTable("dish_tag","recipe_management");
                 });
 
             modelBuilder.Entity("HappyFL.DB.RecipeManagement.Ingredient", b =>
@@ -100,6 +115,13 @@ namespace HappyFL.DB.Migrations
                     b.HasIndex("dish_id");
 
                     b.ToTable("recipe","recipe_management");
+                });
+
+            modelBuilder.Entity("HappyFL.DB.RecipeManagement.DishTag", b =>
+                {
+                    b.HasOne("HappyFL.DB.RecipeManagement.Dish", "Dish")
+                        .WithMany("Tags")
+                        .HasForeignKey("DishId");
                 });
 
             modelBuilder.Entity("HappyFL.DB.RecipeManagement.Ingredient", b =>

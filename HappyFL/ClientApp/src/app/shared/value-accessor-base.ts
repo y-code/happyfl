@@ -33,4 +33,11 @@ export class ValueAccessorBase<T> implements ControlValueAccessor {
   registerOnTouched(fn: () => void) {
     this._touched.push(fn);
   }
+
+  updateValue(newValue: T) {
+    if (!this.value)
+      return;
+    for (let propName in newValue)
+      this.value[propName] = newValue[propName];
+  }
 }

@@ -22,12 +22,24 @@ namespace HappyFL.Services.WebSeekers
                 .SelectNodes(k => $"/ancestor::{k}", "div[@class = 'ingredients']")
                 .FirstOrDefault();
 
-        protected override IEnumerable<string> ScanRecipeNameCandidates(HtmlDocument doc, HtmlNode ingredientsCaptionNode)
-            => ingredientsCaptionNode
-                .SelectNodes(k => $"/ancestor::div[@class = 'site-content']//{k}", "*[contains(@class, 'recipe-hed')]")
-                .Select(n => n.InnerText.HtmlDecode().Trim());
+        protected override ScannedDish ScanDishCandidates(HtmlDocument doc, HtmlNode ingredientsCaptionNode)
+        {
+            return new ScannedDish
+            {
+                Candidates = ingredientsCaptionNode
+                    .SelectNodes(k => $"/ancestor::div[@class = 'site-content']//{k}", "*[contains(@class, 'recipe-hed')]")
+                    .Select(n =>
+                    {
+                        var caption = n.InnerText.HtmlDecode().Trim();
+                        return new Dish
+                        {
+                            Name = caption,
+                        };
+                    })
+            };
+        }
 
-        protected override IEnumerable<HtmlNode> ScanIngredientsSubSectionNodes(HtmlDocument doc, HtmlNode ingredientsSectionNode)
+        protected override IEnumerable<HtmlNode> ScanIngredientSectionNodes(HtmlDocument doc, HtmlNode ingredientsSectionNode)
             => ingredientsSectionNode.SelectNodes(k => $"//div[contains(@class, '{k}')]", "ingredient-section");
 
         protected override ScannedIngredientSection ScanIngredientSection(HtmlDocument doc, HtmlNode subSectionNode)

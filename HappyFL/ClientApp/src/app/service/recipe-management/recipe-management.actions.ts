@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store'
 import { Dish } from './recipe-management.service';
-import { RecipeSeekResult } from '../web-seeker/web-seeker.service';
+import { ScannedRecipe } from '../web-seeker/web-seeker.service';
 import { Recipe } from 'src/app/model/recipe-management';
 
 export const requestDishes = createAction('[Recipe Management] Request Dishes');
@@ -11,4 +11,4 @@ export const requestSaveRecipe = createAction('[Recipe Management] Request Save 
 export const receiveResponseForSaveRecipe = createAction('[Recipe Management] Receive Response for Save Recipe', props<{ isSuccess: boolean, message: string }>());
 export const requestRecipeSeek = createAction('[Recipe Management] Request Recipe Seek', props<{ url: string }>());
 export const cancelRecipeSeek = createAction('[Recipe Management] Cancel Recipe Seek', props<{ url: string }>());
-export const receiveRecipeSeekResult = createAction('[Recipe Management] Receive Recipe Seek Result', props<{ url: string, result: RecipeSeekResult }>());
+export const receiveRecipeSeekResult = createAction('[Recipe Management] Receive Recipe Seek Result', props<{ url: string, result: ScannedRecipe }>());

@@ -30,7 +30,7 @@ namespace HappyFL.Services.WebSeekers
         protected override HtmlNode ScanIngredientsSectionNode(HtmlDocument doc, HtmlNode ingredientsCaptionNode)
             => ingredientsCaptionNode.ParentNode;
 
-        protected override IEnumerable<string> ScanRecipeNameCandidates(HtmlDocument doc, HtmlNode ingredientsCaptionNode)
+        protected override ScannedDish ScanDishCandidates(HtmlDocument doc, HtmlNode ingredientsCaptionNode)
         {
             string[] nameNodeNames;
             switch (ingredientsCaptionNode.Name)
@@ -46,11 +46,21 @@ namespace HappyFL.Services.WebSeekers
                     break;
             }
 
-            return doc.SelectNodes(k => $"//{k}", nameNodeNames)
-                .Select(n => n.InnerText.HtmlDecode().Trim());
+            return new ScannedDish
+            {
+                Candidates = doc.SelectNodes(k => $"//{k}", nameNodeNames)
+                    .Select(n =>
+                    {
+                        var caption = n.InnerText.HtmlDecode().Trim();
+                        return new Dish
+                        {
+                            Name = caption
+                        };
+                    })
+            };
         }
  
-        protected override IEnumerable<HtmlNode> ScanIngredientsSubSectionNodes(HtmlDocument doc, HtmlNode ingredientsSectionNode)
+        protected override IEnumerable<HtmlNode> ScanIngredientSectionNodes(HtmlDocument doc, HtmlNode ingredientsSectionNode)
             => ingredientsSectionNode.SelectNodes(k => $"//{k}", "ul", "ol");
 
         protected override ScannedIngredientSection ScanIngredientSection(HtmlDocument doc, HtmlNode subSectionNode)

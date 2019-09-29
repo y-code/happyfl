@@ -5,7 +5,7 @@
       <h1 class="text-center app-name">Recipe Seeker</h1>
     </div>
     <div class="col-12 text-right site-link">
-      <a class="" href="{{url}}" target="_blank">Open in {{getSiteDomain()}}</a>
+      <a class="" href="{{url}}" target="_blank">Open in {{getRecipeSiteDomain()}}</a>
     </div>
   </div>
 
@@ -33,12 +33,22 @@
     <div class="col-12">
       <div class="form-group">
         <label for="recipeName">Recipe Name</label>
-        <app-candidates-combobox
-          name="recipeName"
-          placeholder="Please enter this recipe's name."
+        <input
+          id="recipeName"
           [(ngModel)]="recipe.name"
-          [options]="(recipeSeekResult$ | async).data.names">
-        </app-candidates-combobox>
+          class="form-control"
+          placeholder="Please enter this recipe's name."/>
+      </div>
+
+      <h3>Dish</h3>
+      <div class="form-group">
+        <label for="recipeName">Dish Name</label>
+        <app-recipe-seeker-dish-combobox
+          name="recipeName"
+          placeholder="Please enter this recipe's dish name."
+          [(ngModel)]="recipe.dish"
+          [options]="(recipeSeekResult$ | async).data.dish.candidates">
+        </app-recipe-seeker-dish-combobox>
       </div>
 
       <h3>Ingredients</h3>
@@ -47,13 +57,12 @@
         <h4>Section {{(i + 10).toString(36).toUpperCase()}}</h4>
         <div class="form-group">
           <label for="sectionName">Section Name</label>
-          <app-candidates-combobox
+          <app-recipe-seeker-ingredient-section-combobox
             name="sectionName"
             placeholder="Please enter this section's name, if you need it."
-            [ngModel]="sections[i]?.name"
-            (ngModelChange)="sections[i].name = $event"
-            [options]="extractSectionNameCandidatesFrom(group.section)">
-          </app-candidates-combobox>
+            [(ngModel)]="sections[i]"
+            [options]="group.section.candidates">
+          </app-recipe-seeker-ingredient-section-combobox>
         </div>
         <div class="form-group">
           <label>Ingredients ({{group.ingredients.length}})</label>
@@ -61,14 +70,14 @@
             <div
               class="row ingredient-row"
               *ngFor="let ingredient of group.ingredients; let j = index;">
-              <app-ingredient-candidates-combobox
+              <app-recipe-seeker-ingredient-combobox
                 class="col-12"
                 name="ingredient-{{i}}-{{j}}"
                 [ngModel]="ingredientsBySection[i]?.ingredients[j]"
                 (ngModelChange)="ingredientsBySection[i].ingredients[j] = $event"
                 [options]="ingredient.candidates"
                 [original]="ingredient.input">
-              </app-ingredient-candidates-combobox>
+              </app-recipe-seeker-ingredient-combobox>
             </div>
           </div>
         </div>

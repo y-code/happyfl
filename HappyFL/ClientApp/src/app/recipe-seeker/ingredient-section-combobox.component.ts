@@ -1,9 +1,11 @@
 import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter } from '@angular/core';
 import { ValueAccessorBase } from '../shared/value-accessor-base';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Dish, IngredientSection } from '../model/recipe-management';
+import { Combobox } from './combobox';
 
 @Component({
-  selector: 'app-candidates-combobox',
+  selector: 'app-recipe-seeker-ingredient-section-combobox',
   template: `
     <div class="accordion main" id="accordionExample">
       <div class="card">
@@ -18,7 +20,8 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
               type="text"
               class="form-control"
               [placeholder]="placeholder"
-              [(ngModel)]="value"
+              [ngModel]="value?.name"
+              (ngModelChange)="value.name = $event"
               (mousedown)="$event.stopPropagation(); showOptions()"
               (focus)="showOptions()"
               (focusout)="hideOptions()" />
@@ -41,7 +44,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
             class="card-body"
             [ngClass]="{ 'border-bottom' : i < options.length - 1 }"
             (mousedown)="onOptionClick($event, option)">
-            {{option}}
+            {{option.name}}
           </div>
         </div>
       </div>
@@ -57,21 +60,10 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
     'input { flex: 1 }'
   ],
   providers: [
-    { provide: NG_VALUE_ACCESSOR, useExisting: CandidatesComboboxComponent, multi: true },
+    { provide: NG_VALUE_ACCESSOR, useExisting: IngredientSectionComboboxComponent, multi: true },
   ],
 })
-export class CandidatesComboboxComponent extends ValueAccessorBase<string> implements OnInit {
-  @Input()
-  public name: string;
-
-  @Input()
-  public placeholder: string;
-
-  @Input()
-  public options: string[];
-
-  public toggleFlg: boolean;
-
+export class IngredientSectionComboboxComponent extends Combobox<IngredientSection> implements OnInit {
   @ViewChild("theInput", { static: true })
   public inputElement: ElementRef;
 
@@ -83,23 +75,7 @@ export class CandidatesComboboxComponent extends ValueAccessorBase<string> imple
   ngOnInit() {
   }
 
-  onOptionClick(event: Event, option: string): void {
-    this.value = option;
+  putBackFocus(): void {
     this.inputElement.nativeElement.focus();
-    event.preventDefault();
-  }
-
-  toggleOptions(event: Event) {
-    this.toggleFlg = !this.toggleFlg;
-    event.preventDefault();
-    this.inputElement.nativeElement.focus();
-  }
-
-  showOptions() {
-    this.toggleFlg = true;
-  }
-  
-  hideOptions() {
-    this.toggleFlg = false;
   }
 }

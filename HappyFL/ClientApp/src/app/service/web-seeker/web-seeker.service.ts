@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { Recipe, Ingredient, IngredientSection } from '../../model/recipe-management';
+import { Recipe, Ingredient, IngredientSection, Dish } from '../../model/recipe-management';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,8 @@ export class WebSeekerService {
     @Inject('BASE_URL') private baseUrl: string
   ) { }
 
-  public findRecipes(url: string): Observable<RecipeSeekResult[]> {
-    return this.http.get<RecipeSeekResult[]>(`${this.baseUrl}api/WebSeeker/FindRecipes?url=${encodeURIComponent(url)}`)
+  public findRecipes(url: string): Observable<ScannedRecipe[]> {
+    return this.http.get<ScannedRecipe[]>(`${this.baseUrl}api/WebSeeker/FindRecipes?url=${encodeURIComponent(url)}`)
       .pipe(
         map((value, index) => {
           for (let result of value) {
@@ -48,13 +48,19 @@ export class LinkInfo {
   public caption: string;
 }
 
-export class RecipeSeekResult {
-  public names: string[];
+export class ScannedRecipe {
+  public name: string;
+  public dish: ScannedDish;
   public ingredients: ScannedIngredient[];
 }
 
+export class ScannedDish {
+  id: number;
+  candidates: Dish[];
+}
+
 export class ScannedIngredient {
-  id: number
+  id: number;
   input: string;
   candidates: Ingredient[];
   section: ScannedIngredientSection;

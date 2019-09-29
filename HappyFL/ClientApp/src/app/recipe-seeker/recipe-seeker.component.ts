@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, Output, Inject, ViewChild, ElementRef, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { WebSeekerService, LinkInfo, RecipeSeekResult, ScannedIngredient, ScannedIngredientSection,  } from '../service/web-seeker/web-seeker.service';
+import { WebSeekerService, LinkInfo, ScannedRecipe, ScannedIngredient, ScannedIngredientSection,  } from '../service/web-seeker/web-seeker.service';
 import { Store } from '@ngrx/store';
 import { requestRecipeSeek, cancelRecipeSeek, requestSaveRecipe } from '../service/recipe-management/recipe-management.actions';
-import { Recipe, Ingredient, IngredientSection } from '../model/recipe-management';
+import { Recipe, Ingredient, IngredientSection, Dish } from '../model/recipe-management';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators'
 
@@ -25,7 +25,7 @@ export class RecipeSeekerComponent implements OnInit {
   public recipeSeekResult$: Observable<{
     isLoading: boolean,
     url: string,
-    data: RecipeSeekResult
+    data: ScannedRecipe
   }>;
   public ingredientCandidatesBySection$: Observable<{
     section: ScannedIngredientSection,
@@ -48,7 +48,7 @@ export class RecipeSeekerComponent implements OnInit {
         recipeSeekResult: {
           isLoading: boolean,
           url: string,
-          data: RecipeSeekResult
+          data: ScannedRecipe
         }
       }
     }>,
@@ -76,8 +76,10 @@ export class RecipeSeekerComponent implements OnInit {
             ingredients: Ingredient[]
           }[] = [];
   
-          recipe.name = r.data.names.length ? r.data.names[0] : undefined;
-  
+          recipe.name = r.data.dish.candidates.length ? `${r.data.dish.candidates[0].name} from ${this.getRecipeSiteDomain()}` : undefined;
+ 
+          recipe.dish = r.data.dish.candidates.length ? { ...r.data.dish.candidates[0] } : new Dish();
+          
           let groups = this.groupBySection(r.data.ingredients);
           for (let group of groups) {
             let section = new IngredientSection();
@@ -125,7 +127,7 @@ export class RecipeSeekerComponent implements OnInit {
     );
   }
 
-  getSiteDomain(): string {
+  getRecipeSiteDomain(): string {
     var parts = this.url.split('/');
     if (parts.length < 3)
       return "";

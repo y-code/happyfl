@@ -3,9 +3,10 @@ import { ValueAccessorBase } from '../shared/value-accessor-base';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DOCUMENT } from '@angular/common';
 import { Ingredient } from '../model/recipe-management';
+import { Combobox } from './combobox';
 
 @Component({
-  selector: 'app-ingredient-candidates-combobox',
+  selector: 'app-recipe-seeker-ingredient-combobox',
   template: `
     <div class="accordion main" id="accordionExample">
       <div class="card">
@@ -107,32 +108,12 @@ import { Ingredient } from '../model/recipe-management';
     }`,
   ],
   providers: [
-    { provide: NG_VALUE_ACCESSOR, useExisting: IngredientCandidatesComboboxComponent, multi: true },
+    { provide: NG_VALUE_ACCESSOR, useExisting: IngredientComboboxComponent, multi: true },
   ],
 })
-export class IngredientCandidatesComboboxComponent extends ValueAccessorBase<Ingredient> implements OnInit {
-  @Input()
-  public name: string;
-
-  @Input()
-  public placeholder: string;
-
-  private _options: Ingredient[];
-  @Input()
-  public set options(value: Ingredient[]) {
-    this._options = value;
-    if (this._options.length) {
-      this.updateValue(this._options[0]);
-    }
-  }
-  public get options(): Ingredient[] {
-    return this._options;
-  }
-
+export class IngredientComboboxComponent extends Combobox<Ingredient> implements OnInit {
   @Input()
   public original: string;
-
-  public toggleFlg: boolean;
 
   @ViewChild("nameInput", { static: true })
   public nameInputElement: ElementRef;
@@ -156,25 +137,6 @@ export class IngredientCandidatesComboboxComponent extends ValueAccessorBase<Ing
   ngOnInit() {
   }
 
-  private updateValue(newValue: Ingredient) {
-    if (!this.value)
-      return;
-    for (let propName in newValue)
-      this.value[propName] = newValue[propName];
-  }
-
-  onOptionClick(event: Event, option: Ingredient): void {
-    this.updateValue(option);
-    this.putBackFocus();
-    event.preventDefault();
-  }
-
-  toggleOptions(event: Event) {
-    this.toggleFlg = !this.toggleFlg;
-    event.preventDefault();
-    this.putBackFocus();
-  }
-
   putBackFocus() {
     if (this.document.activeElement.isSameNode(this.nameInputElement.nativeElement))
       (this.document.activeElement as any).focus();
@@ -186,13 +148,5 @@ export class IngredientCandidatesComboboxComponent extends ValueAccessorBase<Ing
       (this.document.activeElement as any).focus();
     else
       this.nameInputElement.nativeElement.focus();
-  }
-
-  showOptions() {
-    this.toggleFlg = true;
-  }
-  
-  hideOptions() {
-    this.toggleFlg = false;
   }
 }
