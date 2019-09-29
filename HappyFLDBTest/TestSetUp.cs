@@ -9,6 +9,7 @@ namespace HappyFL.DB.Test
         [OneTimeSetUp]
         public void SetUpBeforeAnyTests()
         {
+            Environment.SetEnvironmentVariable("DB_ENVIRONMENT", "Development");
             DevDBSetup.DevDBSetup.Main();
         }
     }
