@@ -1,13 +1,17 @@
-import { Component, OnInit, Input, Output, Inject, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { WebSeekerService, LinkInfo, RecipeSeekResult } from '../service/web-seeker.service';
+import { Component, OnInit, Input, Output, Inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { WebSeekerService, LinkInfo, ScannedRecipe, ScannedIngredient, ScannedIngredientSection,  } from 'src/app/service/web-seeker/web-seeker.service';
 import { Store } from '@ngrx/store';
-import { requestRecipeSeek, cancelRecipeSeek } from '../service/recipe-management/recipe-management.actions';
+import { requestRecipeSeek, cancelRecipeSeek, requestSaveRecipe, completeSaveRecipe } from 'src/app/service/recipe-management/recipe-management.actions';
+import { Recipe, Ingredient, IngredientSection, Dish } from 'src/app/model/recipe-management';
+import { Notification } from 'src/app/model/notification';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-recipe-seeker',
   templateUrl: './recipe-seeker.component.html',
-  styleUrls: ['./recipe-seeker.component.css']
+  styleUrls: ['./recipe-seeker.component.css'],
 })
 export class RecipeSeekerComponent implements OnInit {
 
@@ -15,13 +19,31 @@ export class RecipeSeekerComponent implements OnInit {
   @Output()
   public url: string;
 
-  public historyCursor: number = -1;
-  public history: (() => string)[] = [];
+  @Input()
+  public recipeSeekResult$: Observable<{
+    isLoading: boolean,
+    url: string,
+    data: ScannedRecipe,
+  }>;
 
-  public links: LinkInfo[];
-  public imageLinks: LinkInfoPlus[];
+  public ingredientCandidatesBySection$: Observable<{
+    section: ScannedIngredientSection,
+    ingredients: ScannedIngredient[],
+  }[]>;
 
-  recipeSeekResult$ = this.store.select(state => state.recipeManagement.recipeSeekResult);
+  public saveRecipe$: Observable<{
+    isSaving: boolean,
+    isSuccess: boolean,
+    message: Notification,
+  }>;
+
+  public recipe: Recipe = new Recipe();
+
+  public sections: IngredientSection[] = [];
+  public ingredientsBySection: {
+    section: IngredientSection,
+    ingredients: Ingredient[],
+  }[] = [];
 
   constructor(
     private webSeekerService: WebSeekerService,
@@ -31,12 +53,20 @@ export class RecipeSeekerComponent implements OnInit {
         recipeSeekResult: {
           isLoading: boolean,
           url: string,
-          data: RecipeSeekResult[]
-        }
+          data: ScannedRecipe
+        },
+        saveRecipe: {
+          isSaving: boolean,
+          isSuccess: boolean,
+          message: Notification,
+        },
       }
     }>,
     private route: ActivatedRoute,
-  ) { }
+    private router: Router
+  ) {
+    this.recipe = new Recipe();
+  }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -44,73 +74,113 @@ export class RecipeSeekerComponent implements OnInit {
 
       this.findRecipe(this.url);
     });
-  }
 
-  onFindRecipe()  {
-    this.runWithHistory(this.url, u => this.findRecipe(u));
-  }
+    this.recipeSeekResult$ = this.store.select(state => state.recipeManagement.recipeSeekResult).pipe(
+      map(r => {
 
-  onFindImages() {
-    this.runWithHistory(this.url, u => this.findImages(u));
-  }
+        /* re-initialize this.recipe */
+        if (r.data) {
+          let recipe = new Recipe();
+          let sections: IngredientSection[] = [];
+          let ingredientsBySection: {
+            section: IngredientSection,
+            ingredients: Ingredient[]
+          }[] = [];
+  
+          recipe.name = r.data.dish.candidates.length ? `${r.data.dish.candidates[0].name} from ${this.getRecipeSiteDomain()}` : undefined;
+ 
+          recipe.dish = r.data.dish.candidates.length ? { ...r.data.dish.candidates[0] } : new Dish();
+          
+          let groups = this.groupBySection(r.data.ingredients);
+          for (let group of groups) {
+            let section = new IngredientSection();
+            let ingredients: {
+              section: IngredientSection,
+              ingredients: Ingredient[]
+            } = { section, ingredients: [] };
 
-  runWithHistory(url: string, run: (url: string) => void) {
-    this.historyCursor++;
-    while (this.history.length > this.historyCursor)
-      this.history.pop();
-    let execRun = () => {
-      run(url);
-      return url;
-    }
-    this.history.push(execRun);
-    execRun();
-  }
+            section.id = group.section.id;
+            if (group.section.candidates.length)
+              section.name = group.section.candidates[0].name;
+  
+            for (let i in group.ingredients) {
+              let scannedIngredient = group.ingredients[i];
+              let ingredient: Ingredient;
+              if (scannedIngredient.candidates.length)
+                ingredient = {
+                  ...scannedIngredient.candidates[0],
+                  section,
+                };
+              else {
+                ingredient = new Ingredient();
+                ingredient.section = section;
+              }
+              ingredient.id = scannedIngredient.id;
+              recipe.ingredients.push(ingredient);
+              ingredients.ingredients.push(ingredient);
+            }
 
-  findRecipe(url: string) {
-    this.links = undefined;
-    this.imageLinks = undefined;
+            sections.push(section);
+            ingredientsBySection.push(ingredients);
+          }
+  
+          this.sections = sections;
+          this.ingredientsBySection = ingredientsBySection;
+          this.recipe = recipe;
+        }
 
-    this.store.dispatch(requestRecipeSeek({url}));
-  }
+        return r;
+      })
+    );
 
-  findImages(url: string) {
-    this.links = undefined;
-    this.imageLinks = undefined;
-    this.webSeekerService.FindLinksWithImage(url).subscribe(result => {
-      this.links = result;
-    })
-    this.webSeekerService.FindImageLinks(url).subscribe(result => {
-      this.imageLinks = result as LinkInfoPlus[];
-      this.imageLinks.map(l => l.encodedUrl = encodeURIComponent(l.url));
+    this.ingredientCandidatesBySection$ = this.recipeSeekResult$.pipe(
+      map(r => this.groupBySection(r.data.ingredients))
+    );
+
+    this.saveRecipe$ = this.store.select(state => state.recipeManagement.saveRecipe);
+    this.saveRecipe$.subscribe(r => {
+      if (!r || r.isSaving || typeof(r.isSuccess) !== "boolean")
+        return;
+      
+      if (!r.isSuccess)
+        return;
+
+      this.store.dispatch(completeSaveRecipe({}));
+      this.router.navigate(["dishes"]);
     });
   }
 
-  seekWeb(url: string) {
-    this.url = url;
-    this.onFindImages();
+  getRecipeSiteDomain(): string {
+    var parts = this.url.split('/');
+    if (parts.length < 3)
+      return "";
+    else
+      return parts[2];
   }
 
-  onGoBack() {
-    if (this.historyCursor == 0)
-      return;
-    this.historyCursor--;
-    let run = this.history[this.historyCursor];
-    this.url = run();
+  save() {
+    this.store.dispatch(requestSaveRecipe({ recipe: this.recipe }));
   }
 
-  onGoForeward() {
-    if (this.historyCursor + 1 >= this.history.length)
-      return;
-    this.historyCursor++;
-    let run = this.history[this.historyCursor];
-    this.url = run();
+  findRecipe(url: string) {
+    this.store.dispatch(requestRecipeSeek({url}));
   }
 
   onCancel() {
     this.store.dispatch(cancelRecipeSeek({ url: this.url }));
   }
-}
 
-class LinkInfoPlus extends LinkInfo {
-  public encodedUrl: string;
+  groupBySection(ingredients: Array<ScannedIngredient>): { section: ScannedIngredientSection, ingredients: ScannedIngredient[] }[] {
+    let groups = ingredients.reduce(function (gs, x) {
+      let s = x.section;
+      let g = gs.find((g) => g && g.section === s);
+      if (g) {
+        g.ingredients.push(x);
+      } else {
+        gs.push({ section: s, ingredients: [x] });
+      }
+      return gs;
+    }, []);
+    return groups;
+  }
 }

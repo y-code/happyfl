@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,11 +8,10 @@ namespace HappyFL.DB.RecipeManagement
     public class Dish
     {
         [Column("dish_id"), Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+        public long? Id { get; set; }
         [Column("name")]
         public string Name { get; set; }
-        [Column("cuisine")]
-        public string Cuisine { get; set; }
+        public ICollection<DishTag> Tags { get; set; }
         public ICollection<Recipe> Recipes { get; set; }
     }
 }

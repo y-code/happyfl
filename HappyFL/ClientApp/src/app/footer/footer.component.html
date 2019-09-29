@@ -1,0 +1,26 @@
+<div class="main-container align-items-center bg-dark">
+  <div class="row">
+    <div class="col-app-name">
+      HappyFL
+    </div>
+    <div class="col-content">
+      <ul class="navbar-nav flex-grow">
+        <li class="nav-item" [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
+          <a class="nav-link text-white app-name" [routerLink]='["/recipe-seeker-index"]'>Recipe Seeker</a>
+        </li>
+        <!-- <li class="nav-item" [routerLinkActive]='["link-active"]'>
+          <a class="nav-link text-white" [routerLink]='["/"]'>Home</a>
+        </li> -->
+        <li class="nav-item" [routerLinkActive]='["link-active"]'>
+          <a class="nav-link text-white app-name" [routerLink]='["/dishes"]'>Dishes</a>
+        </li>
+        <li class="nav-item" [routerLinkActive]='["link-active"]'>
+          <a class="nav-link text-white app-name" [routerLink]='["/web-seeker"]'>Web Seeker</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="row justify-content-end text-light">
+    &copy; Y-code
+  </div>
+</div>

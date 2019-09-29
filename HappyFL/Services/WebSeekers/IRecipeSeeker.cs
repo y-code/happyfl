@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using HappyFL.Models.WebSeeker;
 
 namespace HappyFL.Services.WebSeekers
 {
     public interface IRecipeSeeker
     {
-        IEnumerable<WebSeekerService.RecipeSeekResult> Scan();
+        IEnumerable<ScannedRecipe> Scan();
     }
 }

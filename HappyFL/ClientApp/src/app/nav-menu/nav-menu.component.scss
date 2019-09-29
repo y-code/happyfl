@@ -1,3 +1,5 @@
+@import '../../styles.scss';
+
 a.navbar-brand {
   white-space: normal;
   text-align: center;
@@ -15,4 +17,20 @@ html {
 
 .box-shadow {
   box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+nav .container {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.tool-name {
+  @extend .app-name;
+  @extend .text-white;
+}
+
+.app-logo {
+  @extend .app-name;
+  @extend .text-white;
+  text-shadow: 1px 1px 2px #343a40;
 }

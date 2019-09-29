@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using HappyFL.Models.WebSeeker;
 using HtmlAgilityPack;
 
 namespace HappyFL.Services.WebSeekers
@@ -12,17 +13,19 @@ namespace HappyFL.Services.WebSeekers
         public Uri Url { get; }
         public CancellationToken? Cancel { get; }
         public Encoding Encoding { get; private set; }
+        public IIngredientItemParser IngredientItemParser { get; }
 
-        public RecipeSeeker(Uri url, CancellationToken? cancel = null, Encoding encoding = null)
+        public RecipeSeeker(Uri url, CancellationToken? cancel = null, Encoding encoding = null, IIngredientItemParser ingredientItemParser = null)
         {
             Url = url;
             Cancel = cancel;
             Encoding = encoding;
+            IngredientItemParser = ingredientItemParser ?? new IngredientItemParserCommonA();
         }
 
-        public IEnumerable<WebSeekerService.RecipeSeekResult> Scan()
+        public IEnumerable<ScannedRecipe> Scan()
         {
-            var result = new List<WebSeekerService.RecipeSeekResult>();
+            var scanned = new List<ScannedRecipe>();
 
             var web = new HtmlWeb();
             if (Encoding != null)
@@ -49,42 +52,78 @@ namespace HappyFL.Services.WebSeekers
                 Cancel?.ThrowIfCancellationRequested();
 
                 var ingredientsSectionNode = ScanIngredientsSectionNode(doc, ingredientsCaptionNode);
-                var recipe = new WebSeekerService.RecipeSeekResult();
-                result.Add(recipe);
+                var recipe = new ScannedRecipe();
+                scanned.Add(recipe);
 
-                recipe.Names = ScanRecipeNameCandidates(doc, ingredientsCaptionNode).ToList();
+                recipe.Dish = ScanDishCandidates(doc, ingredientsCaptionNode);
 
-                var ingredientsSubSectionNodes = ScanIngredientsSubSectionNodes(doc, ingredientsSectionNode);
-                foreach (var subSectionNode in ingredientsSubSectionNodes)
+                var ingredientSectionNodes = ScanIngredientSectionNodes(doc, ingredientsSectionNode);
+                var ingredients = new List<ScannedIngredient>();
+                foreach (var subSectionNode in ingredientSectionNodes)
                 {
                     Cancel?.ThrowIfCancellationRequested();
 
-                    recipe.IngredientsSections.Add(ScanIngredientsSubSection(doc, subSectionNode));
+                    var section = ScanIngredientSection(doc, subSectionNode);
+
+                    var ingredientsBySection = ScanIngredientsFromIngredientSection(doc, subSectionNode);
+
+                    ingredients.AddRange(ingredientsBySection.Select(i =>
+                    {
+                        var d = IngredientItemParser.Parse(i);
+                        d.Section = section;
+                        return d;
+                    }));
                 }
+                recipe.Ingredients = ingredients;
 
                 // refine data
-                var reliableSectionNames = recipe.IngredientsSections.Where(s => s.Names.Count == 1)
-                    .SelectMany(s => s.Names).ToList();
-                recipe.IngredientsSections.Where(s => s.Names.Count > 1)
-                    .ToList().ForEach(s =>
-                    {
-                        foreach (var i in s.Names.ToList())
-                            if (reliableSectionNames.Contains(i))
-                                s.Names.Remove(i);
-                    });
+                var sections = recipe.Ingredients.Select(i => i.Section).Distinct();
+                var reliableSectionNames = sections.Where(s => s.Candidates.Count() == 1)
+                    .SelectMany(s => s.Candidates.Select(c => c.Name)).ToList();
+                foreach (var s in sections.Where(s => s.Candidates.Count() > 1))
+                {
+                    foreach (var sc in s.Candidates)
+                        if (reliableSectionNames.Any(n => n == sc.Name))
+                            s.Candidates = s.Candidates.Where(c => c != sc);
+                }
             }
 
-            return result;
+            AppendTemporaryIndecies(scanned);
+
+            return scanned;
+        }
+
+        private void AppendTemporaryIndecies(List<ScannedRecipe> scanned)
+        {
+            int sequenceForRecipe = 0;
+            int sequenceForDish = 0;
+            int sequenceForIngredientSection = 0;
+            int sequenceForIngredient = 0;
+
+            foreach (var recipe in scanned)
+            {
+                recipe.Id = --sequenceForRecipe;
+                recipe.Dish.Id = --sequenceForDish;
+                foreach (var s in recipe.Ingredients
+                    .Select(i =>
+                    {
+                        i.Id = --sequenceForIngredient;
+                        return i.Section;
+                    })
+                    .Distinct())
+                {
+                    s.Id = --sequenceForIngredientSection;
+                }
+            }
+
+
         }
 
         protected abstract IEnumerable<HtmlNode> ScanIngredientsCaptionNodes(HtmlDocument doc);
-
         protected abstract HtmlNode ScanIngredientsSectionNode(HtmlDocument doc, HtmlNode ingredientsCaptionNode);
-
-        protected abstract IEnumerable<string> ScanRecipeNameCandidates(HtmlDocument doc, HtmlNode ingredientsCaptionNode);
-
-        protected abstract IEnumerable<HtmlNode> ScanIngredientsSubSectionNodes(HtmlDocument doc, HtmlNode ingredientsSectionNode);
-
-        protected abstract WebSeekerService.RecipeSeekResult.IngredientsSection ScanIngredientsSubSection(HtmlDocument doc, HtmlNode subSectionNode);
+        protected abstract ScannedDish ScanDishCandidates(HtmlDocument doc, HtmlNode ingredientsCaptionNode);
+        protected abstract IEnumerable<HtmlNode> ScanIngredientSectionNodes(HtmlDocument doc, HtmlNode ingredientsSectionNode);
+        protected abstract ScannedIngredientSection ScanIngredientSection(HtmlDocument doc, HtmlNode subSectionNode);
+        protected abstract List<string> ScanIngredientsFromIngredientSection(HtmlDocument doc, HtmlNode subSectionNode);
     }
 }

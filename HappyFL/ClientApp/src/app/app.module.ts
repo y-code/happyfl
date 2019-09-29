@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -21,6 +22,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { RecipeManagementEffects } from './service/recipe-management/recipe-management.effects';
 import { RecipesComponent } from './recipes/recipes.component';
 import { RecipeSeekerIndexComponent } from './recipe-seeker-index/recipe-seeker-index.component';
+import { DishComboboxComponent } from './recipe-seeker/dish-combobox.component';
+import { IngredientSectionComboboxComponent } from './recipe-seeker/ingredient-section-combobox.component';
+import { IngredientComboboxComponent } from './recipe-seeker/ingredient-combobox.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -33,14 +38,19 @@ import { RecipeSeekerIndexComponent } from './recipe-seeker-index/recipe-seeker-
     WebSeekerComponent,
     RecipeSeekerComponent,
     RecipeSeekerIndexComponent,
-    RecipesComponent
+    RecipesComponent,
+    DishComboboxComponent,
+    IngredientSectionComboboxComponent,
+    IngredientComboboxComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+    // BrowserAnimationsModule,
     HttpClientModule,
     FormsModule, ReactiveFormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: '', component: RecipeSeekerIndexComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'dishes', component: DishesComponent },

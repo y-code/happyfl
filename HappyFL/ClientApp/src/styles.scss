@@ -1,0 +1,25 @@
+@import 'bootstrap-custom.scss';
+@import '../node_modules/bootstrap/scss/bootstrap';
+
+// override _grid.scss
+.no-gutters {
+  margin-right: -15px;
+  margin-left: -15px;
+
+  > .col,
+  > [class*="col-"] {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+// custom general style
+.app-name {
+  font-family: 'Palatino';
+  font-weight: bold;
+}
+
+row-fluid {
+  padding-right: 0;
+  padding-left: 0;
+}

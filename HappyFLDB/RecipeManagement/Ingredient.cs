@@ -7,7 +7,7 @@ namespace HappyFL.DB.RecipeManagement
     public class Ingredient
     {
         [Column("ingredient_id"), Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+        public long? Id { get; set; }
         [Column("name")]
         public string Name { get; set; }
         [Column("amount")]

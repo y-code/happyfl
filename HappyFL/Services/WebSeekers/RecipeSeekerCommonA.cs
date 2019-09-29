@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using HappyFL.DB.RecipeManagement;
+using HappyFL.Models.WebSeeker;
 using HtmlAgilityPack;
 
 namespace HappyFL.Services.WebSeekers
@@ -28,7 +30,7 @@ namespace HappyFL.Services.WebSeekers
         protected override HtmlNode ScanIngredientsSectionNode(HtmlDocument doc, HtmlNode ingredientsCaptionNode)
             => ingredientsCaptionNode.ParentNode;
 
-        protected override IEnumerable<string> ScanRecipeNameCandidates(HtmlDocument doc, HtmlNode ingredientsCaptionNode)
+        protected override ScannedDish ScanDishCandidates(HtmlDocument doc, HtmlNode ingredientsCaptionNode)
         {
             string[] nameNodeNames;
             switch (ingredientsCaptionNode.Name)
@@ -44,31 +46,56 @@ namespace HappyFL.Services.WebSeekers
                     break;
             }
 
-            return doc.SelectNodes(k => $"//{k}", nameNodeNames)
-                .Select(n => n.InnerText.HtmlDecode());
+            return new ScannedDish
+            {
+                Candidates = doc.SelectNodes(k => $"//{k}", nameNodeNames)
+                    .Select(n =>
+                    {
+                        var caption = n.InnerText.HtmlDecode().Trim();
+                        return new Dish
+                        {
+                            Name = caption
+                        };
+                    })
+            };
         }
  
-        protected override IEnumerable<HtmlNode> ScanIngredientsSubSectionNodes(HtmlDocument doc, HtmlNode ingredientsSectionNode)
+        protected override IEnumerable<HtmlNode> ScanIngredientSectionNodes(HtmlDocument doc, HtmlNode ingredientsSectionNode)
             => ingredientsSectionNode.SelectNodes(k => $"//{k}", "ul", "ol");
 
-        protected override WebSeekerService.RecipeSeekResult.IngredientsSection ScanIngredientsSubSection(HtmlDocument doc, HtmlNode subSectionNode)
+        protected override ScannedIngredientSection ScanIngredientSection(HtmlDocument doc, HtmlNode subSectionNode)
         {
-            var subSection = new WebSeekerService.RecipeSeekResult.IngredientsSection();
-            subSection.Ingredients = subSectionNode.SelectNodes(k => $"//{k}", "li")
+            var candidates = subSectionNode.ParentNode.SelectNodes(k => $"/{k}", "h1", "h2", "h3", "h4", "h5")
+                .Select(n =>
+                {
+                    var candidate = new IngredientSection
+                    {
+                        Name = n.InnerText.HtmlDecode().Trim()
+                    };
+                    return candidate;
+                }).ToList();
+
+            var closestName = subSectionNode.PreviousSibling?.InnerText.HtmlDecode().Trim();
+            IngredientSection closestCandidate = candidates.FirstOrDefault(c => c.Name == closestName);
+            if (closestCandidate != null)
+                candidates = new List<IngredientSection> { closestCandidate };
+
+            var scanned = new ScannedIngredientSection
+            {
+                Candidates = candidates,
+            };
+
+            return scanned;
+        }
+
+        protected override List<string> ScanIngredientsFromIngredientSection(HtmlDocument doc, HtmlNode subSectionNode)
+            => subSectionNode.SelectNodes(k => $"//{k}", "li")
                 .Select(n => n
                     .SelectNodes(k => $"//{k}", "text()[parent::li|parent::a[parent::li]|parent::span]")
-                    .Select(n2 => n2.InnerText)
-                    .DefaultIfEmpty().Aggregate((a, b) => a + b)
-                    .HtmlDecode())
+                    .Select(n2 => n2.InnerText.Trim())
+                    .DefaultIfEmpty().Aggregate((a, b) => a + " " + b)
+                    .HtmlDecode().Trim())
+                .Where(t => !string.IsNullOrEmpty(t))
                 .ToList();
-
-            subSection.Names = subSectionNode.ParentNode.SelectNodes(k => $"/{k}", "h1", "h2", "h3", "h4", "h5")
-                .Select(n => n.InnerText.HtmlDecode()).ToList();
-
-            if (subSection.Names.Contains(subSectionNode.PreviousSibling?.InnerText.HtmlDecode()))
-                subSection.Names = new List<string> { subSectionNode.PreviousSibling.InnerText.HtmlDecode() };
-
-            return subSection;
-        }
     }
 }

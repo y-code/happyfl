@@ -1,6 +1,22 @@
-<body>
+<body class="bg-light">
   <app-nav-menu></app-nav-menu>
-  <div class="container">
+  <div class="container container-main">
+
+    <div *ngIf="(saveRecipe$ | async).notification" class="row sticky-top notifications">
+      <ngb-alert
+        class="col-12"
+        [type]="(saveRecipe$ | async).notification.type"
+        (close)="closeSaveRecipeMessage()">
+        {{(saveRecipe$ | async).notification.message}}
+      </ngb-alert>
+    </div>
+
     <router-outlet></router-outlet>
+    
   </div>
+  <footer class="bg-dark">
+    <footer class="container">
+      <app-footer></app-footer>
+    </footer>
+  </footer>
 </body>
