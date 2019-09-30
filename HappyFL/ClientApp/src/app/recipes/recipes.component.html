@@ -1,28 +1,65 @@
-<h1>Recipes</h1>
-
-<div *ngIf='(recipes$ | async).isLoading'>
-  Loading...
+<div
+  *ngIf="(recipes$ | async).isLoading"
+  class="row fill-window">
+  <div class="col-12 align-self-center text-center">
+    Loading...
+  </div>
 </div>
 
-<div *ngIf="(recipes$ | async).data">
-  <div *ngFor="let recipe of (recipes$ | async).data">
-    <h2>{{recipe.name}}</h2>
-    <a href="{{recipe.urlOfBase}}" target="_blank">{{recipe.urlOfBase}}</a>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <td>Name</td>
-          <td>Amount</td>
-          <td>Note</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let ingredient of recipe.ingredients">
-          <td>{{ingredient.name}}</td>
-          <td>{{ingredient.amount}} {{ingredient.unit}}</td>
-          <td>{{ingredient.note}}</td>
-        </tr>
-      </tbody>
-    </table>
+<div
+  *ngIf="!(recipes$ | async)?.isLoading"
+  class="container-fluid">
+  <h1>
+    {{(recipes$ | async).data[0].recipe.dish.name}}
+  </h1>
+
+  <div
+    class="accordion">
+    <div
+      class="card"
+      *ngFor="let d of (recipes$ | async)?.data; let i = index"
+      id="recipe-{{i}}">
+      <div
+        class="card-header bg-secondary"
+        (click)="showRecipe(i)">
+        <h2>{{d.recipe?.name}}</h2>
+      </div>
+      <div
+        [ngClass]="{ show: ( activeRecipeIndex == i ) }"
+        class="collapse container">
+        <div
+          class="row">
+          <div
+            class="col-12 text-right">
+            <a class="" href="{{d.recipe.urlOfBase}}" target="_blank">Open in {{getRecipeSiteDomain(d.recipe.urlOfBase)}}</a>
+          </div>
+        </div>
+        <div
+          class="row">
+          <div
+            class="col-12">
+            <p>
+              Servings: {{d.recipe.servings}}
+            </p>
+          </div>
+        </div>
+        <h3>Ingredients</h3>
+        <div
+          *ngFor="let group of d.ingredientsBySection; let i = index"
+          class="card-body row section">
+          <h4>{{group.section.name}}</h4>
+          <div
+            class="col-12">
+            <div
+              *ngFor="let ingredient of group.ingredients"
+              class="row ingredient">
+              <div class="ingredient-name">{{ingredient.name}}</div>
+              <div class="ingredient-amount">{{ingredient.amount}} {{ingredient.unit}}</div>
+              <div class="ingredient-note">{{ingredient.note}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

@@ -1,8 +1,9 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Recipe, Dish } from 'src/app/model/recipe-management';
+import { Recipe, Dish, IngredientSection } from 'src/app/model/recipe-management';
 import { SaveRecipeResponse } from '../web-seeker/web-seeker.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,21 @@ export class RecipeManagementService {
   }
 
   getRecipes(dishId: number): Observable<Recipe[]> {
-    return this.http.get<Recipe[]>(`${this.baseUrl}api/RecipeManagement/Recipes?DishId=${dishId}`);
+    return this.http.get<Recipe[]>(`${this.baseUrl}api/RecipeManagement/Recipes?DishId=${dishId}`)
+      .pipe(
+        map(value => {
+          for (let recipe of value) {
+            let section: IngredientSection;
+            for (let ingredient of recipe.ingredients) {
+              if (section && section.id === ingredient.section.id)
+                ingredient.section = section;
+              else
+                section = ingredient.section;
+            }
+          }
+          return value;
+        })
+      );
   }
 
   public saveRecipe(recipe: Recipe): Observable<SaveRecipeResponse> {

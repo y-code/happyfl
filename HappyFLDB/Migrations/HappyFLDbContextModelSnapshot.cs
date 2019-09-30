@@ -105,6 +105,9 @@ namespace HappyFL.DB.Migrations
                     b.Property<string>("Name")
                         .HasColumnName("name");
 
+                    b.Property<int>("Servings")
+                        .HasColumnName("servings");
+
                     b.Property<string>("UrlOfBase")
                         .HasColumnName("url_of_base");
 

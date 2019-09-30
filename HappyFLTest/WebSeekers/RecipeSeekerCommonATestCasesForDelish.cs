@@ -19,12 +19,17 @@ namespace HappyFL.Test.WebSeekers
                             new ScannedRecipe
                             {
                                 Id = -1,
+                                Servings = 4,
                                 Dish = new ScannedDish
                                 {
                                     Id = -1,
                                     Candidates = new List<Dish>
                                     {
-                                    }
+                                        new Dish
+                                        {
+                                            Name = "Coconut Chicken Tenders"
+                                        },
+                                    },
                                 },
                                 Ingredients = new List<ScannedIngredient>
                                 {
@@ -244,11 +249,16 @@ namespace HappyFL.Test.WebSeekers
                             new ScannedRecipe
                             {
                                 Id = -1,
+                                Servings = 16,
                                 Dish = new ScannedDish
                                 {
                                     Id = -1,
                                     Candidates = new List<Dish>
                                     {
+                                        new Dish
+                                        {
+                                            Name = "Cookie Monster Cheesecake Bars"
+                                        },
                                     }
                                 },
                                 Ingredients = new List<ScannedIngredient>

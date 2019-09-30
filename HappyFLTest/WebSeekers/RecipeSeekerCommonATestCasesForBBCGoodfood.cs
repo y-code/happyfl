@@ -19,11 +19,16 @@ namespace HappyFL.Test.WebSeekers
                             new ScannedRecipe
                             {
                                 Id = -1,
+                                Servings = 6,
                                 Dish = new ScannedDish
                                 {
                                     Id = -1,
                                     Candidates = new List<Dish>
                                     {
+                                        new Dish
+                                        {
+                                            Name = "Jerk chicken with rice & peas",
+                                        }
                                     }
                                 },
                                 Ingredients = new List<ScannedIngredient>
@@ -621,11 +626,16 @@ namespace HappyFL.Test.WebSeekers
                             new ScannedRecipe
                             {
                                 Id = -1,
+                                Servings = 12,
                                 Dish = new ScannedDish
                                 {
                                     Id = -1,
                                     Candidates = new List<Dish>
                                     {
+                                        new Dish
+                                        {
+                                            Name = "Angel cake with meringue icing & strawberry ganache",
+                                        }
                                     }
                                 },
                                 Ingredients = new List<ScannedIngredient>
@@ -1015,11 +1025,16 @@ namespace HappyFL.Test.WebSeekers
                             new ScannedRecipe
                             {
                                 Id = -1,
+                                Servings = 5,
                                 Dish = new ScannedDish
                                 {
                                     Id = -1,
                                     Candidates = new List<Dish>
                                     {
+                                        new Dish
+                                        {
+                                            Name = "Classic cheese scones",
+                                        }
                                     }
                                 },
                                 Ingredients = new List<ScannedIngredient>

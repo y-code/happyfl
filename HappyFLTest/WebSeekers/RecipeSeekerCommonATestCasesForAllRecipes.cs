@@ -19,11 +19,16 @@ namespace HappyFL.Test.WebSeekers
                             new ScannedRecipe
                             {
                                 Id = -1,
+                                Servings = 24,
                                 Dish = new ScannedDish
                                 {
                                     Id = -1,
                                     Candidates = new List<Dish>
                                     {
+                                        new Dish
+                                        {
+                                            Name = "Mom's Ice Cream Dessert",
+                                        }
                                     }
                                 },
                                 Ingredients = new List<ScannedIngredient>
@@ -259,7 +264,7 @@ namespace HappyFL.Test.WebSeekers
             {
                 new TestFindRecipeTestCase
                 {
-                    Url = "https://www.allrecipes.com/recipe/143082/sweet-sticky-and-spicy-chicken/?internalSource=previously%20viewed&referringContentType=Homepage&clickId=cardslot%202",
+                    Url = "https://www.countdown.co.nz/recipes/2118/tuna-sushi-style-sandwiches",
                     Expected =
                     {
                         Recipes =
@@ -267,15 +272,154 @@ namespace HappyFL.Test.WebSeekers
                             new ScannedRecipe
                             {
                                 Id = -1,
+                                Servings = 2,
                                 Dish = new ScannedDish
                                 {
                                     Id = -1,
                                     Candidates = new List<Dish>
                                     {
-                                    }
+                                        new Dish
+                                        {
+                                            Name = "Tuna sushi style sandwiches",
+                                        },
+                                    },
                                 },
                                 Ingredients = new List<ScannedIngredient>
                                 {
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "wholegrain bread",
+                                                Amount = 4f,
+                                                Unit = "slice",
+                                                Note = "crusts removed",
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -1,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Ingredients",
+                                                },
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "spreadable cream cheese",
+                                                Amount = 50f,
+                                                Unit = "g",
+                                                Note = null,
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -1,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Ingredients",
+                                                },
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "tuna in springwater",
+                                                Amount = 95f,
+                                                Unit = "g",
+                                                Note = "flaked and drained",
+                                            },
+                                            new Ingredient
+                                            {
+                                                Name = "springwater",
+                                                Amount = 1f,
+                                                Unit = "inch",
+                                                Note = "flaked and drained, 95 g tuna",
+                                            },
+                                            new Ingredient
+                                            {
+                                                Name = "95 g tuna",
+                                                Amount = 1f,
+                                                Unit = "inch",
+                                                Note = "springwater, flaked and drained",
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -1,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Ingredients",
+                                                },
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "lebanese cucumber",
+                                                Amount = 0.5f,
+                                                Unit = null,
+                                                Note = "deseeded and cut into matchsticks",
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -1,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Ingredients",
+                                                },
+                                            },
+                                        },
+                                    },
+                                    new ScannedIngredient
+                                    {
+                                        Candidates = new List<Ingredient>
+                                        {
+                                            new Ingredient
+                                            {
+                                                Name = "medium carrot",
+                                                Amount = 0.25f,
+                                                Unit = null,
+                                                Note = "cut into matchsticks",
+                                            },
+                                        },
+                                        Section = new ScannedIngredientSection
+                                        {
+                                            Id = -1,
+                                            Candidates = new List<IngredientSection>
+                                            {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Ingredients",
+                                                },
+                                            },
+                                        },
+                                    },
                                 }
                             },
                         }
@@ -293,11 +437,16 @@ namespace HappyFL.Test.WebSeekers
                             new ScannedRecipe
                             {
                                 Id = -1,
+                                Servings = 4,
                                 Dish = new ScannedDish
                                 {
                                     Id = -1,
                                     Candidates = new List<Dish>
                                     {
+                                        new Dish
+                                        {
+                                            Name = "Healthier Pan-Fried Honey-Sesame Chicken",
+                                        }
                                     }
                                 },
                                 Ingredients = new List<ScannedIngredient>
@@ -319,6 +468,10 @@ namespace HappyFL.Test.WebSeekers
                                             Id = -1,
                                             Candidates = new List<IngredientSection>
                                             {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Sauce:",
+                                                },
                                             },
                                         },
                                     },
@@ -339,6 +492,10 @@ namespace HappyFL.Test.WebSeekers
                                             Id = -1,
                                             Candidates = new List<IngredientSection>
                                             {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Sauce:",
+                                                },
                                             },
                                         },
                                     },
@@ -359,6 +516,10 @@ namespace HappyFL.Test.WebSeekers
                                             Id = -1,
                                             Candidates = new List<IngredientSection>
                                             {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Sauce:",
+                                                },
                                             },
                                         },
                                     },
@@ -379,6 +540,10 @@ namespace HappyFL.Test.WebSeekers
                                             Id = -1,
                                             Candidates = new List<IngredientSection>
                                             {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Sauce:",
+                                                },
                                             },
                                         },
                                     },
@@ -399,6 +564,10 @@ namespace HappyFL.Test.WebSeekers
                                             Id = -1,
                                             Candidates = new List<IngredientSection>
                                             {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Sauce:",
+                                                },
                                             },
                                         },
                                     },
@@ -419,6 +588,10 @@ namespace HappyFL.Test.WebSeekers
                                             Id = -1,
                                             Candidates = new List<IngredientSection>
                                             {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Sauce:",
+                                                },
                                             },
                                         },
                                     },
@@ -439,6 +612,10 @@ namespace HappyFL.Test.WebSeekers
                                             Id = -1,
                                             Candidates = new List<IngredientSection>
                                             {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Sauce:",
+                                                },
                                             },
                                         },
                                     },
@@ -459,6 +636,10 @@ namespace HappyFL.Test.WebSeekers
                                             Id = -2,
                                             Candidates = new List<IngredientSection>
                                             {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Sauce:",
+                                                },
                                             },
                                         },
                                     },
@@ -479,6 +660,10 @@ namespace HappyFL.Test.WebSeekers
                                             Id = -2,
                                             Candidates = new List<IngredientSection>
                                             {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Sauce:",
+                                                },
                                             },
                                         },
                                     },
@@ -499,6 +684,10 @@ namespace HappyFL.Test.WebSeekers
                                             Id = -2,
                                             Candidates = new List<IngredientSection>
                                             {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Sauce:",
+                                                },
                                             },
                                         },
                                     },
@@ -519,6 +708,10 @@ namespace HappyFL.Test.WebSeekers
                                             Id = -2,
                                             Candidates = new List<IngredientSection>
                                             {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Sauce:",
+                                                },
                                             },
                                         },
                                     },
@@ -539,6 +732,10 @@ namespace HappyFL.Test.WebSeekers
                                             Id = -2,
                                             Candidates = new List<IngredientSection>
                                             {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Sauce:",
+                                                },
                                             },
                                         },
                                     },
@@ -559,6 +756,10 @@ namespace HappyFL.Test.WebSeekers
                                             Id = -2,
                                             Candidates = new List<IngredientSection>
                                             {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Sauce:",
+                                                },
                                             },
                                         },
                                     },
@@ -579,6 +780,10 @@ namespace HappyFL.Test.WebSeekers
                                             Id = -2,
                                             Candidates = new List<IngredientSection>
                                             {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Sauce:",
+                                                },
                                             },
                                         },
                                     },
@@ -599,6 +804,10 @@ namespace HappyFL.Test.WebSeekers
                                             Id = -2,
                                             Candidates = new List<IngredientSection>
                                             {
+                                                new IngredientSection
+                                                {
+                                                    Name = "Sauce:",
+                                                },
                                             },
                                         },
                                     },

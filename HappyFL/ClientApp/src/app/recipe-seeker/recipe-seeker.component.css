@@ -8,10 +8,6 @@
   right: 10px;
 }
 
-.fill-window {
-  height: calc(100vh - 150px);
-}
-
 .ingredient-row {
   padding-top: 6px;
   padding-bottom: 6px;

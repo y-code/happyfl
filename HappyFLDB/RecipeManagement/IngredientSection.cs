@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace HappyFL.DB.RecipeManagement
 {
@@ -11,6 +12,7 @@ namespace HappyFL.DB.RecipeManagement
         public long? Id { get; set; }
         [Column("name")]
         public string Name { get; set; }
+        [JsonIgnore]
         public ICollection<Ingredient> Ingredients { get; set; }
     }
 }

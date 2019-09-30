@@ -88,7 +88,8 @@ export class RecipeSeekerComponent implements OnInit {
           }[] = [];
   
           recipe.name = r.data.dish.candidates.length ? `${r.data.dish.candidates[0].name} from ${this.getRecipeSiteDomain()}` : undefined;
- 
+          recipe.urlOfBase = this.url;
+          recipe.servings = r.data.servings ? r.data.servings : 1;
           recipe.dish = r.data.dish.candidates.length ? { ...r.data.dish.candidates[0] } : new Dish();
           
           let groups = this.groupBySection(r.data.ingredients);

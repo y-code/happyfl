@@ -19,7 +19,7 @@ namespace HappyFL.Test.WebSeekers
             GenerateTestCaseCodeOfTestFindRecipe(testCase.Url);
         }
 
-        //[TestCase("https://www.delish.com/cooking/recipe-ideas/a27819262/coconut-chicken-tenders-recipe/")]
+        //[TestCase("https://www.allrecipes.com/recipe/143082/sweet-sticky-and-spicy-chicken/?internalSource=previously%20viewed&referringContentType=Homepage&clickId=cardslot%202")]
         public void GenerateTestCaseCodeOfTestFindRecipe(string url)
         {
             var service = new WebSeekerService(_logger);
@@ -95,12 +95,13 @@ namespace HappyFL.Test.WebSeekers
                             new ScannedRecipe
                             {{
                                 Id = {r.Id},
+                                Servings = {r.Servings},
                                 Dish = new ScannedDish
                                 {{
                                     Id = -1,
                                     Candidates = new List<Dish>
                                     {{{dishCandidates}
-                                    }}
+                                    }},
                                 }},
                                 Ingredients = new List<ScannedIngredient>
                                 {{{ingredients}
@@ -111,7 +112,7 @@ namespace HappyFL.Test.WebSeekers
 
             return $@"
             {{
-                new TestFindRecipeTestCase2
+                new TestFindRecipeTestCase
                 {{
                     Url = ""{url}"",
                     Expected =

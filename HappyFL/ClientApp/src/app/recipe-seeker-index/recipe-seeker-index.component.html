@@ -94,18 +94,26 @@
     </button>
   </div>
   <div class="modal-body">
-    <p>
-      Before going to the recipe site, <span class="text-danger">save Recipe Seeker Bookmarklet below</span> to your browser.
-    </p>
-    <p>
-      <a [href]="getLauncherScript()" class="btn btn-warning">→ Recipe Seeker</a>
-    </p>
-    <p>
-      Then, when you are at a recipe webpage, <span class="text-danger">click the Recipe Seeker Bookmarklet</span> on the list of bookmarks. It'll help you open the recipe in Recipe Seeker 👍
-    </p>
+    <ol>
+      <li>Get <i>Recipe Seeker Bookmarklet</i></li>
+        <p>
+          Before going to the recipe site, please <span class="text-danger">install Recipe Seeker Bookmarklet</span> to your browser. Drag the button below and drop at bookmark bar of browser.
+        </p>
+        <p>
+          <a [href]="getLauncherScript()" class="btn btn-warning">→ Recipe Seeker</a>
+        </p>
+      <li>Open Recipe Page on Browser</li>
+        <p>
+          Open a recipe website on browser, and <span class="text-danger">go to a recipe page</span>.
+        </p>
+      <li>Run <i>Recipe Seeker Bookmarklet</i></li>
+      <p>
+          <span class="text-danger">select the Recipe Seeker Bookmarklet</span> on the list of bookmarks on your browser. You'll see Recipe Seeker open and help you save the recipe. 👍
+        </p>
+    </ol>
   </div>
   <div class="modal-footer">
     <!-- <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('Cancel click')">Cancel</button> -->
-    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Open click')">Go to Site</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Open click')">Go to Recipe Site</button>
   </div>
 </ng-template>

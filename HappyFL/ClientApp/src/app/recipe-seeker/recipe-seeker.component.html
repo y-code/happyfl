@@ -35,9 +35,20 @@
         <label for="recipeName">Recipe Name</label>
         <input
           id="recipeName"
+          type="text"
           [(ngModel)]="recipe.name"
           class="form-control"
           placeholder="Please enter this recipe's name."/>
+      </div>
+
+      <div class="form-group">
+        <label for="servings">Servings</label>
+        <input
+          id="servings"
+          type="number"
+          [(ngModel)]="recipe.servings"
+          class="form-control"
+          placeholder="Please enter number of servings of this recipe."/>
       </div>
 
       <h3>Dish</h3>
