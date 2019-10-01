@@ -12,10 +12,11 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 })
 export class RecipeSeekerIndexComponent implements OnInit {
 
-  readonly URL_BBCGoodFood: string = "https://www.bbcgoodfood.com/";
+  readonly URL_BBCGoodFood: string = "https://www.bbcgoodfood.com/recipes/";
   readonly URL_allrecipes: string = "https://www.allrecipes.com/";
-  readonly URL_JamieOliver: string = "https://www.jamieoliver.com/";
-  readonly URL_delish: string = "https://www.delish.com/";
+  readonly URL_JamieOliver: string = "https://www.jamieoliver.com/recipes/";
+  readonly URL_delish: string = "https://www.delish.com/contenttype/recipes/";
+  readonly URL_countdown: string = "https://www.countdown.co.nz/recipes/";
 
   customSiteForm: FormGroup;
 
