@@ -21,11 +21,11 @@ namespace HappyFL.DB.RecipeManagement
         {
             get
             {
-                return Recipes.Select(r => new
+                return Recipes?.Select(r => new
                     {
                         Name = r.Name
                     })
-                    .ToArray();
+                    .ToArray() ?? new object[0];
             }
         }
     }
