@@ -3,8 +3,7 @@ jobs:
   build:
     docker:
       - image: docker
-        environment:
-          TAG: v0.2.$CIRCLE_BUILD_NUM
+          DOCKER_REPO: ycode/happyfl
 
     steps:
       - checkout
@@ -15,7 +14,8 @@ jobs:
       - run:
           name: Run docker build
           command: |
-            docker build -t ycode/happyfl:$TAG .
+            TAG=v0.2.$CIRCLE_BUILD_NUM
+            docker build -t $DOCKER_REPO:$TAG .
             docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push ycode/happyfl:$TAG
+            docker push $DOCKER_REPO:$TAG
 
