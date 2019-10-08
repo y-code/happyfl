@@ -26,37 +26,47 @@
       </div>
       <div
         [ngClass]="{ show: ( activeRecipeIndex == i ) }"
-        class="collapse container">
-        <div
-          class="row">
+        class="collapse">
+        <div class="card-body container recipe-control-container">
           <div
-            class="col-12 text-right">
-            <a class="" href="{{d.recipe.urlOfBase}}" target="_blank">Open in {{getRecipeSiteDomain(d.recipe.urlOfBase)}}</a>
-          </div>
-        </div>
-        <div
-          class="row">
-          <div
-            class="col-12">
-            <p>
-              Servings: {{d.recipe.servings}}
-            </p>
-          </div>
-        </div>
-        <h3>Ingredients</h3>
-        <div
-          *ngFor="let group of d.ingredientsBySection; let i = index"
-          class="card-body row section">
-          <h4>{{group.section.name}}</h4>
-          <div
-            class="col-12">
+            class="row">
             <div
-              *ngFor="let ingredient of group.ingredients"
-              class="row ingredient">
-              <div class="ingredient-name">{{ingredient.name}}</div>
-              <div class="ingredient-amount">{{ingredient.amount}} {{ingredient.unit}}</div>
-              <div class="ingredient-note">{{ingredient.note}}</div>
+              class="col-12">
+                Recipe: <a class="" href="{{d.recipe.urlOfBase}}" target="_blank">Open in {{getRecipeSiteDomain(d.recipe.urlOfBase)}}</a>
             </div>
+            <div
+              class="col-12">
+                Servings: {{d.recipe.servings}}
+            </div>
+            <p></p>
+          </div>
+          <h4>Ingredients</h4>
+          <div class="container">
+            <div
+              *ngFor="let group of d.ingredientsBySection; let i = index"
+              class="row section">
+              <h5>{{group.section.name}}</h5>
+              <div
+                class="col-12">
+                <div
+                  *ngFor="let ingredient of group.ingredients"
+                  class="row ingredient">
+                  <div class="ingredient-name">{{ingredient.name}}</div>
+                  <div class="ingredient-amount">{{ingredient.amount}} {{ingredient.unit}}</div>
+                  <div class="ingredient-note">{{ingredient.note}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="recipe-control">
+            <button
+              ngbButton
+              class="btn btn-primary"
+              (click)="edit(d.recipe)"
+              [disabled]="false">
+              Edit
+            </button>
           </div>
         </div>
       </div>

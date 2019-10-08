@@ -71,7 +71,7 @@
           <app-recipe-seeker-ingredient-section-combobox
             name="sectionName"
             placeholder="Please enter this section's name, if you need it."
-            [(ngModel)]="sections[i]"
+            [(ngModel)]="ingredientsBySection[i].section"
             [options]="group.section.candidates">
           </app-recipe-seeker-ingredient-section-combobox>
         </div>
@@ -94,12 +94,13 @@
         </div>
       </div>
       <div class="text-center row-btn">
-        <input
+        <button
           ngbButton
           class="btn btn-primary btn-save"
           (click)="save()"
-          [disabled]="(saveRecipe$ | async).isSaving"
-          value="Save" />
+          [disabled]="(saveRecipe$ | async).isSaving">
+          Save
+        </button>
       </div>
     </div>
   </div>

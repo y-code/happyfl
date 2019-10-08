@@ -75,4 +75,6 @@ export class ScannedIngredientSection {
 export class SaveRecipeResponse {
   isSuccess: boolean;
   message: string;
+  recipeId: number;
+  dishId: number;
 }

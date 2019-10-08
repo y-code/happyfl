@@ -50,7 +50,6 @@ namespace HappyFL.Controllers
             public string caption { get; set; }
         }
 
-
         [HttpGet("[action]")]
 		public IEnumerable<FindImageLinksResponse> FindImageLinks(string url)
 		{

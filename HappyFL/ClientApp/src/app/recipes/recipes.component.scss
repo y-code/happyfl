@@ -28,6 +28,17 @@
   cursor: pointer;
 }
 
+.recipe-control-container {
+  position: relative;
+}
+
+.recipe-control-container > .recipe-control {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  display: inline-block;
+}
+
 @media (min-width: 992px) {
 
   .ingredient-name {

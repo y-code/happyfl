@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { requestRecipes } from '../service/recipe-management/recipe-management.actions';
-import { ActivatedRoute } from '@angular/router';
+import { requestRecipesByDish } from '../service/recipe-management/recipe-management.actions';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Recipe, IngredientSection, Ingredient } from '../model/recipe-management';
 import { Observable } from 'rxjs';
 import { map, groupBy } from 'rxjs/operators';
@@ -30,18 +30,19 @@ export class RecipesComponent implements OnInit {
   constructor(
     private store: Store<{
       recipeManagement: {
-        recipes: {
+        recipesByDish: {
           isLoading: boolean,
           dishId: number,
           data: Recipe[]
         }
       }
     }>,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router,
   ) { }
 
   ngOnInit() {
-    this.recipes$ = this.store.select(state => state.recipeManagement.recipes).pipe(
+    this.recipes$ = this.store.select(state => state.recipeManagement.recipesByDish).pipe(
       map(r => ({
         ...r,
         data: r.data ? r.data.map(recipe => ({
@@ -51,10 +52,10 @@ export class RecipesComponent implements OnInit {
       }))
     );
 
-    this.store.dispatch(requestRecipes({ dishId: this.route.snapshot.queryParams.dishId }));
+    this.store.dispatch(requestRecipesByDish({ dishId: this.route.snapshot.queryParams.dishId }));
   }
 
-  groupBySection(ingredients: Array<Ingredient>): { section: IngredientSection, ingredients: Ingredient[] }[] {
+  private groupBySection(ingredients: Array<Ingredient>): { section: IngredientSection, ingredients: Ingredient[] }[] {
     let groups = ingredients.reduce(function (gs, x) {
       let s = x.section;
       let g = gs.find((g) => g && g.section === s);
@@ -81,5 +82,9 @@ export class RecipesComponent implements OnInit {
       return "";
     else
       return parts[2];
+  }
+
+  edit(recipe: Recipe) {
+    this.router.navigate([ "/recipe-seeker/recipe", recipe.id ]);
   }
 }

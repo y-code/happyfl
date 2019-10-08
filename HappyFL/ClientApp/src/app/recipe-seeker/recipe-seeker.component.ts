@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, Inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { WebSeekerService, LinkInfo, ScannedRecipe, ScannedIngredient, ScannedIngredientSection,  } from 'src/app/service/web-seeker/web-seeker.service';
 import { Store } from '@ngrx/store';
-import { requestRecipeSeek, cancelRecipeSeek, requestSaveRecipe, completeSaveRecipe } from 'src/app/service/recipe-management/recipe-management.actions';
+import { requestRecipeSeek, cancelRecipeSeek, requestSaveRecipe, completeSaveRecipe, requestRecipe } from 'src/app/service/recipe-management/recipe-management.actions';
 import { Recipe, Ingredient, IngredientSection, Dish } from 'src/app/model/recipe-management';
 import { Notification } from 'src/app/model/notification';
 import { Observable } from 'rxjs';
@@ -15,11 +15,8 @@ import { map } from 'rxjs/operators';
 })
 export class RecipeSeekerComponent implements OnInit {
 
-  @Input()
-  @Output()
   public url: string;
 
-  @Input()
   public recipeSeekResult$: Observable<{
     isLoading: boolean,
     url: string,
@@ -35,11 +32,12 @@ export class RecipeSeekerComponent implements OnInit {
     isSaving: boolean,
     isSuccess: boolean,
     message: Notification,
-  }>;
+    dishId: number,
+    recipeId: number,
+}>;
 
-  public recipe: Recipe = new Recipe();
+  public recipe: Recipe;
 
-  public sections: IngredientSection[] = [];
   public ingredientsBySection: {
     section: IngredientSection,
     ingredients: Ingredient[],
@@ -59,29 +57,48 @@ export class RecipeSeekerComponent implements OnInit {
           isSaving: boolean,
           isSuccess: boolean,
           message: Notification,
+          dishId: number,
+          recipeId: number,
         },
+        recipe: {
+          isLoading: boolean,
+          data: Recipe,
+        }
       }
     }>,
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this.recipe = new Recipe();
   }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.url = params.url;
-
-      this.findRecipe(this.url);
+      if (params.id) {
+        this.store.dispatch(requestRecipe({ recipeId: params.id }));
+      } else {
+        this.url = params.url;
+        this.store.dispatch(requestRecipeSeek({ url: this.url }));
+      }
     });
+
+    this.store.select(state => state.recipeManagement.recipe)
+      .subscribe(r => {
+        if (r.isLoading || !r.data)
+          return r;
+        this.recipe = r.data;
+        this.ingredientsBySection = this.groupBySection(this.recipe.ingredients);
+        this.url = this.recipe.urlOfBase;
+
+        this.store.dispatch(requestRecipeSeek({ url: this.recipe.urlOfBase }));
+
+        return r;
+      });
 
     this.recipeSeekResult$ = this.store.select(state => state.recipeManagement.recipeSeekResult).pipe(
       map(r => {
-
-        /* re-initialize this.recipe */
-        if (r.data) {
+        if (r.data && !this.recipe) {
+          /* initialize this.recipe */
           let recipe = new Recipe();
-          let sections: IngredientSection[] = [];
           let ingredientsBySection: {
             section: IngredientSection,
             ingredients: Ingredient[]
@@ -92,7 +109,7 @@ export class RecipeSeekerComponent implements OnInit {
           recipe.servings = r.data.servings ? r.data.servings : 1;
           recipe.dish = r.data.dish.candidates.length ? { ...r.data.dish.candidates[0] } : new Dish();
           
-          let groups = this.groupBySection(r.data.ingredients);
+          let groups = this.groupByScannedSection(r.data.ingredients);
           for (let group of groups) {
             let section = new IngredientSection();
             let ingredients: {
@@ -121,11 +138,9 @@ export class RecipeSeekerComponent implements OnInit {
               ingredients.ingredients.push(ingredient);
             }
 
-            sections.push(section);
             ingredientsBySection.push(ingredients);
           }
   
-          this.sections = sections;
           this.ingredientsBySection = ingredientsBySection;
           this.recipe = recipe;
         }
@@ -135,7 +150,7 @@ export class RecipeSeekerComponent implements OnInit {
     );
 
     this.ingredientCandidatesBySection$ = this.recipeSeekResult$.pipe(
-      map(r => this.groupBySection(r.data.ingredients))
+      map(r => this.groupByScannedSection(r.data.ingredients))
     );
 
     this.saveRecipe$ = this.store.select(state => state.recipeManagement.saveRecipe);
@@ -146,12 +161,15 @@ export class RecipeSeekerComponent implements OnInit {
       if (!r.isSuccess)
         return;
 
-      this.store.dispatch(completeSaveRecipe({}));
-      this.router.navigate(["dishes"]);
+      this.store.dispatch(completeSaveRecipe());
+      this.router.navigate([ "recipes" ], { queryParams: { dishId: r.dishId } });
     });
   }
 
   getRecipeSiteDomain(): string {
+    if (!this.url)
+      return;
+
     var parts = this.url.split('/');
     if (parts.length < 3)
       return "";
@@ -163,15 +181,25 @@ export class RecipeSeekerComponent implements OnInit {
     this.store.dispatch(requestSaveRecipe({ recipe: this.recipe }));
   }
 
-  findRecipe(url: string) {
-    this.store.dispatch(requestRecipeSeek({url}));
-  }
-
   onCancel() {
     this.store.dispatch(cancelRecipeSeek({ url: this.url }));
   }
 
-  groupBySection(ingredients: Array<ScannedIngredient>): { section: ScannedIngredientSection, ingredients: ScannedIngredient[] }[] {
+  private groupByScannedSection(ingredients: Array<ScannedIngredient>): { section: ScannedIngredientSection, ingredients: ScannedIngredient[] }[] {
+    let groups = ingredients.reduce(function (gs, x) {
+      let s = x.section;
+      let g = gs.find((g) => g && g.section === s);
+      if (g) {
+        g.ingredients.push(x);
+      } else {
+        gs.push({ section: s, ingredients: [x] });
+      }
+      return gs;
+    }, []);
+    return groups;
+  }
+
+  private groupBySection(ingredients: Array<Ingredient>): { section: IngredientSection, ingredients: Ingredient[] }[] {
     let groups = ingredients.reduce(function (gs, x) {
       let s = x.section;
       let g = gs.find((g) => g && g.section === s);

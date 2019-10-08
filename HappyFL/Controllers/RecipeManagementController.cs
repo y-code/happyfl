@@ -32,19 +32,33 @@ namespace HappyFL.Controllers
 
         public class RecipesForm
         {
-            public long DishId { get; set; }
+            public long? DishId { get; set; }
+            public long? RecipeId { get; set; }
         }
 
         [HttpGet("[action]")]
         public IEnumerable<Recipe> Recipes(RecipesForm form)
         {
-            var recipes = _dbContext.Recipes
-                .Where(r => r.Dish.Id == form.DishId)
-                .Include(r => r.Dish)
-                .Include(r => r.Ingredients)
-                .ThenInclude(i => i.Section)
-                .OrderBy(r => r.Id)
-                .ToList();
+            List<Recipe> recipes;
+            if (form.RecipeId.HasValue)
+                recipes = _dbContext.Recipes
+                    .Where(r => r.Id == form.RecipeId)
+                    .Include(r => r.Dish)
+                    .Include(r => r.Ingredients)
+                    .ThenInclude(i => i.Section)
+                    .OrderBy(r => r.Id)
+                    .ToList();
+            else if (form.DishId.HasValue)
+                recipes = _dbContext.Recipes
+                    .Where(r => r.Dish.Id == form.DishId)
+                    .Include(r => r.Dish)
+                    .Include(r => r.Ingredients)
+                    .ThenInclude(i => i.Section)
+                    .OrderBy(r => r.Id)
+                    .ToList();
+            else
+                recipes = new List<Recipe>();
+
             foreach (var recipe in recipes)
             {
                 recipe.Ingredients = recipe.Ingredients
@@ -52,6 +66,7 @@ namespace HappyFL.Controllers
                     .ThenBy(i => i.Id)
                     .ToList();
             }
+
             return recipes;
         }
 
@@ -59,32 +74,21 @@ namespace HappyFL.Controllers
         {
             public bool IsSuccess { get; set; }
             public string Message { get; set; }
+            public long? RecipeId { get; set; }
+            public long? DishId { get; set; }
         }
 
         [HttpPost("[action]")]
-        public async Task<SaveRecipeResult> SaveRecipe([FromBody] DB.RecipeManagement.Recipe recipe)
+        public async Task<SaveRecipeResult> Recipes([FromBody] Recipe recipe)
         {
-            if (recipe.Id < 0)
-                recipe.Id = null;
-            var sections = recipe.Ingredients
-                .Select(i => i.Section)
-                .GroupBy(s => s.Id)
-                .Select(g => g.First());
-            foreach (var ingredient in recipe.Ingredients)
-            {
-                if (ingredient.Id < 0)
-                    ingredient.Id = null;
-                ingredient.Section = sections
-                    .FirstOrDefault(s => s.Id == ingredient.Section.Id);
-            }
-            foreach (var section in sections)
-                if (section.Id < 0)
-                    section.Id = null;
+            PrepareForPersistence(recipe, out var sections);
 
             try
             {
-
-                _dbContext.AddRange(sections);
+                if (sections.Any(s => s.Id.HasValue))
+                    _dbContext.UpdateRange(sections.Where(s => s.Id.HasValue));
+                if (sections.Any(s => !s.Id.HasValue))
+                    _dbContext.AddRange(sections.Where(s => !s.Id.HasValue));
                 _dbContext.SaveChanges();
 
                 if (recipe?.Id == null)
@@ -107,7 +111,29 @@ namespace HappyFL.Controllers
             {
                 IsSuccess = true,
                 Message = "The recipe has been successfully saved.",
+                RecipeId = recipe.Id,
+                DishId = recipe.Dish?.Id,
             };
+        }
+
+        private void PrepareForPersistence(Recipe recipe, out IEnumerable<IngredientSection> sections)
+        {
+            if (recipe.Id < 0)
+                recipe.Id = null;
+            sections = recipe.Ingredients
+                .Select(i => i.Section)
+                .GroupBy(s => s.Id)
+                .Select(g => g.First());
+            foreach (var ingredient in recipe.Ingredients)
+            {
+                if (ingredient.Id < 0)
+                    ingredient.Id = null;
+                ingredient.Section = sections
+                    .FirstOrDefault(s => s.Id == ingredient.Section.Id);
+            }
+            foreach (var section in sections)
+                if (section.Id < 0)
+                    section.Id = null;
         }
     }
 }
