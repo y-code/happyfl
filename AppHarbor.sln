@@ -14,8 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{3F4D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyFL", "HappyFL\HappyFL.csproj", "{0345BF7F-74D7-406B-A20D-03579EEF9B4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyFLDBRelease", "HappyFLDBRelease\HappyFLDBRelease.csproj", "{BBE93D37-EDB5-4B60-AE8D-69F66AECC70F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,10 +28,6 @@ Global
 		{0345BF7F-74D7-406B-A20D-03579EEF9B4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0345BF7F-74D7-406B-A20D-03579EEF9B4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0345BF7F-74D7-406B-A20D-03579EEF9B4E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BBE93D37-EDB5-4B60-AE8D-69F66AECC70F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BBE93D37-EDB5-4B60-AE8D-69F66AECC70F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BBE93D37-EDB5-4B60-AE8D-69F66AECC70F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BBE93D37-EDB5-4B60-AE8D-69F66AECC70F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
