@@ -3,6 +3,7 @@ jobs:
   build:
     docker:
       - image: docker
+        environment:
           DOCKER_REPO: ycode/happyfl
 
     steps:
