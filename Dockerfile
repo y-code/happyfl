@@ -23,6 +23,7 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2.7 AS runtime
 WORKDIR /app
 EXPOSE 8080/tcp
+ARG ASPNETCORE_ENVIRONMENT=Docker
 COPY --from=build /app/HappyFL/out ./
 ENTRYPOINT ["dotnet", "HappyFL.dll"]
 
