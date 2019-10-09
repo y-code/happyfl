@@ -15,20 +15,7 @@ namespace HappyFL
     {
         public static void Main(string[] args)
         {
-            var configBuilder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json");
-            switch (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"))
-            {
-                case "Development":
-                    configBuilder.AddJsonFile("appsettings.Development.json", false);
-                    break;
-                case "Docker":
-                    configBuilder.AddJsonFile("appsettings.Docker.json", false);
-                    break;
-            }
-
             CreateWebHostBuilder(args)
-                .UseConfiguration(configBuilder.Build())
                 .Build().Run();
         }
 

@@ -24,6 +24,6 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:2.2.7 AS runtime
 WORKDIR /app
 EXPOSE 8080/tcp
 ENV ASPNETCORE_ENVIRONMENT Docker
+ENV ASPNETCORE_URLS http://+:8080
 COPY --from=build /app/HappyFL/out ./
 ENTRYPOINT ["dotnet", "HappyFL.dll"]
-
