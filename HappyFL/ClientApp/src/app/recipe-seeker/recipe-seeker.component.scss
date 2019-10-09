@@ -1,3 +1,5 @@
+@import '../../styles.scss';
+
 .header {
   height: 80px;
 }
@@ -23,7 +25,7 @@
   padding-bottom: 40px;
 }
 
-@media (min-width: 992px) {
+@include media-breakpoint-up(md, $grid-breakpoints) {
 
   .btn-save {
     width: 300px;

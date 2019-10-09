@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-recipe-seeker',
   templateUrl: './recipe-seeker.component.html',
-  styleUrls: ['./recipe-seeker.component.css'],
+  styleUrls: ['./recipe-seeker.component.scss'],
 })
 export class RecipeSeekerComponent implements OnInit {
 
