@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>McMaster.AspNetCore.LetsEncrypt</name>
+    </assembly>
+    <members>
+        <member name="T:McMaster.AspNetCore.LetsEncrypt.ILetsEncryptServiceBuilder">
+            <summary>
+            Configures options for Let's Encrypt
+            </summary>
+        </member>
+        <member name="P:McMaster.AspNetCore.LetsEncrypt.ILetsEncryptServiceBuilder.Services">
+            <summary>
+            The service collection.
+            </summary>
+        </member>
+        <member name="T:McMaster.AspNetCore.LetsEncrypt.Internal.AcmeCertificateLoader">
+            <summary>
+            Loads certificates for all configured hostnames
+            </summary>
+        </member>
+        <member name="T:McMaster.AspNetCore.LetsEncrypt.Internal.DeveloperCertLoader">
+            <summary>
+            Loads the ASP.NET Developer certificate
+            /// </summary>
+        </member>
+        <member name="P:McMaster.AspNetCore.LetsEncrypt.LetsEncryptServiceBuilder.Services">
+            <inheritdoc />
+        </member>
+        <member name="T:McMaster.AspNetCore.LetsEncrypt.LetsEncryptOptions">
+            <summary>
+            Options for configuring Let's Encrypt to automatically generate HTTPS certificates.
+            </summary>
+        </member>
+        <member name="P:McMaster.AspNetCore.LetsEncrypt.LetsEncryptOptions.DomainNames">
+            <summary>
+            The domain names for which to generate certificates.
+            </summary>
+        </member>
+        <member name="P:McMaster.AspNetCore.LetsEncrypt.LetsEncryptOptions.AcceptTermsOfService">
+            <summary>
+            Indicate that you agree with Let's Encrypt's terms of service.
+            <para>
+            See <see href="https://letsencrypt.org">https://letsencrypt.org</see> for details.
+            </para>
+            </summary>
+        </member>
+        <member name="P:McMaster.AspNetCore.LetsEncrypt.LetsEncryptOptions.EmailAddress">
+            <summary>
+            The email address used to register with letsencrypt.org.
+            </summary>
+        </member>
+        <member name="P:McMaster.AspNetCore.LetsEncrypt.LetsEncryptOptions.UseStagingServer">
+            <summary>
+            Use Let's Encrypt staging server.
+            <para>
+            This is recommended during development of the application and is automatically enabled
+            if the hosting environment name is 'Development'.
+            </para>
+            </summary>
+        </member>
+        <member name="P:McMaster.AspNetCore.LetsEncrypt.LetsEncryptOptions.FallbackCertificate">
+            <summary>
+            A certificate to use if a certifcates cannot be created automatically.
+            <para>
+            This can be null if there is not fallback certificate.
+            </para>
+            </summary>
+        </member>
+        <member name="P:McMaster.AspNetCore.LetsEncrypt.LetsEncryptOptions.KeyAlgorithm">
+            <summary>
+            Asymetric encryption algorithm: RS256, ES256, ES384, ES512
+            </summary>
+        </member>
+        <member name="M:McMaster.AspNetCore.LetsEncrypt.LetsEncryptOptions.GetAcmeServer(Microsoft.Extensions.Hosting.IHostingEnvironment)">
+            <summary>
+            The uri to the server that implements the ACME protocol for certificate generation.
+            </summary>
+            <param name="env"></param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.LetsEncryptApplicationBuilderExtensions">
+            <summary>
+            Helper methods
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.LetsEncryptApplicationBuilderExtensions.UseLetsEncryptDomainVerification(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds middleware use to verify domain ownership.
+            </summary>
+            <param name="app">The application builder</param>
+            <returns>The application builder</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.LetsEncryptServiceCollectionExtensions">
+            <summary>
+            Helper methods for configuring https://letsencrypt.org/.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.LetsEncryptServiceCollectionExtensions.AddLetsEncrypt(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Use Let's Encrypt (<see href="https://letsencrypt.org/">https://letsencrypt.org/</see>) to automatically
+            generate HTTPS certificates for this server.
+            </summary>
+            <param name="services"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.LetsEncryptServiceCollectionExtensions.AddLetsEncrypt(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{McMaster.AspNetCore.LetsEncrypt.LetsEncryptOptions})">
+            <summary>
+            Use Let's Encrypt (<see href="https://letsencrypt.org/">https://letsencrypt.org/</see>) to automatically
+            generate HTTPS certificates for this server.
+            </summary>
+            <param name="services"></param>
+            <param name="configure">A callback to configure options.</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

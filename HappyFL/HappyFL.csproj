@@ -28,13 +28,13 @@
     <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+    <PackageReference Include="Certes" Version="2.3.3" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Content Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
-    <None Include="Properties\launchSettings.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -89,6 +89,9 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\unsubmodule\html-agility-pack\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="McMaster.AspNetCore.LetsEncrypt">
+      <HintPath>..\unsubmodule\LetsEncrypt\McMaster.AspNetCore.LetsEncrypt.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <Target Name="UnsubmoduleOnDebug" BeforeTargets="Build">
@@ -102,12 +105,15 @@
 
   <ItemGroup>
     <HtmlAgilityPackArtifacts Include="$(SolutionDir)/html-agility-pack/src/HtmlAgilityPack.NETStandard2_0/bin/Debug/netstandard2.0/netstandard2.0/*.*" />
+    <LetsEncryptArtifacts Include="$(SolutionDir)/LetsEncrypt/.build/McMaster.AspNetCore.LetsEncrypt/bin/Debug/netstandard2.0/*.*" />
   </ItemGroup>
 
   <Target Name="Unsubmodule">
     <Message Importance="High" Text="Copy submodule artifacts to unsubmodule dir for the use in AppHarbor.sln." />
     <MakeDir Directories="$(SolutionDir)/unsubmodule/html-agility-pack" />
     <Copy SourceFiles="@(HtmlAgilityPackArtifacts)" DestinationFolder="$(SolutionDir)/unsubmodule/html-agility-pack" />
+    <MakeDir Directories="$(SolutionDir)/unsubmodule/LetsEncrypt" />
+    <Copy SourceFiles="@(LetsEncryptArtifacts)" DestinationFolder="$(SolutionDir)/unsubmodule/LetsEncrypt" />
   </Target>
 
 </Project>

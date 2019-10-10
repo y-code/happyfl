@@ -32,6 +32,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{0281FA
 		.dockerignore = .dockerignore
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "McMaster.AspNetCore.LetsEncrypt", "LetsEncrypt\src\LetsEncrypt\McMaster.AspNetCore.LetsEncrypt.csproj", "{57B50979-3EE0-4DC1-B044-D34DF217F050}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +68,10 @@ Global
 		{0471A77D-FE36-423C-86CB-109D720592BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0471A77D-FE36-423C-86CB-109D720592BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0471A77D-FE36-423C-86CB-109D720592BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57B50979-3EE0-4DC1-B044-D34DF217F050}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57B50979-3EE0-4DC1-B044-D34DF217F050}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57B50979-3EE0-4DC1-B044-D34DF217F050}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57B50979-3EE0-4DC1-B044-D34DF217F050}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

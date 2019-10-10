@@ -30,6 +30,7 @@ namespace HappyFL
                 configuration.RootPath = "ClientApp/dist";
             });
 
+            services.AddLetsEncrypt();
             services.AddHttpsRedirection(options => { });
 
 			services.AddSingleton<WebSeekerService>();

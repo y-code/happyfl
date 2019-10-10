@@ -2,3 +2,6 @@
 	path = html-agility-pack
 	url = https://github.com/y-code/html-agility-pack.git
 	branch = handle-not-supported-content-encoding
+[submodule "LetsEncrypt"]
+	path = LetsEncrypt
+	url = https://github.com/mbican/LetsEncrypt.git
