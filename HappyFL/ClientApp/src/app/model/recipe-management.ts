@@ -1,6 +1,8 @@
 export class Recipe {
   id: number;
   name: string;
+  servings: number;
+  urlOfBase: string;
   dish: Dish;
   ingredients: Ingredient[] = [];
 }

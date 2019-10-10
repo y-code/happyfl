@@ -19,11 +19,16 @@ namespace HappyFL.Test.WebSeekers
                             new ScannedRecipe
                             {
                                 Id = -1,
+                                Servings = 2,
                                 Dish = new ScannedDish
                                 {
                                     Id = -1,
                                     Candidates = new List<Dish>
                                     {
+                                        new Dish
+                                        {
+                                            Name = "Tuna sushi style sandwiches",
+                                        },
                                     }
                                 },
                                 Ingredients = new List<ScannedIngredient>

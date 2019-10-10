@@ -60,6 +60,18 @@ namespace HappyFL.Test.WebSeekers
                 var expectedRecipe = testCase.Expected.Recipes[i];
                 var actualRecipe = results[i];
 
+                Assert.That(actualRecipe.Servings, Is.EqualTo(expectedRecipe.Servings));
+
+                Assert.That(actualRecipe.Dish, Is.Not.Null);
+                Assert.That(actualRecipe.Dish.Candidates, Has.Count.EqualTo(expectedRecipe.Dish.Candidates.Count()));
+                for (var j = 0; j < expectedRecipe.Dish.Candidates.Count(); j++)
+                {
+                    var expectedDishCandidate = expectedRecipe.Dish.Candidates.ElementAt(j);
+                    var actualDishCandidate = actualRecipe.Dish.Candidates.ElementAt(j);
+
+                    Assert.That(actualDishCandidate.Name, Is.EqualTo(expectedDishCandidate.Name));
+                }
+
                 Assert.That(actualRecipe.Ingredients, Has.Count.EqualTo(expectedRecipe.Ingredients.Count()));
                 for (var j = 0; j < expectedRecipe.Ingredients.Count(); j++)
                 {

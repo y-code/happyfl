@@ -34,10 +34,11 @@ export class ValueAccessorBase<T> implements ControlValueAccessor {
     this._touched.push(fn);
   }
 
-  updateValue(newValue: T) {
+  updateValue(newValue: T, exclude: string[] = []) {
     if (!this.value)
       return;
     for (let propName in newValue)
-      this.value[propName] = newValue[propName];
+      if (!exclude.includes(propName))
+        this.value[propName] = newValue[propName];
   }
 }

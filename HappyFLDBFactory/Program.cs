@@ -7,8 +7,6 @@ namespace HappyFL.DBFactory
     {
         static void Main(string[] args)
         {
-            var factory = new HappyFLDbContextFactory();
-            Console.WriteLine("Hello World!");
         }
     }
 }

@@ -17,3 +17,32 @@
 .col-content {
   flex: 1;
 }
+
+.col-github-logo {
+  @extend .text-center;
+  min-width: 100%;
+  min-height: 140px;
+  margin-top: 40px;
+}
+
+@include media-breakpoint-up(sm) {
+
+  .col-github-logo {
+    min-width: 140px;
+    min-height: 140px;
+    margin-top: 0px;
+    margin-right: 0px;
+  }
+
+}
+
+@include media-breakpoint-up(md) {
+
+  .col-github-logo {
+    min-width: 140px;
+    min-height: 140px;
+    margin-top: 0px;
+    margin-right: 100px;
+  }
+
+}

@@ -57,8 +57,13 @@ import { FooterComponent } from './footer/footer.component';
       { path: 'recipes', component: RecipesComponent },
       { path: 'web-seeker', component: WebSeekerComponent },
       { path: 'recipe-seeker-index', component: RecipeSeekerIndexComponent },
-      { path: 'recipe-seeker', component: RecipeSeekerComponent },
-      { path: 'recipe-seeker/:url', component: RecipeSeekerComponent },
+      {
+        path: 'recipe-seeker',
+        children: [
+          { path: 'recipe/:id', component: RecipeSeekerComponent },
+          { path: ':url', component: RecipeSeekerComponent },
+        ],
+      },
     ]),
     NgbModule,
     StoreModule.forRoot({

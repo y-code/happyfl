@@ -49,9 +49,10 @@ export class LinkInfo {
 }
 
 export class ScannedRecipe {
-  public name: string;
-  public dish: ScannedDish;
-  public ingredients: ScannedIngredient[];
+  name: string;
+  servings: number;
+  dish: ScannedDish;
+  ingredients: ScannedIngredient[];
 }
 
 export class ScannedDish {
@@ -74,4 +75,6 @@ export class ScannedIngredientSection {
 export class SaveRecipeResponse {
   isSuccess: boolean;
   message: string;
+  recipeId: number;
+  dishId: number;
 }

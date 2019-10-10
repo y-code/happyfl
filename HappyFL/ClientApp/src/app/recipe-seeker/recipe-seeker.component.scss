@@ -1,3 +1,5 @@
+@import '../../styles.scss';
+
 .header {
   height: 80px;
 }
@@ -6,10 +8,6 @@
   position: absolute;
   top: 46px;
   right: 10px;
-}
-
-.fill-window {
-  height: calc(100vh - 150px);
 }
 
 .ingredient-row {
@@ -27,7 +25,7 @@
   padding-bottom: 40px;
 }
 
-@media (min-width: 992px) {
+@include media-breakpoint-up(md) {
 
   .btn-save {
     width: 300px;

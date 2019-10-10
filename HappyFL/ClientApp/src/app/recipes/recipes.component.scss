@@ -1,0 +1,54 @@
+@import '../../styles.scss';
+
+.ingredient-name {
+  flex: 5;
+}
+.ingredient-amount {
+  flex: 3;
+}
+.ingredient-note {
+  flex: 100%;
+  font-style: italic;
+}
+
+.section .ingredient:nth-of-type(odd) {
+  @extend .bg-light;
+}
+
+.section .ingredient:nth-of-type(even) {
+  @extend .bg-white;
+}
+
+.accordion > div.card:only-child {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: calc(0.25rem - 1px);
+}
+
+.accordion > .card > .card-header:hover {
+  cursor: pointer;
+}
+
+.recipe-control-container {
+  position: relative;
+}
+
+.recipe-control-container > .recipe-control {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  display: inline-block;
+}
+
+@media (min-width: 992px) {
+
+  .ingredient-name {
+    flex: 5;
+  }
+  .ingredient-amount {
+    flex: 3;
+  }
+  .ingredient-note {
+    flex: 5;
+  }
+
+}

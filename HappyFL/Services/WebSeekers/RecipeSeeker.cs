@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using HappyFL.DB.RecipeManagement;
 using HappyFL.Models.WebSeeker;
 using HtmlAgilityPack;
 
@@ -55,7 +56,22 @@ namespace HappyFL.Services.WebSeekers
                 var recipe = new ScannedRecipe();
                 scanned.Add(recipe);
 
-                recipe.Dish = ScanDishCandidates(doc, ingredientsCaptionNode);
+                var dishCaptionNodes = ScanDishCaptionNodes(doc, ingredientsCaptionNode);
+
+                var dishes = new List<ScannedDish>();
+                var servingsList = new List<int>();
+                foreach (var dishCaptionNode in dishCaptionNodes)
+                {
+                    dishes.Add(ScanDish(doc, dishCaptionNode));
+                    servingsList.Add(ScanServings(doc, dishCaptionNode));
+                }
+                recipe.Dish = dishes.FirstOrDefault();
+                if (recipe.Dish == null)
+                    recipe.Dish = new ScannedDish
+                    {
+                        Candidates = new List<Dish>(),
+                    };
+                recipe.Servings = servingsList.Min();
 
                 var ingredientSectionNodes = ScanIngredientSectionNodes(doc, ingredientsSectionNode);
                 var ingredients = new List<ScannedIngredient>();
@@ -121,7 +137,9 @@ namespace HappyFL.Services.WebSeekers
 
         protected abstract IEnumerable<HtmlNode> ScanIngredientsCaptionNodes(HtmlDocument doc);
         protected abstract HtmlNode ScanIngredientsSectionNode(HtmlDocument doc, HtmlNode ingredientsCaptionNode);
-        protected abstract ScannedDish ScanDishCandidates(HtmlDocument doc, HtmlNode ingredientsCaptionNode);
+        protected abstract IEnumerable<HtmlNode> ScanDishCaptionNodes(HtmlDocument doc, HtmlNode ingredientsCaptionNode);
+        protected abstract ScannedDish ScanDish(HtmlDocument doc, HtmlNode dishCaptionNode);
+        protected abstract int ScanServings(HtmlDocument doc, HtmlNode dishCaptionNode);
         protected abstract IEnumerable<HtmlNode> ScanIngredientSectionNodes(HtmlDocument doc, HtmlNode ingredientsSectionNode);
         protected abstract ScannedIngredientSection ScanIngredientSection(HtmlDocument doc, HtmlNode subSectionNode);
         protected abstract List<string> ScanIngredientsFromIngredientSection(HtmlDocument doc, HtmlNode subSectionNode);

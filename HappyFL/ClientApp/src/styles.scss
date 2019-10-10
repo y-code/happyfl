@@ -1,5 +1,7 @@
-@import 'bootstrap-custom.scss';
+@import 'bootstrap-custom';
 @import '../node_modules/bootstrap/scss/bootstrap';
+@import '../node_modules/bootstrap/scss/variables';
+@import '../node_modules/bootstrap/scss/mixins/breakpoints';
 
 // override _grid.scss
 .no-gutters {
@@ -17,6 +19,10 @@
 .app-name {
   font-family: 'Palatino';
   font-weight: bold;
+}
+
+.fill-window {
+  height: calc(100vh - 150px);
 }
 
 row-fluid {

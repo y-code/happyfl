@@ -30,7 +30,7 @@ export abstract class Combobox<T> extends ValueAccessorBase<T> {
   }
   
   onOptionClick(event: Event, option: T): void {
-    this.updateValue(option);
+    this.updateValue(option, [ "id", "section" ]);
     this.putBackFocus();
     event.preventDefault();
   }

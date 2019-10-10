@@ -14,7 +14,7 @@ namespace HappyFL.Controllers
         [HttpGet("main.js")]
         public IActionResult GetMainJs()
         {
-            ViewData["RecipeSeekerUrl"] = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}/recipe-seeker/";
+            ViewData["RecipeSeekerUrl"] = $"https://{this.Request.Host}{this.Request.PathBase}/recipe-seeker/";
             return View();
         }
     }

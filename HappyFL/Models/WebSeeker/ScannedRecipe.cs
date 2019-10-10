@@ -8,7 +8,7 @@ namespace HappyFL.Models.WebSeeker
     {
         public long? Id { get; set; }
         public string Name { get; set; }
-        public long? Serves { get; set; }
+        public long? Servings { get; set; }
         public ScannedDish Dish { get; set; }
         public IEnumerable<ScannedIngredient> Ingredients { get; set; }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using HappyFL.DB.RecipeManagement;
 using HappyFL.Models.WebSeeker;
@@ -10,6 +11,8 @@ namespace HappyFL.Services.WebSeekers
 {
     public class RecipeSeekerForDelish : RecipeSeeker
     {
+        private Regex _servingsNumberPattern = new Regex(@"[0-9]+(\.[0-9]+)?", RegexOptions.IgnoreCase);
+
         public RecipeSeekerForDelish(Uri url, CancellationToken? cancel = null)
             : base(url, cancel) { }
 
@@ -22,21 +25,42 @@ namespace HappyFL.Services.WebSeekers
                 .SelectNodes(k => $"/ancestor::{k}", "div[@class = 'ingredients']")
                 .FirstOrDefault();
 
-        protected override ScannedDish ScanDishCandidates(HtmlDocument doc, HtmlNode ingredientsCaptionNode)
-        {
-            return new ScannedDish
+        protected override IEnumerable<HtmlNode> ScanDishCaptionNodes(HtmlDocument doc, HtmlNode ingredientsCaptionNode)
+            => ingredientsCaptionNode
+                .SelectNodes(k => $"/ancestor::div[@class = 'site-content']//{k}", "*[contains(@class, 'recipe-hed')]");
+
+        protected override ScannedDish ScanDish(HtmlDocument doc, HtmlNode dishCaptionNode)
+            => new ScannedDish
             {
-                Candidates = ingredientsCaptionNode
-                    .SelectNodes(k => $"/ancestor::div[@class = 'site-content']//{k}", "*[contains(@class, 'recipe-hed')]")
-                    .Select(n =>
+                Candidates = new List<Dish>
+                {
+                    new Dish
                     {
-                        var caption = n.InnerText.HtmlDecode().Trim();
-                        return new Dish
-                        {
-                            Name = caption,
-                        };
-                    })
+                        Name = dishCaptionNode.InnerText.HtmlDecode().Trim()
+                    }
+                }
             };
+
+        protected override int ScanServings(HtmlDocument doc, HtmlNode dishCaptionNode)
+        {
+            return (int)Math.Floor(dishCaptionNode
+                .SelectNodes(k => $"/ancestor::div[@class = 'site-content']//{k}", "*[@class = 'yields-amount']")
+                .SelectMany(n =>
+                {
+                    var matches = _servingsNumberPattern.Matches(n.InnerText);
+                    return matches
+                        .Select(m =>
+                        {
+                            float r;
+                            if (float.TryParse(m.Value, out r))
+                                return (float?)r;
+                            return null;
+                        })
+                        .Where(s => s.HasValue)
+                        .Select(s => (float)s);
+                })
+                .DefaultIfEmpty(0f)
+                .Min());
         }
 
         protected override IEnumerable<HtmlNode> ScanIngredientSectionNodes(HtmlDocument doc, HtmlNode ingredientsSectionNode)

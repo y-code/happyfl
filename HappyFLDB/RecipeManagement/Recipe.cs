@@ -12,6 +12,8 @@ namespace HappyFL.DB.RecipeManagement
         public long? Id { get; set; }
         [Column("name")]
         public string Name { get; set; }
+        [Column("servings")]
+        public int Servings { get; set; }
         [Column("url_of_base")]
         public string UrlOfBase { get; set; }
         [ForeignKey("dish_id")]

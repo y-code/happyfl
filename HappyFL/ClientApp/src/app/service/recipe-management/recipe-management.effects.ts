@@ -11,20 +11,38 @@ import { WebSeekerService } from '../web-seeker/web-seeker.service';
 export class RecipeManagementEffects {
 
   loadDishes$ = createEffect(() => this.actions$.pipe(
-    ofType(RecipeManagementAction.requestDishes.type),
+    ofType(RecipeManagementAction.requestDishes),
     mergeMap(() =>
       this.recipeManagementService.getDishes().pipe(
-        map(dishes => ({ type: RecipeManagementAction.receiveDishes.type, dishes })),
+        map(dishes => (RecipeManagementAction.receiveDishes({
+          dishes
+        }))),
         catchError(() => EMPTY)
       )
     )
   ));
 
-  loadRecipes$ = createEffect(() => this.actions$.pipe(
-    ofType(RecipeManagementAction.requestRecipes),
+  loadRecipe$ = createEffect(() => this.actions$.pipe(
+    ofType(RecipeManagementAction.requestRecipe),
     exhaustMap(action =>
-      this.recipeManagementService.getRecipes(action.dishId).pipe(
-        map(recipes => RecipeManagementAction.receiveRecipes({ dishId: action.dishId, recipes })),
+      this.recipeManagementService.getRecipe(action.recipeId).pipe(
+        map(recipe => RecipeManagementAction.receiveRecipe({
+          recipeId: action.recipeId,
+          recipe
+        })),
+        catchError(() => EMPTY)
+      )
+    )
+  ));
+
+  loadRecipesByDish$ = createEffect(() => this.actions$.pipe(
+    ofType(RecipeManagementAction.requestRecipesByDish),
+    exhaustMap(action =>
+      this.recipeManagementService.getRecipesByDish(action.dishId).pipe(
+        map(recipes => RecipeManagementAction.receiveRecipesByDish({
+          dishId: action.dishId,
+          recipes
+        })),
         catchError(() => EMPTY)
       )
     )
@@ -34,7 +52,10 @@ export class RecipeManagementEffects {
     ofType(RecipeManagementAction.requestRecipeSeek),
     exhaustMap(action =>
       this.webSeekerService.findRecipes(action.url).pipe(
-        map(result => RecipeManagementAction.receiveRecipeSeekResult({ url: action.url, result: (result && result.length > 0 ? result[0] : null) })),
+        map(result => RecipeManagementAction.receiveRecipeSeekResult({
+          url: action.url,
+          result: (result && result.length > 0 ? result[0] : null)
+        })),
         catchError(() => EMPTY),
         takeUntil(
           this.actions$.pipe(
@@ -49,7 +70,12 @@ export class RecipeManagementEffects {
     ofType(RecipeManagementAction.requestSaveRecipe),
     exhaustMap(action =>
       this.recipeManagementService.saveRecipe(action.recipe).pipe(
-        map(result => RecipeManagementAction.receiveResponseForSaveRecipe({ isSuccess: result.isSuccess, message: result.message })),
+        map(r => RecipeManagementAction.receiveResponseForSaveRecipe({
+          isSuccess: r.isSuccess,
+          message: r.message,
+          recipeId: r.recipeId,
+          dishId: r.dishId
+        })),
         catchError(() => EMPTY)
       )
     )

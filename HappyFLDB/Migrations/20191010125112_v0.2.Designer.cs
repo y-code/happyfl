@@ -3,15 +3,17 @@ using System;
 using HappyFL.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HappyFL.DB.Migrations
 {
     [DbContext(typeof(HappyFLDbContext))]
-    partial class HappyFLDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191010125112_v0.2")]
+    partial class v02
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

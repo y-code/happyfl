@@ -1,22 +1,33 @@
 <h1>Dishes</h1>
 
-<div *ngIf='(dishes$ | async).isLoading'>
-  Loading...
+<div
+  *ngIf="(dishes$ | async).isLoading"
+  class="row fill-window">
+  <div class="col-12 align-self-center text-center">
+    Loading...
+  </div>
 </div>
 
-<table *ngIf='(dishes$ | async).data' class="table table-striped">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Cuisine</th>
-      <th># of Recipes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor='let dish of (dishes$ | async).data'>
-      <td>{{dish.name}}</td>
-      <td>{{dish.cuisine}}</td>
-      <td><a [routerLink]="['/recipes']" [queryParams]="{dishId:dish.id}">{{dish.numberOfRecipes}}</a></td>
-    </tr>
-  </tbody>
-</table>
+<div
+  *ngIf="(dishes$ | async).data"
+  class="row">
+  <div
+    *ngFor="let dish of (dishes$ | async).data"
+    class="col-4">
+    <div
+      (click)="goToRecipesPage(dish.id)"
+      class="card dish">
+      <div class="card-header bg-secondary">
+        {{dish.name}}
+      </div>
+      <div class="card-body">
+        <ul>
+          <li
+            *ngFor="let recipe of dish.recipesSummary">
+            {{recipe.name}}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

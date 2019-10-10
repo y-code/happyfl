@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace HappyFL.DB.RecipeManagement
 {
@@ -17,6 +18,7 @@ namespace HappyFL.DB.RecipeManagement
         [Column("note")]
         public string Note { get; set; }
         [ForeignKey("recipe_id")]
+        [JsonIgnore]
         public Recipe Recipe { get; set; }
         [ForeignKey("ingredient_section_id")]
         public IngredientSection Section { get; set; }

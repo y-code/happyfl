@@ -5,6 +5,7 @@ import { Notification, NotificationType } from 'src/app/model/notification';
 export class RecipeManagementState {
   dishes = {};
   recipe = {};
+  recipesByDish = {};
   recipeSeekResult = {};
   saveRecipe = {};
 }
@@ -25,16 +26,16 @@ export const RecipeManagementReducer = createReducer(initialState,
       data: action.dishes,
     },
   })),
-  on(RecipeManagementAction.requestRecipes, (state, action) => ({
+  on(RecipeManagementAction.requestRecipesByDish, (state, action) => ({
     ...state,
-    recipes: {
+    recipesByDish: {
       isLoading: true,
       dishId: action.dishId,
     },
   })),
-  on(RecipeManagementAction.receiveRecipes, (state, action) => ({
+  on(RecipeManagementAction.receiveRecipesByDish, (state, action) => ({
     ...state,
-    recipes: {
+    recipesByDish: {
       isLoading: false,
       dishId: action.dishId,
       data: action.recipes,
@@ -76,7 +77,9 @@ export const RecipeManagementReducer = createReducer(initialState,
     saveRecipe: {
       isSaving: false,
       isSuccess: action.isSuccess,
-      notification: new Notification(NotificationType.success, action.message),
+      notification: new Notification(action.isSuccess ? NotificationType.success : NotificationType.error, action.message),
+      recipeId: action.recipeId,
+      dishId: action.dishId,
     }
   })),
   on(RecipeManagementAction.completeSaveRecipe, (state, action) => ({
@@ -92,6 +95,21 @@ export const RecipeManagementReducer = createReducer(initialState,
     saveRecipe: {
       ...state.saveRecipe,
       notification: undefined,
+    }
+  })),
+  on(RecipeManagementAction.requestRecipe, (state, action) => ({
+    ...state,
+    recipe: {
+      isLoading: true,
+      recipeId: action.recipeId,
+    }
+  })),
+  on(RecipeManagementAction.receiveRecipe, (state, action) => ({
+    ...state,
+    recipe: {
+      ...state.recipe,
+      isLoading: false,
+      data: action.recipe,
     }
   }))
 );

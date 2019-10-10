@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
+using HappyFL.DB.RecipeManagement;
 
 namespace HappyFL.Controllers
 {
@@ -22,87 +23,50 @@ namespace HappyFL.Controllers
             _dbContext = dbContext;
 		}
 
-	    public class Dish
-	    {
-            public long? Id { get; set; }
-		    public string Name { get; set; }
-		    public string Cuisine { get; set; }
-		    public int NumberOfRecipes { get; set; }
-            public Dish(HappyFL.DB.RecipeManagement.Dish d)
-            {
-                Id = d.Id;
-                Name = d.Name;
-                NumberOfRecipes = d.Recipes?.Count ?? 0;
-            }
-        }
-
 		[HttpGet("[action]")]
 		public IEnumerable<Dish> Dishes()
 		{
 			return _dbContext.Dishes
-                .Include(d => d.Recipes)
-                .Select(d => new Dish(d));
+                .Include(d => d.Recipes);
 		}
 
         public class RecipesForm
         {
-            public long DishId { get; set; }
-        }
-
-        public class Recipe
-        {
-            public long? Id { get; set; }
-            public string Name { get; set; }
-            public string UrlOfBase { get; set; }
-            public Dish Dish { get; set; }
-            public IEnumerable<Ingredient> Ingredients { get; set; }
-            public Recipe(HappyFL.DB.RecipeManagement.Recipe r)
-            {
-                Id = r.Id;
-                Name = r.Name;
-                UrlOfBase = r.UrlOfBase;
-                Dish = r.Dish == null ? null : new Dish(r.Dish);
-                Ingredients = r.Ingredients?.Select(i => new Ingredient(i));
-            }
-        }
-        public class Ingredient
-        {
-            public long? Id { get; set; }
-            public string Name { get; set; }
-            public float? Amount { get; set; }
-            public string Unit { get; set; }
-            public string Note { get; set; }
-            public IngredientSection Section { get; set; }
-            public Ingredient(HappyFL.DB.RecipeManagement.Ingredient i)
-            {
-                Id = i.Id;
-                Name = i.Name;
-                Amount = i.Amount;
-                Unit = i.Unit;
-                Note = i.Note;
-                Section = i.Section == null ? null : new IngredientSection(i.Section);
-            }
-        }
-        public class IngredientSection
-        {
-            public long? Id { get; set; }
-            public string Name { get; set; }
-            public IngredientSection(HappyFL.DB.RecipeManagement.IngredientSection s)
-            {
-                Id = s.Id;
-                Name = s.Name;
-            }
+            public long? DishId { get; set; }
+            public long? RecipeId { get; set; }
         }
 
         [HttpGet("[action]")]
         public IEnumerable<Recipe> Recipes(RecipesForm form)
         {
-            var recipes = _dbContext.Recipes
-                .Where(r => r.Dish.Id == form.DishId)
-                .Include(r => r.Dish)
-                .Include(r => r.Ingredients)
-                .Select(r => new Recipe(r));
-            var test = recipes.ToList();
+            List<Recipe> recipes;
+            if (form.RecipeId.HasValue)
+                recipes = _dbContext.Recipes
+                    .Where(r => r.Id == form.RecipeId)
+                    .Include(r => r.Dish)
+                    .Include(r => r.Ingredients)
+                    .ThenInclude(i => i.Section)
+                    .OrderBy(r => r.Id)
+                    .ToList();
+            else if (form.DishId.HasValue)
+                recipes = _dbContext.Recipes
+                    .Where(r => r.Dish.Id == form.DishId)
+                    .Include(r => r.Dish)
+                    .Include(r => r.Ingredients)
+                    .ThenInclude(i => i.Section)
+                    .OrderBy(r => r.Id)
+                    .ToList();
+            else
+                recipes = new List<Recipe>();
+
+            foreach (var recipe in recipes)
+            {
+                recipe.Ingredients = recipe.Ingredients
+                    .OrderBy(i => i.Section.Id)
+                    .ThenBy(i => i.Id)
+                    .ToList();
+            }
+
             return recipes;
         }
 
@@ -110,32 +74,21 @@ namespace HappyFL.Controllers
         {
             public bool IsSuccess { get; set; }
             public string Message { get; set; }
+            public long? RecipeId { get; set; }
+            public long? DishId { get; set; }
         }
 
         [HttpPost("[action]")]
-        public async Task<SaveRecipeResult> SaveRecipe([FromBody] DB.RecipeManagement.Recipe recipe)
+        public async Task<SaveRecipeResult> Recipes([FromBody] Recipe recipe)
         {
-            if (recipe.Id < 0)
-                recipe.Id = null;
-            var sections = recipe.Ingredients
-                .Select(i => i.Section)
-                .GroupBy(s => s.Id)
-                .Select(g => g.First());
-            foreach (var ingredient in recipe.Ingredients)
-            {
-                if (ingredient.Id < 0)
-                    ingredient.Id = null;
-                ingredient.Section = sections
-                    .FirstOrDefault(s => s.Id == ingredient.Section.Id);
-            }
-            foreach (var section in sections)
-                if (section.Id < 0)
-                    section.Id = null;
+            PrepareForPersistence(recipe, out var sections);
 
             try
             {
-
-                _dbContext.AddRange(sections);
+                if (sections.Any(s => s.Id.HasValue))
+                    _dbContext.UpdateRange(sections.Where(s => s.Id.HasValue));
+                if (sections.Any(s => !s.Id.HasValue))
+                    _dbContext.AddRange(sections.Where(s => !s.Id.HasValue));
                 _dbContext.SaveChanges();
 
                 if (recipe?.Id == null)
@@ -158,7 +111,29 @@ namespace HappyFL.Controllers
             {
                 IsSuccess = true,
                 Message = "The recipe has been successfully saved.",
+                RecipeId = recipe.Id,
+                DishId = recipe.Dish?.Id,
             };
+        }
+
+        private void PrepareForPersistence(Recipe recipe, out IEnumerable<IngredientSection> sections)
+        {
+            if (recipe.Id < 0)
+                recipe.Id = null;
+            sections = recipe.Ingredients
+                .Select(i => i.Section)
+                .GroupBy(s => s.Id)
+                .Select(g => g.First());
+            foreach (var ingredient in recipe.Ingredients)
+            {
+                if (ingredient.Id < 0)
+                    ingredient.Id = null;
+                ingredient.Section = sections
+                    .FirstOrDefault(s => s.Id == ingredient.Section.Id);
+            }
+            foreach (var section in sections)
+                if (section.Id < 0)
+                    section.Id = null;
         }
     }
 }

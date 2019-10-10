@@ -1,22 +1,20 @@
 import { Component, OnInit, Output } from '@angular/core';
-// import { RecipeManagementService, Dish } from '../service/recipe-management.service';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { requestDishes } from '../service/recipe-management/recipe-management.actions';
 import { Dish } from '../model/recipe-management';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dishes',
   templateUrl: './dishes.component.html',
-  styleUrls: ['./dishes.component.css']
+  styleUrls: ['./dishes.component.scss']
 })
 export class DishesComponent implements OnInit {
   @Output()
-  // dishes: Dish[];
   dishes$ = this.store.select(state => state.recipeManagement.dishes);
 
   constructor(
-    // private recipeManagement: RecipeManagementService,
     private store: Store<{
       recipeManagement: {
         dishes: {
@@ -24,14 +22,15 @@ export class DishesComponent implements OnInit {
           data: Dish[],
         },
       }
-    }>
+    }>,
+    private router: Router
   ) {}
 
   ngOnInit() {
-    // this.recipeManagement.getDishes().subscribe((value: Dish[]) => {
-    //   this.dishes = value;
-    // });
     this.store.dispatch(requestDishes());
   }
 
+  goToRecipesPage(dishId: number) {
+    this.router.navigate(["/recipes"], { queryParams: { dishId } });
+  }
 }
