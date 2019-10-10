@@ -11,17 +11,14 @@ namespace HappyFL.DBFactory
 
         public DbContextFactory()
         {
+            var environment = Environment.GetEnvironmentVariable("DB_ENVIRONMENT");
+
+            if (string.IsNullOrEmpty(environment))
+                throw new Exception("DB_ENVIRONMENT is not set. Please set the environment variable to either Development or Release.");
+
             var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json");
-            switch (Environment.GetEnvironmentVariable("DB_ENVIRONMENT"))
-            {
-                case "Development":
-                    builder.AddJsonFile("appsettings.Development.json");
-                    break;
-                case "Release":
-                    builder.AddJsonFile("appsettings.Release.json");
-                    break;
-            }
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.{environment}.json", optional: false);
             var config = builder.Build();
             var connStr = config.GetConnectionString("happyfl-db");
             optionsBuilder = new DbContextOptionsBuilder<T>()
