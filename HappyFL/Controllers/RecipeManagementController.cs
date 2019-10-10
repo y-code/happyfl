@@ -62,7 +62,7 @@ namespace HappyFL.Controllers
             foreach (var recipe in recipes)
             {
                 recipe.Ingredients = recipe.Ingredients
-                    .OrderBy(i => i.Section.Id)
+                    .OrderBy(i => i.Section?.Id ?? 0)
                     .ThenBy(i => i.Id)
                     .ToList();
             }
@@ -121,6 +121,7 @@ namespace HappyFL.Controllers
             if (recipe.Id < 0)
                 recipe.Id = null;
             sections = recipe.Ingredients
+                .Where(i => i.Section != null)
                 .Select(i => i.Section)
                 .GroupBy(s => s.Id)
                 .Select(g => g.First());
@@ -128,8 +129,9 @@ namespace HappyFL.Controllers
             {
                 if (ingredient.Id < 0)
                     ingredient.Id = null;
-                ingredient.Section = sections
-                    .FirstOrDefault(s => s.Id == ingredient.Section.Id);
+                if (ingredient.Section != null)
+                    ingredient.Section = sections
+                        .FirstOrDefault(s => s.Id == ingredient.Section.Id);
             }
             foreach (var section in sections)
                 if (section.Id < 0)
