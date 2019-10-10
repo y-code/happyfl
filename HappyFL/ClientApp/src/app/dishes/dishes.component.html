@@ -4,7 +4,9 @@
   *ngIf="(dishes$ | async).isLoading"
   class="row fill-window">
   <div class="col-12 align-self-center text-center">
-    Loading...
+    <img src="./assets/spinner.gif"/>
+    <div>Loading...</div>
+    <small>It might take a half minute if the database had been sleeping.</small>
   </div>
 </div>
 
