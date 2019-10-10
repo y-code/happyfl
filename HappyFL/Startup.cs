@@ -22,6 +22,8 @@ namespace HappyFL
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLetsEncrypt();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // In production, the Angular files will be served from this directory
@@ -30,7 +32,6 @@ namespace HappyFL
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            services.AddLetsEncrypt();
             services.AddHttpsRedirection(options => { });
 
 			services.AddSingleton<WebSeekerService>();
