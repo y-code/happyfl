@@ -28,6 +28,10 @@ export class RecipeSeekerComponent implements OnInit {
     ingredients: ScannedIngredient[],
   }[]>;
 
+  public loadRecipe$: Observable<{
+    isLoading: boolean,
+  }>;
+
   public saveRecipe$: Observable<{
     isSaving: boolean,
     isSuccess: boolean,
@@ -81,8 +85,8 @@ export class RecipeSeekerComponent implements OnInit {
       }
     });
 
-    this.store.select(state => state.recipeManagement.recipe)
-      .subscribe(r => {
+    this.loadRecipe$ = this.store.select(state => state.recipeManagement.recipe).pipe(
+      map(r => {
         if (r.isLoading || !r.data)
           return r;
         this.recipe = r.data;
@@ -92,7 +96,8 @@ export class RecipeSeekerComponent implements OnInit {
         this.store.dispatch(requestRecipeSeek({ url: this.recipe.urlOfBase }));
 
         return r;
-      });
+      })
+    );
 
     this.recipeSeekResult$ = this.store.select(state => state.recipeManagement.recipeSeekResult).pipe(
       map(r => {

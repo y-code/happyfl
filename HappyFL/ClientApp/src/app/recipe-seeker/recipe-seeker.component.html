@@ -18,6 +18,14 @@
   </div>
 
   <div
+    *ngIf="(loadRecipe$ | async).isLoading"
+    class="row fill-window">
+    <div class="col-12 align-self-center text-center">
+      Loading...
+    </div>
+  </div>
+
+  <div
     *ngIf="(recipeSeekResult$ | async).isCancelled"
     class="row fill-window">
     <div class="col-12 align-self-center">
@@ -28,7 +36,7 @@
   </div>
 
   <div
-    *ngIf="!(recipeSeekResult$ | async).isLoading && !(recipeSeekResult$ | async).isCancelled && (recipeSeekResult$ | async).data"
+    *ngIf="!(loadRecipe$ | async).isLoading && !(recipeSeekResult$ | async).isLoading && !(recipeSeekResult$ | async).isCancelled"
     class="row no-gutters">
     <div class="col-12">
       <div class="form-group">
