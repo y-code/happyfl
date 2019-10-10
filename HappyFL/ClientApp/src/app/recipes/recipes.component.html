@@ -45,7 +45,7 @@
             <div
               *ngFor="let group of d.ingredientsBySection; let i = index"
               class="row section">
-              <h5>{{group.section.name}}</h5>
+              <h5>{{group.section?.name}}</h5>
               <div
                 class="col-12">
                 <div
