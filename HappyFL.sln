@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29020.237
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyFLDB", "HappyFLDB\HappyFLDB.csproj", "{8DBDEBC1-5B72-404B-9FD9-2219D44C2390}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyFLDBFactory", "HappyFLDBFactory\HappyFLDBFactory.csproj", "{FB51F304-B372-40AF-BF7F-289DDC1609D8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{3F4D702A-D328-49DD-B02E-355D1E1440D3}"
@@ -22,15 +20,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyFL", "HappyFL\HappyFL.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyFLTest", "HappyFLTest\HappyFLTest.csproj", "{3E7BCE23-535B-4FC6-A8EF-AAEA7935DCEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmlAgilityPack.NETStandard2_0", "html-agility-pack\src\HtmlAgilityPack.NETStandard2_0\HtmlAgilityPack.NETStandard2_0.csproj", "{0471A77D-FE36-423C-86CB-109D720592BD}"
-EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HtmlAgilityPack.Shared", "html-agility-pack\src\HtmlAgilityPack.Shared\HtmlAgilityPack.Shared.shproj", "{5BA9A0D7-173F-4C4F-AFFA-3DD6DC2F9A79}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{0281FAD4-4EAD-4CD6-80E8-BAC45AACE991}"
 	ProjectSection(SolutionItems) = preProject
 		Dockerfile = Dockerfile
 		.dockerignore = .dockerignore
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyFLDB", "HappyFLDB\HappyFLDB.csproj", "{127759B3-447C-4A9B-A732-CCD305E03F28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,10 +34,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8DBDEBC1-5B72-404B-9FD9-2219D44C2390}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8DBDEBC1-5B72-404B-9FD9-2219D44C2390}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8DBDEBC1-5B72-404B-9FD9-2219D44C2390}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8DBDEBC1-5B72-404B-9FD9-2219D44C2390}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FB51F304-B372-40AF-BF7F-289DDC1609D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FB51F304-B372-40AF-BF7F-289DDC1609D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB51F304-B372-40AF-BF7F-289DDC1609D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -62,10 +54,10 @@ Global
 		{3E7BCE23-535B-4FC6-A8EF-AAEA7935DCEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E7BCE23-535B-4FC6-A8EF-AAEA7935DCEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E7BCE23-535B-4FC6-A8EF-AAEA7935DCEE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0471A77D-FE36-423C-86CB-109D720592BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0471A77D-FE36-423C-86CB-109D720592BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0471A77D-FE36-423C-86CB-109D720592BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0471A77D-FE36-423C-86CB-109D720592BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{127759B3-447C-4A9B-A732-CCD305E03F28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{127759B3-447C-4A9B-A732-CCD305E03F28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{127759B3-447C-4A9B-A732-CCD305E03F28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{127759B3-447C-4A9B-A732-CCD305E03F28}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

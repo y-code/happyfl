@@ -27,11 +27,30 @@
     <Compile Remove="Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove=".DS_Store" />
-    <None Remove="run.sh" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\HappyFLDBFactory\HappyFLDBFactory.csproj" />
     <ProjectReference Include="..\HappyFLDB\HappyFLDB.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Npgsql">
+      <HintPath>..\unsubmodule\npgsql\Npgsql.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <SolutionDir>$([System.IO.Path]::GetDirectoryName($(MSBuildProjectDirectory)))\</SolutionDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <NpgsqlArtifacts Include="$(SolutionDir)/npgsql/src/Npgsql/bin/Debug/netstandard2.0/*.*" />
+    <NpgsqlLibs Include="..\unsubmodule\npgsql\*.*" />
+    <Compile Remove="..\unsubmodule\npgsql\*.*" />
+  </ItemGroup>
+
+  <Target Name="CopyLibs" AfterTargets="AfterBuild">
+    <Message Importance="High" Text="Copy libs." />
+    <Copy SourceFiles="@(NpgsqlLibs)" DestinationFolder="$(OutputPath)" />
+    <Copy SourceFiles="@(EFCorePGLibs)" DestinationFolder="$(OutputPath)" />
+  </Target>
+
 </Project>

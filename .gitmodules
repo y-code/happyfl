@@ -2,3 +2,9 @@
 	path = html-agility-pack
 	url = https://github.com/y-code/html-agility-pack.git
 	branch = handle-not-supported-content-encoding
+[submodule "npgsql"]
+	path = npgsql
+	url = https://github.com/y-code/npgsql
+[submodule "efcore.pg"]
+	path = efcore.pg
+	url = https://github.com/npgsql/efcore.pg.git

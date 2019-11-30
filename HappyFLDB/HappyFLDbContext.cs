@@ -10,7 +10,6 @@ namespace HappyFL.DB
 
         public HappyFLDbContext(DbContextOptions<HappyFLDbContext> options) : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

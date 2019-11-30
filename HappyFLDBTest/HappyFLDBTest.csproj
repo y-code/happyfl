@@ -30,8 +30,8 @@
     <Folder Include="RecipeManagement\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HappyFL\HappyFL.csproj" />
     <ProjectReference Include="..\DevDBSetup\DevDBSetup.csproj" />
+    <ProjectReference Include="..\HappyFLDBFactory\HappyFLDBFactory.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\HappyFL\appsettings.Development.json">

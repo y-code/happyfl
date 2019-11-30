@@ -20,7 +20,10 @@ namespace HappyFL.DBFactory
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{environment}.json", optional: false);
             var config = builder.Build();
-            var connStr = config.GetConnectionString("happyfl-db");
+
+            var connStr = Environment.GetEnvironmentVariable("ELEPHANTSQL_URL");
+            if (string.IsNullOrEmpty(connStr))
+                connStr = config.GetConnectionString("happyfl-db");
             optionsBuilder = new DbContextOptionsBuilder<T>()
                 .UseNpgsql(connStr);
         }

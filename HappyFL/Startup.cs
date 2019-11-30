@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using HappyFL.DB;
 using HappyFL.Services;
+using System;
 
 namespace HappyFL
 {
@@ -36,9 +37,14 @@ namespace HappyFL
 
             services.AddEntityFrameworkNpgsql();
             services.AddDbContext<HappyFLDbContext>((serviceProvider, optionsBuilder) =>
+            {
+                var connStr = Environment.GetEnvironmentVariable("ELEPHANTSQL_URL");
+                if (string.IsNullOrEmpty(connStr))
+                    connStr = Configuration.GetConnectionString("happyfl-db");
                 ((DbContextOptionsBuilder<HappyFLDbContext>)optionsBuilder)
-                    .UseNpgsql(Configuration.GetConnectionString("happyfl-db")));
-		}
+                    .UseNpgsql(connStr);
+            });
+    }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
