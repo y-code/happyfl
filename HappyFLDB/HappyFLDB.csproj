@@ -40,9 +40,9 @@
 
   <ItemGroup>
     <NpgsqlArtifacts Include="$(SolutionDir)/npgsql/src/Npgsql/bin/Debug/netstandard2.0/*.*" />
-    <NpgsqlLibs Include="..\unsubmodule\npgsql\*.*" />
+    <NpgsqlLibs Include="..\unsubmodule\npgsql\*.*" Visible="false" />
     <EFCorePGArtifacts Include="$(SolutionDir)\efcore.pg\src\EFCore.PG\bin\Debug\netstandard2.0\*.*" />
-    <EFCorePGLibs Include="..\unsubmodule\efcorepg\*.*" />
+    <EFCorePGLibs Include="..\unsubmodule\efcorepg\*.*" Visible="false" />
   </ItemGroup>
 
   <Target Name="UnsubmoduleOnDebug" BeforeTargets="BeforeBuild">

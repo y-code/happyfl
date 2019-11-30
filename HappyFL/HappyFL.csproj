@@ -97,8 +97,8 @@
 
   <ItemGroup>
     <HtmlAgilityPackArtifacts Include="$(SolutionDir)/html-agility-pack/src/HtmlAgilityPack.NETStandard2_0/bin/Debug/netstandard2.0/netstandard2.0/*.*" />
-    <NpgsqlLibs Include="..\unsubmodule\npgsql\*.*" />
-    <EFCorePGLibs Include="..\unsubmodule\efcorepg\*.*" />
+    <NpgsqlLibs Include="..\unsubmodule\npgsql\*.*" Visible="false" />
+    <EFCorePGLibs Include="..\unsubmodule\efcorepg\*.*" Visible="false" />
   </ItemGroup>
 
   <Target Name="UnsubmoduleOnDebug" BeforeTargets="BeforeBuild">
