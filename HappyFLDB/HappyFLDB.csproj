@@ -10,10 +10,12 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.4" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.1" />
-    <PackageReference Include="Npgsql" Version="4.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="System.Memory" Version="4.5.3" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.6.0" />
+    <PackageReference Include="System.Text.Json" Version="4.6.0" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.3" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="RecipeManagement\" />
@@ -22,4 +24,50 @@
     <Compile Remove="Migrations\20190929082026_v0.1.Designer.cs" />
     <Compile Remove="Migrations\20190929082026_v0.1.cs" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Npgsql">
+      <HintPath>..\unsubmodule\npgsql\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql.EntityFrameworkCore.PostgreSQL">
+      <HintPath>..\unsubmodule\efcorepg\Npgsql.EntityFrameworkCore.PostgreSQL.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <SolutionDir>$([System.IO.Path]::GetDirectoryName($(MSBuildProjectDirectory)))\</SolutionDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <NpgsqlArtifacts Include="$(SolutionDir)/npgsql/src/Npgsql/bin/Debug/netstandard2.0/*.*" />
+    <NpgsqlLibs Include="..\unsubmodule\npgsql\*.*" Visible="false" />
+    <EFCorePGArtifacts Include="$(SolutionDir)\efcore.pg\src\EFCore.PG\bin\Debug\netstandard2.0\*.*" />
+    <EFCorePGLibs Include="..\unsubmodule\efcorepg\*.*" Visible="false" />
+  </ItemGroup>
+
+  <Target Name="UnsubmoduleOnDebug" BeforeTargets="BeforeBuild">
+    <Message Importance="High" Text="Run Unsubmodule if configuration is 'Debug'." />
+    <CallTarget Condition="'$(Configuration)' == 'Debug'" Targets="Unsubmodule" />
+  </Target>
+
+  <Target Name="Unsubmodule">
+    <Message Importance="High" Text="Build submodule Npgsql." />
+    <MSBuild Projects="$(SolutionDir)/npgsql/Npgsql.sln" Properties="Configuration=Debug" />
+    <Message Importance="High" Text="Copy the submodule's artifacts to unsubmodule dir." />
+    <MakeDir Directories="$(SolutionDir)/unsubmodule/npgsql" />
+    <Copy SourceFiles="@(NpgsqlArtifacts)" DestinationFolder="$(SolutionDir)/unsubmodule/npgsql" />
+    
+    <Message Importance="High" Text="Build submodule Entity Framework Core PostgreSQL." />
+    <MSBuild Projects="$(SolutionDir)\efcore.pg\src\EFCore.PG\EFCore.PG.csproj" Properties="Configuration=Debug" />
+    <Message Importance="High" Text="Copy the submodule's artifacts to unsubmodule dir." />
+    <MakeDir Directories="$(SolutionDir)/unsubmodule/efcorepg" />
+    <Copy SourceFiles="@(EFCorePGArtifacts)" DestinationFolder="$(SolutionDir)/unsubmodule/efcorepg" />
+  </Target>
+
+  <Target Name="CopyLibs" AfterTargets="AfterBuild">
+    <Message Importance="High" Text="Copy libs." />
+    <Copy SourceFiles="@(NpgsqlLibs)" DestinationFolder="$(OutputPath)" />
+    <Copy SourceFiles="@(EFCorePGLibs)" DestinationFolder="$(OutputPath)" />
+  </Target>
+
 </Project>

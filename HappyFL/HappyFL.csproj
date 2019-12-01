@@ -46,12 +46,6 @@
     <Content Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="appsettings.Development.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="appsettings.Docker.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\Sample\" />
@@ -89,12 +83,13 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\unsubmodule\html-agility-pack\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="Npgsql">
+      <HintPath>..\unsubmodule\npgsql\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql.EntityFrameworkCore.PostgreSQL">
+      <HintPath>..\unsubmodule\efcorepg\Npgsql.EntityFrameworkCore.PostgreSQL.dll</HintPath>
+    </Reference>
   </ItemGroup>
-
-  <Target Name="UnsubmoduleOnDebug" BeforeTargets="Build">
-    <Message Importance="High" Text="Run Unsubmodule if configuration is 'Debug'." />
-    <CallTarget Condition="'$(Configuration)' == 'Debug'" Targets="Unsubmodule" />
-  </Target>
 
   <PropertyGroup>
     <SolutionDir>$([System.IO.Path]::GetDirectoryName($(MSBuildProjectDirectory)))\</SolutionDir>
@@ -102,12 +97,27 @@
 
   <ItemGroup>
     <HtmlAgilityPackArtifacts Include="$(SolutionDir)/html-agility-pack/src/HtmlAgilityPack.NETStandard2_0/bin/Debug/netstandard2.0/netstandard2.0/*.*" />
+    <NpgsqlLibs Include="..\unsubmodule\npgsql\*.*" Visible="false" />
+    <EFCorePGLibs Include="..\unsubmodule\efcorepg\*.*" Visible="false" />
   </ItemGroup>
 
+  <Target Name="UnsubmoduleOnDebug" BeforeTargets="BeforeBuild">
+    <Message Importance="High" Text="Run Unsubmodule if configuration is 'Debug'." />
+    <CallTarget Condition="'$(Configuration)' == 'Debug'" Targets="Unsubmodule" />
+  </Target>
+
   <Target Name="Unsubmodule">
-    <Message Importance="High" Text="Copy submodule artifacts to unsubmodule dir for the use in AppHarbor.sln." />
+    <Message Importance="High" Text="Build submodule HtmlAgilityPack." />
+    <MSBuild Projects="$(SolutionDir)/html-agility-pack/src/HtmlAgilityPack.NETStandard2_0/HtmlAgilityPack.NETStandard2_0.csproj" Properties="Configuration=Debug" />
+    <Message Importance="High" Text="Copy the submodule artifacts to unsubmodule dir." />
     <MakeDir Directories="$(SolutionDir)/unsubmodule/html-agility-pack" />
     <Copy SourceFiles="@(HtmlAgilityPackArtifacts)" DestinationFolder="$(SolutionDir)/unsubmodule/html-agility-pack" />
+  </Target>
+
+  <Target Name="CopyLibs" AfterTargets="AfterBuild">
+    <Message Importance="High" Text="Copy libs." />
+    <Copy SourceFiles="@(NpgsqlLibs)" DestinationFolder="$(OutputPath)" />
+    <Copy SourceFiles="@(EFCorePGLibs)" DestinationFolder="$(OutputPath)" />
   </Target>
 
 </Project>

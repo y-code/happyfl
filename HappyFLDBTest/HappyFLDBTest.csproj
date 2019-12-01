@@ -30,17 +30,14 @@
     <Folder Include="RecipeManagement\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HappyFL\HappyFL.csproj" />
     <ProjectReference Include="..\DevDBSetup\DevDBSetup.csproj" />
+    <ProjectReference Include="..\HappyFLDBFactory\HappyFLDBFactory.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\HappyFL\appsettings.Development.json">
       <Link>appsettings.Development.json</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="WebSeekerServiceTest.cs" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
