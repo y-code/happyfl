@@ -27,10 +27,6 @@
     <Compile Remove="Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove=".DS_Store" />
-    <None Remove="run.sh" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\HappyFLDBFactory\HappyFLDBFactory.csproj" />
     <ProjectReference Include="..\HappyFLDB\HappyFLDB.csproj" />
   </ItemGroup>
