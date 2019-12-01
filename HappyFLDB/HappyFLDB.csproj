@@ -50,12 +50,6 @@
     <CallTarget Condition="'$(Configuration)' == 'Debug'" Targets="Unsubmodule" />
   </Target>
 
-  <Target Name="CopyLibs" AfterTargets="AfterBuild">
-    <Message Importance="High" Text="Copy libs." />
-    <Copy SourceFiles="@(NpgsqlLibs)" DestinationFolder="$(OutputPath)" />
-    <Copy SourceFiles="@(EFCorePGLibs)" DestinationFolder="$(OutputPath)" />
-  </Target>
-
   <Target Name="Unsubmodule">
     <Message Importance="High" Text="Build submodule Npgsql." />
     <MSBuild Projects="$(SolutionDir)/npgsql/Npgsql.sln" Properties="Configuration=Debug" />
@@ -68,6 +62,12 @@
     <Message Importance="High" Text="Copy the submodule's artifacts to unsubmodule dir." />
     <MakeDir Directories="$(SolutionDir)/unsubmodule/efcorepg" />
     <Copy SourceFiles="@(EFCorePGArtifacts)" DestinationFolder="$(SolutionDir)/unsubmodule/efcorepg" />
+  </Target>
+
+  <Target Name="CopyLibs" AfterTargets="AfterBuild">
+    <Message Importance="High" Text="Copy libs." />
+    <Copy SourceFiles="@(NpgsqlLibs)" DestinationFolder="$(OutputPath)" />
+    <Copy SourceFiles="@(EFCorePGLibs)" DestinationFolder="$(OutputPath)" />
   </Target>
 
 </Project>

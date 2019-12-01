@@ -106,19 +106,18 @@
     <CallTarget Condition="'$(Configuration)' == 'Debug'" Targets="Unsubmodule" />
   </Target>
 
-  <Target Name="CopyLibs" AfterTargets="AfterBuild">
-    <Message Importance="High" Text="Copy libs." />
-    <Copy SourceFiles="@(NpgsqlLibs)" DestinationFolder="$(OutputPath)" />
-    <Copy SourceFiles="@(NpgsqlLibs)" DestinationFolder="$(OutputPath)" />
-    <Copy SourceFiles="@(EFCorePGLibs)" DestinationFolder="$(OutputPath)" />
-  </Target>
-
   <Target Name="Unsubmodule">
     <Message Importance="High" Text="Build submodule HtmlAgilityPack." />
     <MSBuild Projects="$(SolutionDir)/html-agility-pack/src/HtmlAgilityPack.NETStandard2_0/HtmlAgilityPack.NETStandard2_0.csproj" Properties="Configuration=Debug" />
     <Message Importance="High" Text="Copy the submodule artifacts to unsubmodule dir." />
     <MakeDir Directories="$(SolutionDir)/unsubmodule/html-agility-pack" />
     <Copy SourceFiles="@(HtmlAgilityPackArtifacts)" DestinationFolder="$(SolutionDir)/unsubmodule/html-agility-pack" />
+  </Target>
+
+  <Target Name="CopyLibs" AfterTargets="AfterBuild">
+    <Message Importance="High" Text="Copy libs." />
+    <Copy SourceFiles="@(NpgsqlLibs)" DestinationFolder="$(OutputPath)" />
+    <Copy SourceFiles="@(EFCorePGLibs)" DestinationFolder="$(OutputPath)" />
   </Target>
 
 </Project>
