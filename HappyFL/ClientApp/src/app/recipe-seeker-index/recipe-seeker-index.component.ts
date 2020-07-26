@@ -20,7 +20,7 @@ export class RecipeSeekerIndexComponent implements OnInit {
 
   customSiteForm: FormGroup;
 
-  @ViewChild('modalContent', { static: false })
+  @ViewChild('modalContent')
   modalContent;
 
   constructor(
